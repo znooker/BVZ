@@ -10,7 +10,6 @@
     <Folder Include="BVZ.Application\Interface\" />
     <Folder Include="BVZ.Application\Common\" />
     <Folder Include="BVZ.Domain\Visitors\" />
-    <Folder Include="BVZ.Infrastructure\Repositories\" />
   </ItemGroup>
 
   <ItemGroup>
