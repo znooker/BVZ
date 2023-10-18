@@ -10,11 +10,13 @@ namespace BVZ.BVZ.Domain.Models.Visitors
         public string TourName { get; set; }
         public string Description { get; set; }
         public int NrOfParticipants { get; private set; }
-        public bool TourCompleted { get; private set; }
+        public bool TourCompleted { get; private set; } = false;
         public DateTime TourDate { get; set; }
 
+        public Guid ZooDayId { get; set; }
         public ZooDay ZooDay { get; set; }
         public Guide Guide { get; set; }
+        public Guid GuideId { get; set; }
         public ICollection<TourParticipant> TourParticipants { get; set; }
 
         public Tour(Guid id, string tourName, string description, int nrOfParticipants, Guide guide, ICollection<TourParticipant> tourParticipants)

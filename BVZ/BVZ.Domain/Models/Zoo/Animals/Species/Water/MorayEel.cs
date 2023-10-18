@@ -4,6 +4,6 @@ namespace BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Water
 {
     public class MorayEel : WaterHabitat
     {
-        public override double DivingDepth { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public override double DivingDepth{ get; set; }
     }
 }

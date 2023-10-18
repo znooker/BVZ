@@ -7,9 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="BVZ.Domain\Visitors\**" />
+    <Content Remove="BVZ.Domain\Visitors\**" />
+    <EmbeddedResource Remove="BVZ.Domain\Visitors\**" />
+    <None Remove="BVZ.Domain\Visitors\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="BVZ.Application\Interface\" />
     <Folder Include="BVZ.Application\Common\" />
-    <Folder Include="BVZ.Domain\Visitors\" />
     <Folder Include="BVZ.Infrastructure\Repositories\" />
   </ItemGroup>
 
