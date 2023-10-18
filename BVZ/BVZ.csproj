@@ -9,7 +9,6 @@
   <ItemGroup>
     <Folder Include="BVZ.Application\Interface\" />
     <Folder Include="BVZ.Application\Common\" />
-    <Folder Include="BVZ.Domain\Models\Zoo\Animals\Species\Water\" />
     <Folder Include="BVZ.Domain\Visitors\" />
     <Folder Include="BVZ.Infrastructure\Repositories\" />
   </ItemGroup>

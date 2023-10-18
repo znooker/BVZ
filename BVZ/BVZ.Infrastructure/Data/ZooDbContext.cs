@@ -3,6 +3,7 @@ using BVZ.BVZ.Domain.Models.Zoo.Animals.Habitats;
 using BVZ.BVZ.Domain.Models.Zoo.Animals.Species;
 using BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Air;
 using BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Land;
+using BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Water;
 using BVZ.BVZ.Domain.Models.Zoo.Animals.ValueTypes;
 using BVZ.BVZ.Domain.Models.Zoo.Guides;
 using Microsoft.EntityFrameworkCore;
@@ -32,8 +33,12 @@ namespace BVZ.BVZ.Infrastructure.Data
                 .ToTable("Animals")
                 .HasDiscriminator<string>("AnimalType")
                 .HasValue<BaldEagle>("BaldEagle")
+                .HasValue<NorwegianBlueParrot>("NorwegianBlueParrot")
                 .HasValue<Cheetah>("Cheetah")
-                .HasValue<NorwegianBlueParrot>("NorwegianBlueParrot");
+                .HasValue<Ozelot>("Ozelot")
+                .HasValue<Okapi>("Okapi")
+                .HasValue<ElectricEel>("ElectricEel")
+                .HasValue<MorayEel>("MorayEel");
 
 
             // AIR-related entetites
@@ -51,15 +56,42 @@ namespace BVZ.BVZ.Infrastructure.Data
              .ToTable("Animals")
              .HasBaseType<AirHabitat>();
 
+
             // Land-related entetites
             builder.Entity<LandHabitat>()
                .ToTable("Animals")
                .HasDiscriminator<string>("AnimalType")
-               .HasValue<Cheetah>("Cheetah");
+               .HasValue<Cheetah>("Cheetah")
+               .HasValue<Ozelot>("Ozelot")
+               .HasValue<Okapi>("Okapi");
 
             builder.Entity<Cheetah>()
              .ToTable("Animals")
              .HasBaseType<LandHabitat>();
+
+            builder.Entity<Ozelot>()
+            .ToTable("Animals")
+            .HasBaseType<LandHabitat>();
+
+            builder.Entity<Okapi>()
+            .ToTable("Animals")
+            .HasBaseType<LandHabitat>();
+
+
+            // Water-related entetites
+            builder.Entity<WaterHabitat>()
+               .ToTable("Animals")
+               .HasDiscriminator<string>("AnimalType")
+               .HasValue<ElectricEel>("ElectricEel")
+               .HasValue<MorayEel>("MorayEel");
+
+            builder.Entity<ElectricEel>()
+             .ToTable("Animals")
+             .HasBaseType<WaterHabitat>();
+
+            builder.Entity<MorayEel>()
+            .ToTable("Animals")
+            .HasBaseType<WaterHabitat>();
 
         }
     }
