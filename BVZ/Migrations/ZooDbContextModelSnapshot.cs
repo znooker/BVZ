@@ -221,24 +221,6 @@ namespace BVZ.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-1000-000000000030"),
-                            AnimalId = new Guid("00000000-0000-0000-0000-000000000100"),
-                            GuideId = new Guid("00000000-0000-0000-0000-000000000099")
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-1000-000000000031"),
-                            AnimalId = new Guid("00000000-0000-0000-0000-020000000000"),
-                            GuideId = new Guid("00000000-0000-0000-0000-000000000099")
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-1000-000000000032"),
-                            AnimalId = new Guid("00000000-0000-0000-0000-300000000000"),
-                            GuideId = new Guid("00000000-0000-0000-0000-000000000099")
-                        },
-                        new
-                        {
                             Id = new Guid("00000000-0000-0000-1000-000000000044"),
                             AnimalId = new Guid("00000000-0000-0000-0000-100000000000"),
                             GuideId = new Guid("00000000-0000-0000-0000-000000000009")
@@ -254,6 +236,24 @@ namespace BVZ.Migrations
                             Id = new Guid("00000000-0000-0000-1000-000000000046"),
                             AnimalId = new Guid("00000000-0000-0000-0000-300000000000"),
                             GuideId = new Guid("00000000-0000-0000-0000-000000000009")
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-1000-000000000030"),
+                            AnimalId = new Guid("00000000-0000-0000-0000-200000000000"),
+                            GuideId = new Guid("00000000-0000-0000-0000-000000000099")
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-1000-000000000031"),
+                            AnimalId = new Guid("00000000-0000-0000-0000-020000000000"),
+                            GuideId = new Guid("00000000-0000-0000-0000-000000000099")
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-1000-000000000032"),
+                            AnimalId = new Guid("00000000-0000-0000-0000-300000000000"),
+                            GuideId = new Guid("00000000-0000-0000-0000-000000000099")
                         });
                 });
 
@@ -274,13 +274,13 @@ namespace BVZ.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000000099"),
-                            Name = "Nisse"
+                            Id = new Guid("00000000-0000-0000-0000-000000000009"),
+                            Name = "Hjalmar"
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000000009"),
-                            Name = "Hjalmar"
+                            Id = new Guid("00000000-0000-0000-0000-000000000099"),
+                            Name = "Nisse"
                         });
                 });
 
@@ -469,7 +469,7 @@ namespace BVZ.Migrations
             modelBuilder.Entity("BVZ.BVZ.Domain.Models.Visitors.Tour", b =>
                 {
                     b.HasOne("BVZ.BVZ.Domain.Models.Zoo.Guides.Guide", "Guide")
-                        .WithMany()
+                        .WithMany("Tours")
                         .HasForeignKey("GuideId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -532,7 +532,7 @@ namespace BVZ.Migrations
                         .IsRequired();
 
                     b.HasOne("BVZ.BVZ.Domain.Models.Zoo.Guides.Guide", "Guide")
-                        .WithMany("GuideCompetences")
+                        .WithMany("AnimalCompetences")
                         .HasForeignKey("GuideId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -568,7 +568,9 @@ namespace BVZ.Migrations
 
             modelBuilder.Entity("BVZ.BVZ.Domain.Models.Zoo.Guides.Guide", b =>
                 {
-                    b.Navigation("GuideCompetences");
+                    b.Navigation("AnimalCompetences");
+
+                    b.Navigation("Tours");
                 });
 #pragma warning restore 612, 618
         }

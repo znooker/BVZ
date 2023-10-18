@@ -41,11 +41,8 @@ namespace BVZ.BVZ.Infrastructure.Data
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.SeedALlAnimals();
-            builder.SeedNisse();
-            builder.SeedHjalmar();
-            builder.SeedDailyTour();
-            builder.SeedFirstOpenDay();
+            builder.SeedAllData();
+;
 
 
             builder.Entity<Animal>()

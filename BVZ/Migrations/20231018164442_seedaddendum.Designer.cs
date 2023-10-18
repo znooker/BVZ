@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BVZ.Migrations
 {
     [DbContext(typeof(ZooDbContext))]
-    [Migration("20231018140203_visitor")]
-    partial class visitor
+    [Migration("20231018164442_seedaddendum")]
+    partial class seedaddendum
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -60,7 +60,31 @@ namespace BVZ.Migrations
 
                     b.HasIndex("ZooDayId");
 
-                    b.ToTable("Tour");
+                    b.ToTable("Tours");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-444000000000"),
+                            Description = "Se djungelns mäktigaste djur..",
+                            GuideId = new Guid("00000000-0000-0000-0000-000000000009"),
+                            NrOfParticipants = 0,
+                            TourCompleted = false,
+                            TourDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TourName = "Djungel-Expeditionen",
+                            ZooDayId = new Guid("00000000-0000-0000-0000-123000000000")
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-444400000000"),
+                            Description = "Se havets vidunder!",
+                            GuideId = new Guid("00000000-0000-0000-0000-000000000099"),
+                            NrOfParticipants = 0,
+                            TourCompleted = false,
+                            TourDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TourName = "Aqua-expedition",
+                            ZooDayId = new Guid("00000000-0000-0000-0000-123000000000")
+                        });
                 });
 
             modelBuilder.Entity("BVZ.BVZ.Domain.Models.Visitors.TourParticipant", b =>
@@ -81,7 +105,7 @@ namespace BVZ.Migrations
 
                     b.HasIndex("VisitorId");
 
-                    b.ToTable("TourParticipant");
+                    b.ToTable("TourParticipants");
                 });
 
             modelBuilder.Entity("BVZ.BVZ.Domain.Models.Visitors.Visitor", b =>
@@ -96,7 +120,7 @@ namespace BVZ.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Visitor");
+                    b.ToTable("Visitors");
                 });
 
             modelBuilder.Entity("BVZ.BVZ.Domain.Models.Zoo.Animals.Animal", b =>
@@ -167,6 +191,14 @@ namespace BVZ.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ZooDays");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-123000000000"),
+                            Archived = false,
+                            TodaysDate = new DateTime(2023, 10, 18, 0, 0, 0, 0, DateTimeKind.Local)
+                        });
                 });
 
             modelBuilder.Entity("BVZ.BVZ.Domain.Models.Zoo.Guides.AnimalCompetence", b =>
@@ -192,9 +224,39 @@ namespace BVZ.Migrations
                     b.HasData(
                         new
                         {
+                            Id = new Guid("00000000-0000-0000-1000-000000000044"),
+                            AnimalId = new Guid("00000000-0000-0000-0000-100000000000"),
+                            GuideId = new Guid("00000000-0000-0000-0000-000000000009")
+                        },
+                        new
+                        {
                             Id = new Guid("00000000-0000-0000-1000-000000000045"),
-                            AnimalId = new Guid("00000000-0000-0000-0000-000000000100"),
-                            GuideId = new Guid("00000000-0000-0000-0000-000000000045")
+                            AnimalId = new Guid("00000000-0000-0000-0000-010000000000"),
+                            GuideId = new Guid("00000000-0000-0000-0000-000000000009")
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-1000-000000000046"),
+                            AnimalId = new Guid("00000000-0000-0000-0000-300000000000"),
+                            GuideId = new Guid("00000000-0000-0000-0000-000000000009")
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-1000-000000000030"),
+                            AnimalId = new Guid("00000000-0000-0000-0000-200000000000"),
+                            GuideId = new Guid("00000000-0000-0000-0000-000000000099")
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-1000-000000000031"),
+                            AnimalId = new Guid("00000000-0000-0000-0000-020000000000"),
+                            GuideId = new Guid("00000000-0000-0000-0000-000000000099")
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-1000-000000000032"),
+                            AnimalId = new Guid("00000000-0000-0000-0000-300000000000"),
+                            GuideId = new Guid("00000000-0000-0000-0000-000000000099")
                         });
                 });
 
@@ -215,8 +277,13 @@ namespace BVZ.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000000045"),
+                            Id = new Guid("00000000-0000-0000-0000-000000000009"),
                             Name = "Hjalmar"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000099"),
+                            Name = "Nisse"
                         });
                 });
 
@@ -260,15 +327,23 @@ namespace BVZ.Migrations
                 {
                     b.HasBaseType("BVZ.BVZ.Domain.Models.Zoo.Animals.Habitats.AirHabitat");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<double>("Wingspan")
                         .HasColumnType("float");
 
                     b.ToTable("Animals", (string)null);
 
                     b.HasDiscriminator().HasValue("BaldEagle");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-300000000000"),
+                            AnimalName = "Bald Eagle",
+                            DailyVisits = 0,
+                            Specie = 2,
+                            MaxAltitude = 0.0,
+                            Wingspan = 1.3999999999999999
+                        });
                 });
 
             modelBuilder.Entity("BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Air.NorwegianBlueParrot", b =>
@@ -282,42 +357,39 @@ namespace BVZ.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.ToTable("Animals", null, t =>
-                        {
-                            t.Property("Name")
-                                .HasColumnName("NorwegianBlueParrot_Name");
-                        });
+                    b.ToTable("Animals", (string)null);
 
                     b.HasDiscriminator().HasValue("NorwegianBlueParrot");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-030000000000"),
+                            AnimalName = "Norwegian Blue Parrot",
+                            DailyVisits = 0,
+                            Specie = 2,
+                            MaxAltitude = 0.0,
+                            CanSpeak = true,
+                            FeatherColor = "Green"
+                        });
                 });
 
             modelBuilder.Entity("BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Land.Cheetah", b =>
                 {
                     b.HasBaseType("BVZ.BVZ.Domain.Models.Zoo.Animals.Habitats.LandHabitat");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.ToTable("Animals", null, t =>
-                        {
-                            t.Property("Name")
-                                .HasColumnName("Cheetah_Name");
-                        });
+                    b.ToTable("Animals", (string)null);
 
                     b.HasDiscriminator().HasValue("Cheetah");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000000100"),
-                            AnimalName = "Geopard",
+                            Id = new Guid("00000000-0000-0000-0000-100000000000"),
+                            AnimalName = "Cheetah",
                             DailyVisits = 0,
                             Specie = 0,
-                            Speed = 70.0,
-                            Name = "Karl"
+                            Speed = 70.0
                         });
                 });
 
@@ -328,6 +400,16 @@ namespace BVZ.Migrations
                     b.ToTable("Animals", (string)null);
 
                     b.HasDiscriminator().HasValue("Okapi");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-010000000000"),
+                            AnimalName = "Okapi",
+                            DailyVisits = 0,
+                            Specie = 0,
+                            Speed = 10.0
+                        });
                 });
 
             modelBuilder.Entity("BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Land.Ozelot", b =>
@@ -337,6 +419,16 @@ namespace BVZ.Migrations
                     b.ToTable("Animals", (string)null);
 
                     b.HasDiscriminator().HasValue("Ozelot");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-001000000000"),
+                            AnimalName = "Ozelot",
+                            DailyVisits = 0,
+                            Specie = 0,
+                            Speed = 30.0
+                        });
                 });
 
             modelBuilder.Entity("BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Water.ElectricEel", b =>
@@ -346,6 +438,16 @@ namespace BVZ.Migrations
                     b.ToTable("Animals", (string)null);
 
                     b.HasDiscriminator().HasValue("ElectricEel");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-200000000000"),
+                            AnimalName = "Electric Eel",
+                            DailyVisits = 0,
+                            Specie = 1,
+                            DivingDepth = 120.0
+                        });
                 });
 
             modelBuilder.Entity("BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Water.MorayEel", b =>
@@ -355,12 +457,22 @@ namespace BVZ.Migrations
                     b.ToTable("Animals", (string)null);
 
                     b.HasDiscriminator().HasValue("MorayEel");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-020000000000"),
+                            AnimalName = "Moray Eel",
+                            DailyVisits = 0,
+                            Specie = 1,
+                            DivingDepth = 79.0
+                        });
                 });
 
             modelBuilder.Entity("BVZ.BVZ.Domain.Models.Visitors.Tour", b =>
                 {
                     b.HasOne("BVZ.BVZ.Domain.Models.Zoo.Guides.Guide", "Guide")
-                        .WithMany()
+                        .WithMany("Tours")
                         .HasForeignKey("GuideId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -423,7 +535,7 @@ namespace BVZ.Migrations
                         .IsRequired();
 
                     b.HasOne("BVZ.BVZ.Domain.Models.Zoo.Guides.Guide", "Guide")
-                        .WithMany("GuideCompetences")
+                        .WithMany("AnimalCompetences")
                         .HasForeignKey("GuideId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -459,7 +571,9 @@ namespace BVZ.Migrations
 
             modelBuilder.Entity("BVZ.BVZ.Domain.Models.Zoo.Guides.Guide", b =>
                 {
-                    b.Navigation("GuideCompetences");
+                    b.Navigation("AnimalCompetences");
+
+                    b.Navigation("Tours");
                 });
 #pragma warning restore 612, 618
         }
