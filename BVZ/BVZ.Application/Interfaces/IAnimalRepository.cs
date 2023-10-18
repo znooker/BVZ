@@ -10,7 +10,7 @@ namespace BVZ.BVZ.Application.Interfaces
         Task<bool> DeleteAnimal(Animal animal);
         Task<bool> DeleteAnimalById(Guid id);
         Task<IEnumerable<Animal>> GetAllAnimals();
-        Task<Animal> GetAnimalById();
+        Task<Animal> GetAnimalById(Guid id);
 
     }
 }

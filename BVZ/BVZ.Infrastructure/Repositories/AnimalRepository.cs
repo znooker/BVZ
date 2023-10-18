@@ -33,7 +33,7 @@ namespace BVZ.BVZ.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<Animal> GetAnimalById()
+        public Task<Animal> GetAnimalById(Guid id)
         {
             throw new NotImplementedException();
         }
