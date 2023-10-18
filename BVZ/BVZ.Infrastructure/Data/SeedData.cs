@@ -1,5 +1,5 @@
 ﻿using BVZ.BVZ.Domain.Models.Visitors;
-using BVZ.BVZ.Domain.Models.Zoo.Animals;
+using BVZ.BVZ.Domain.Models.Zoo;
 using BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Air;
 using BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Land;
 using BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Water;
@@ -171,9 +171,9 @@ namespace BVZ.BVZ.Infrastructure.Data
              new Tour
              {
                  Id = new Guid("00000000-0000-0000-0000-444000000000"),
-                 ZooDayId = new Guid("00000000-0000-0000-0000-123000000000"),
                  TourName = "Djungel-Expeditionen",
                  Description = "Se djungelns mäktigaste djur..",
+                 DailyBookingCount = 0,
                  GuideId = new Guid("00000000-0000-0000-0000-000000000009"),
              });
 
@@ -181,9 +181,9 @@ namespace BVZ.BVZ.Infrastructure.Data
              new Tour
              {
                  Id = new Guid("00000000-0000-0000-0000-444400000000"),
-                 ZooDayId = new Guid("00000000-0000-0000-0000-123000000000"),
                  TourName = "Aqua-expedition",
                  Description = "Se havets vidunder!",
+                 DailyBookingCount = 0,
                  GuideId = new Guid("00000000-0000-0000-0000-000000000099"),
              });
         }

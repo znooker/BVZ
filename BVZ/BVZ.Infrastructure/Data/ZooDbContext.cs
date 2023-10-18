@@ -1,4 +1,5 @@
 ﻿using BVZ.BVZ.Domain.Models.Visitors;
+using BVZ.BVZ.Domain.Models.Zoo;
 using BVZ.BVZ.Domain.Models.Zoo.Animals;
 using BVZ.BVZ.Domain.Models.Zoo.Animals.Habitats;
 using BVZ.BVZ.Domain.Models.Zoo.Animals.Species;
@@ -29,6 +30,7 @@ namespace BVZ.BVZ.Infrastructure.Data
         public DbSet<Visitor> Visitors { get; set; } = null!;
         public DbSet<TourParticipant> TourParticipants { get; set; } = null!;
         public DbSet<Tour> Tours { get; set; } = null!;
+        public DbSet<ZooTour> ZooTours { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

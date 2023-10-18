@@ -97,6 +97,29 @@ namespace BVZ.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Tours",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TourName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DailyBookingCount = table.Column<int>(type: "int", nullable: false),
+                    NrOfParticipants = table.Column<int>(type: "int", nullable: false),
+                    TourCompleted = table.Column<bool>(type: "bit", nullable: false),
+                    GuideId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tours", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Tours_Guides_GuideId",
+                        column: x => x.GuideId,
+                        principalTable: "Guides",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AnimalVisits",
                 columns: table => new
                 {
@@ -116,36 +139,6 @@ namespace BVZ.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AnimalVisits_ZooDays_ZooDayId",
-                        column: x => x.ZooDayId,
-                        principalTable: "ZooDays",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Tours",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TourName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NrOfParticipants = table.Column<int>(type: "int", nullable: false),
-                    TourCompleted = table.Column<bool>(type: "bit", nullable: false),
-                    TourDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ZooDayId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    GuideId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tours", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Tours_Guides_GuideId",
-                        column: x => x.GuideId,
-                        principalTable: "Guides",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Tours_ZooDays_ZooDayId",
                         column: x => x.ZooDayId,
                         principalTable: "ZooDays",
                         principalColumn: "Id",
@@ -173,6 +166,32 @@ namespace BVZ.Migrations
                         name: "FK_TourParticipants_Visitors_VisitorId",
                         column: x => x.VisitorId,
                         principalTable: "Visitors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ZooTours",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TourID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ZooDayId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DateOfTour = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ZooTours", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ZooTours_Tours_TourID",
+                        column: x => x.TourID,
+                        principalTable: "Tours",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ZooTours_ZooDays_ZooDayId",
+                        column: x => x.ZooDayId,
+                        principalTable: "ZooDays",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -214,7 +233,11 @@ namespace BVZ.Migrations
             migrationBuilder.InsertData(
                 table: "Guides",
                 columns: new[] { "Id", "Name" },
-                values: new object[] { new Guid("00000000-0000-0000-0000-000000000009"), "Hjalmar" });
+                values: new object[,]
+                {
+                    { new Guid("00000000-0000-0000-0000-000000000009"), "Hjalmar" },
+                    { new Guid("00000000-0000-0000-0000-000000000099"), "Nisse" }
+                });
 
             migrationBuilder.InsertData(
                 table: "ZooDays",
@@ -226,6 +249,9 @@ namespace BVZ.Migrations
                 columns: new[] { "Id", "AnimalId", "GuideId" },
                 values: new object[,]
                 {
+                    { new Guid("00000000-0000-0000-1000-000000000030"), new Guid("00000000-0000-0000-0000-200000000000"), new Guid("00000000-0000-0000-0000-000000000099") },
+                    { new Guid("00000000-0000-0000-1000-000000000031"), new Guid("00000000-0000-0000-0000-020000000000"), new Guid("00000000-0000-0000-0000-000000000099") },
+                    { new Guid("00000000-0000-0000-1000-000000000032"), new Guid("00000000-0000-0000-0000-300000000000"), new Guid("00000000-0000-0000-0000-000000000099") },
                     { new Guid("00000000-0000-0000-1000-000000000044"), new Guid("00000000-0000-0000-0000-100000000000"), new Guid("00000000-0000-0000-0000-000000000009") },
                     { new Guid("00000000-0000-0000-1000-000000000045"), new Guid("00000000-0000-0000-0000-010000000000"), new Guid("00000000-0000-0000-0000-000000000009") },
                     { new Guid("00000000-0000-0000-1000-000000000046"), new Guid("00000000-0000-0000-0000-300000000000"), new Guid("00000000-0000-0000-0000-000000000009") }
@@ -233,8 +259,12 @@ namespace BVZ.Migrations
 
             migrationBuilder.InsertData(
                 table: "Tours",
-                columns: new[] { "Id", "Description", "GuideId", "NrOfParticipants", "TourCompleted", "TourDate", "TourName", "ZooDayId" },
-                values: new object[] { new Guid("00000000-0000-0000-0000-444000000000"), "Se djungelns mäktigaste djur..", new Guid("00000000-0000-0000-0000-000000000009"), 0, false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Djungel-Expeditionen", new Guid("00000000-0000-0000-0000-123000000000") });
+                columns: new[] { "Id", "DailyBookingCount", "Description", "GuideId", "NrOfParticipants", "TourCompleted", "TourName" },
+                values: new object[,]
+                {
+                    { new Guid("00000000-0000-0000-0000-444000000000"), 0, "Se djungelns mäktigaste djur..", new Guid("00000000-0000-0000-0000-000000000009"), 0, false, "Djungel-Expeditionen" },
+                    { new Guid("00000000-0000-0000-0000-444400000000"), 0, "Se havets vidunder!", new Guid("00000000-0000-0000-0000-000000000099"), 0, false, "Aqua-expedition" }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AnimalCompetences_AnimalId",
@@ -272,8 +302,13 @@ namespace BVZ.Migrations
                 column: "GuideId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tours_ZooDayId",
-                table: "Tours",
+                name: "IX_ZooTours_TourID",
+                table: "ZooTours",
+                column: "TourID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ZooTours_ZooDayId",
+                table: "ZooTours",
                 column: "ZooDayId");
         }
 
@@ -290,19 +325,22 @@ namespace BVZ.Migrations
                 name: "TourParticipants");
 
             migrationBuilder.DropTable(
-                name: "Animals");
+                name: "ZooTours");
 
             migrationBuilder.DropTable(
-                name: "Tours");
+                name: "Animals");
 
             migrationBuilder.DropTable(
                 name: "Visitors");
 
             migrationBuilder.DropTable(
-                name: "Guides");
+                name: "Tours");
 
             migrationBuilder.DropTable(
                 name: "ZooDays");
+
+            migrationBuilder.DropTable(
+                name: "Guides");
         }
     }
 }

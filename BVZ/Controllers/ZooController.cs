@@ -1,4 +1,5 @@
-﻿using BVZ.Models;
+﻿using BVZ.BVZ.Application.Services;
+using BVZ.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -7,14 +8,19 @@ namespace BVZ.Controllers
     public class ZooController : Controller
     {
         private readonly ILogger<ZooController> _logger;
+        private readonly MockTourService _service;
 
-        public ZooController(ILogger<ZooController> logger)
+        public ZooController(
+            ILogger<ZooController> logger,
+            MockTourService service)
         {
             _logger = logger;
+            _service = service;
         }
 
         public IActionResult Index()
         {
+            _service.NewDay();
             return View();
         }
 

@@ -13,7 +13,7 @@ builder.Services.AddDbContext<ZooDbContext>(options =>
                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
                    builder => builder.MigrationsAssembly(typeof(ZooDbContext).Assembly.FullName)));
 
-builder.Services.AddTransient<GuideServices>();
+builder.Services.AddTransient<MockTourService>();
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())

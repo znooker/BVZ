@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BVZ.Migrations
 {
     [DbContext(typeof(ZooDbContext))]
-    [Migration("20231018164046_init")]
+    [Migration("20231018180024_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -31,6 +31,9 @@ namespace BVZ.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("DailyBookingCount")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -44,21 +47,13 @@ namespace BVZ.Migrations
                     b.Property<bool>("TourCompleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("TourDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("TourName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("ZooDayId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("GuideId");
-
-                    b.HasIndex("ZooDayId");
 
                     b.ToTable("Tours");
 
@@ -66,13 +61,22 @@ namespace BVZ.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-444000000000"),
+                            DailyBookingCount = 0,
                             Description = "Se djungelns mäktigaste djur..",
                             GuideId = new Guid("00000000-0000-0000-0000-000000000009"),
                             NrOfParticipants = 0,
                             TourCompleted = false,
-                            TourDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            TourName = "Djungel-Expeditionen",
-                            ZooDayId = new Guid("00000000-0000-0000-0000-123000000000")
+                            TourName = "Djungel-Expeditionen"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-444400000000"),
+                            DailyBookingCount = 0,
+                            Description = "Se havets vidunder!",
+                            GuideId = new Guid("00000000-0000-0000-0000-000000000099"),
+                            NrOfParticipants = 0,
+                            TourCompleted = false,
+                            TourName = "Aqua-expedition"
                         });
                 });
 
@@ -110,6 +114,30 @@ namespace BVZ.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Visitors");
+                });
+
+            modelBuilder.Entity("BVZ.BVZ.Domain.Models.Visitors.ZooTour", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DateOfTour")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("TourID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ZooDayId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TourID");
+
+                    b.HasIndex("ZooDayId");
+
+                    b.ToTable("ZooTours");
                 });
 
             modelBuilder.Entity("BVZ.BVZ.Domain.Models.Zoo.Animals.Animal", b =>
@@ -165,31 +193,6 @@ namespace BVZ.Migrations
                     b.ToTable("AnimalVisits");
                 });
 
-            modelBuilder.Entity("BVZ.BVZ.Domain.Models.Zoo.Animals.ZooDay", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Archived")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("TodaysDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ZooDays");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-123000000000"),
-                            Archived = false,
-                            TodaysDate = new DateTime(2023, 10, 18, 0, 0, 0, 0, DateTimeKind.Local)
-                        });
-                });
-
             modelBuilder.Entity("BVZ.BVZ.Domain.Models.Zoo.Guides.AnimalCompetence", b =>
                 {
                     b.Property<Guid>("Id")
@@ -228,6 +231,24 @@ namespace BVZ.Migrations
                             Id = new Guid("00000000-0000-0000-1000-000000000046"),
                             AnimalId = new Guid("00000000-0000-0000-0000-300000000000"),
                             GuideId = new Guid("00000000-0000-0000-0000-000000000009")
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-1000-000000000030"),
+                            AnimalId = new Guid("00000000-0000-0000-0000-200000000000"),
+                            GuideId = new Guid("00000000-0000-0000-0000-000000000099")
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-1000-000000000031"),
+                            AnimalId = new Guid("00000000-0000-0000-0000-020000000000"),
+                            GuideId = new Guid("00000000-0000-0000-0000-000000000099")
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-1000-000000000032"),
+                            AnimalId = new Guid("00000000-0000-0000-0000-300000000000"),
+                            GuideId = new Guid("00000000-0000-0000-0000-000000000099")
                         });
                 });
 
@@ -250,6 +271,36 @@ namespace BVZ.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000009"),
                             Name = "Hjalmar"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000099"),
+                            Name = "Nisse"
+                        });
+                });
+
+            modelBuilder.Entity("BVZ.BVZ.Domain.Models.Zoo.ZooDay", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Archived")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("TodaysDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ZooDays");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-123000000000"),
+                            Archived = false,
+                            TodaysDate = new DateTime(2023, 10, 18, 0, 0, 0, 0, DateTimeKind.Local)
                         });
                 });
 
@@ -443,15 +494,7 @@ namespace BVZ.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BVZ.BVZ.Domain.Models.Zoo.Animals.ZooDay", "ZooDay")
-                        .WithMany("DailyTours")
-                        .HasForeignKey("ZooDayId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Guide");
-
-                    b.Navigation("ZooDay");
                 });
 
             modelBuilder.Entity("BVZ.BVZ.Domain.Models.Visitors.TourParticipant", b =>
@@ -473,6 +516,25 @@ namespace BVZ.Migrations
                     b.Navigation("Visitor");
                 });
 
+            modelBuilder.Entity("BVZ.BVZ.Domain.Models.Visitors.ZooTour", b =>
+                {
+                    b.HasOne("BVZ.BVZ.Domain.Models.Visitors.Tour", "Tour")
+                        .WithMany("ZooTours")
+                        .HasForeignKey("TourID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BVZ.BVZ.Domain.Models.Zoo.ZooDay", "ZooDay")
+                        .WithMany("ZooTours")
+                        .HasForeignKey("ZooDayId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tour");
+
+                    b.Navigation("ZooDay");
+                });
+
             modelBuilder.Entity("BVZ.BVZ.Domain.Models.Zoo.Animals.AnimalVisit", b =>
                 {
                     b.HasOne("BVZ.BVZ.Domain.Models.Zoo.Animals.Animal", "Animal")
@@ -481,7 +543,7 @@ namespace BVZ.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BVZ.BVZ.Domain.Models.Zoo.Animals.ZooDay", "ZooDay")
+                    b.HasOne("BVZ.BVZ.Domain.Models.Zoo.ZooDay", "ZooDay")
                         .WithMany("AnimalVisits")
                         .HasForeignKey("ZooDayId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -514,6 +576,8 @@ namespace BVZ.Migrations
             modelBuilder.Entity("BVZ.BVZ.Domain.Models.Visitors.Tour", b =>
                 {
                     b.Navigation("TourParticipants");
+
+                    b.Navigation("ZooTours");
                 });
 
             modelBuilder.Entity("BVZ.BVZ.Domain.Models.Visitors.Visitor", b =>
@@ -528,18 +592,18 @@ namespace BVZ.Migrations
                     b.Navigation("AnimalVisits");
                 });
 
-            modelBuilder.Entity("BVZ.BVZ.Domain.Models.Zoo.Animals.ZooDay", b =>
-                {
-                    b.Navigation("AnimalVisits");
-
-                    b.Navigation("DailyTours");
-                });
-
             modelBuilder.Entity("BVZ.BVZ.Domain.Models.Zoo.Guides.Guide", b =>
                 {
                     b.Navigation("AnimalCompetences");
 
                     b.Navigation("Tours");
+                });
+
+            modelBuilder.Entity("BVZ.BVZ.Domain.Models.Zoo.ZooDay", b =>
+                {
+                    b.Navigation("AnimalVisits");
+
+                    b.Navigation("ZooTours");
                 });
 #pragma warning restore 612, 618
         }
