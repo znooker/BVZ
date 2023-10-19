@@ -1,7 +1,9 @@
 ﻿using BVZ.BVZ.Application.Interfaces;
+using BVZ.BVZ.Domain.Models.Zoo.Animals;
 using BVZ.BVZ.Domain.Models.Zoo.Guides;
 using BVZ.BVZ.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace BVZ.BVZ.Infrastructure.Repositories
 {
@@ -17,13 +19,10 @@ namespace BVZ.BVZ.Infrastructure.Repositories
 
         public async Task<bool> AddGuide(Guide guide)
         {
-            
-                _context.Guides.Add(guide);
-                await _context.SaveChangesAsync();
-                return true;
-           
-
-        }
+            _context.Guides.Add(guide);
+            await _context.SaveChangesAsync();
+            return true;
+         }
 
         public async Task<bool> DeleteGuide(Guide guide)
         {
@@ -36,11 +35,8 @@ namespace BVZ.BVZ.Infrastructure.Repositories
             }
             catch (Exception e)
             {
-
-                throw e;
-                
+                throw e;    
             }
-           
         }
 
         public Task<bool> DeleteGuideById(Guid id)
@@ -72,6 +68,20 @@ namespace BVZ.BVZ.Infrastructure.Repositories
                             .ToListAsync();
 
             return animalIds;
+        }
+
+        public async Task<int> GetAnimalVisitsByDateAndAnimal(Guid id, DateTime dateOfVisit)
+        {
+            int NrOfVisit = await _context.AnimalVisits
+                                    .Where(av => av.ZooDay.TodaysDate == dateOfVisit 
+                                    && av.AnimalId == id)
+                                    .CountAsync();
+            return NrOfVisit;
+        }
+        public async Task<bool> AddAnimalVisit(AnimalVisit animalVisit)
+        {
+            _context.AnimalVisits.Add(animalVisit);
+            return await Task.FromResult(_context.SaveChanges() > 0);
         }
     }
 }

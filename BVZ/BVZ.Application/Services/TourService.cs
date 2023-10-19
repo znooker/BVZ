@@ -1,12 +1,8 @@
-﻿using BVZ.BVZ.Domain.Models.Visitors;
-using BVZ.BVZ.Domain.Models.Zoo.Animals;
+﻿using BVZ.BVZ.Application.Interfaces;
+using BVZ.BVZ.Domain.Models.Visitors;
 using BVZ.BVZ.Domain.Models.Zoo;
-using BVZ.BVZ.Infrastructure.Data;
-using BVZ.BVZ.Application.Interfaces;
+using BVZ.BVZ.Domain.Models.Zoo.Animals;
 using BVZ.BVZ.Infrastructure.Repositories;
-using BVZ.BVZ.Application;
-using System.Collections.Generic;
-using BVZ.BVZ.Domain.Models.Zoo.Guides;
 
 namespace BVZ.BVZ.Application.Services
 {
@@ -15,57 +11,29 @@ namespace BVZ.BVZ.Application.Services
         private readonly ILogger<TourService> _logger;
         private readonly ITourRepository _tourRepository;
         private readonly IGuideRepository _guideRepository;
+        private readonly IAnimalRepository _animalRepository;
+        private readonly IZooRepository _zooRepository;
 
         public TourService(
             ILogger<TourService> logger,
             ITourRepository tourRepository,
-            IGuideRepository guideRepository)
+            IGuideRepository guideRepository,
+            IAnimalRepository animalRepository,
+            IZooRepository zooRepository)
         {
             _logger = logger;
             _tourRepository = tourRepository;
             _guideRepository = guideRepository;
+            _animalRepository = animalRepository;
+            _zooRepository = zooRepository;
         }
 
-        public async Task<ServiceResponse<bool>> BookZooTour(Guid zooTourId, int NrOfPersonsToBook)
-        {
-            ServiceResponse<bool> response = new ServiceResponse<bool>();
-
-            var zootour = await _tourRepository.GetZooTourById(zooTourId);
-
-            CheckAnimalFatigueInTour(zootour.Tour.GuideId);
-
-
-
-            if (zootour == null) 
-            {
-                response.IsSuccess = false;
-                response.ErrorMessage = "Något är fel med turen, försök boka igen.";
-                return response;
-            }
-
-             if((zootour.NrOfParticipants + NrOfPersonsToBook) > 5)
-            {
-                response.IsSuccess = false;
-                response.UserInfo = "För många personer, max 5 personer per bokad tur. Det är redan" + zootour.NrOfParticipants + " personer bokade.";
-                return response;
-            }
-            zootour.NrOfParticipants += NrOfPersonsToBook;
-            if (!await _tourRepository.UpdateZooTour(zootour))
-            {
-                response.IsSuccess = false;
-                response.ErrorMessage = "Fel i databas, försök igen senare.";
-                return response;
-            }
-            response.IsSuccess = true; 
-            return response;
-        }
-
-        public async Task<ServiceResponse<List<ZooTour>>>GetCurrentDayZooTours(DateTime currentDate)
+        public async Task<ServiceResponse<List<ZooTour>>> GetCurrentDayZooTours(DateTime currentDate)
         {
             ServiceResponse<List<ZooTour>> response = new ServiceResponse<List<ZooTour>>();
 
             var list = await _tourRepository.GetZooToursByDate(currentDate);
-            if(list == null) 
+            if (list == null)
             {
                 response.IsSuccess = false;
                 response.ErrorMessage = "Det finns inga turer den här dagen.";
@@ -76,30 +44,101 @@ namespace BVZ.BVZ.Application.Services
             return response;
         }
 
-        private async Task<bool> CheckAnimalFatigueInTour(Guid guideId)
+        public async Task<ServiceResponse<bool>> BookZooTour(Guid zooTourId, int NrOfPersonsToBook)
+        {
+            ServiceResponse<bool> response = new ServiceResponse<bool>();
+
+            var zootour = await _tourRepository.GetZooTourById(zooTourId);
+            if (zootour == null)
+            {
+                response.IsSuccess = false;
+                response.ErrorMessage = "Något är fel med turen, försök boka igen.";
+                return response;
+            }
+            // Kollar om animals är trötta
+            if (!await CheckAnimalFatigue(zootour.Tour.GuideId, zootour.ZooDay, zootour.DateOfTour))
+            {
+                response.IsSuccess = false;
+                response.UserInfo = "Denna turen går tyvärr inte att boka, det är för många besök under samma dag till ett eller flera djur som ingår i turen.";
+                return response;
+            }
+
+            // Säkerställer att det inte blir överbokning
+            if ((zootour.NrOfParticipants + NrOfPersonsToBook) > 5)
+            {
+                response.IsSuccess = false;
+                response.UserInfo = "För många personer, max 5 personer per bokad tur. Det är redan" + zootour.NrOfParticipants + " personer bokade.";
+                return response;
+            }
+
+            //Uppdaterar den specifika turens deltagar-antal
+            zootour.NrOfParticipants += NrOfPersonsToBook;
+            if (!await _tourRepository.UpdateZooTour(zootour))
+            {
+                response.IsSuccess = false;
+                response.ErrorMessage = "Fel i databas, försök igen senare.";
+                return response;
+            }
+
+            // Add tickets
+            if (!await HandleTickets(NrOfPersonsToBook, zootour.Tour, zootour.DateOfTour))
+            {
+                response.IsSuccess = false;
+                response.ErrorMessage = "Fel vid biljettadministration, försök igen senare eller kontakta receptionen.";
+                return response;
+            }
+
+            response.IsSuccess = true;
+            return response;
+        }
+
+        private async Task<bool> CheckAnimalFatigue(Guid guideId, ZooDay zooday, DateTime tourDate)
         {
             var animalsIds = await _guideRepository.GetAnimalsByGuideId(guideId);
 
             foreach (var animalId in animalsIds)
             {
-                // int nrOfVisits = _animalRepository.GetAnimalVisitsByDateAndAnimal();
+                int nrOfVisits = await _guideRepository.GetAnimalVisitsByDateAndAnimal(animalId, tourDate);
+                if (nrOfVisits >= 2)
+                {
+                    return false;
+                }
+            }
+
+            foreach (var animalId in animalsIds)
+            {
+                var animal = await _animalRepository.GetAnimalById(animalId);
+                AnimalVisit av = new AnimalVisit(zooday, animal);
+                if (!await _guideRepository.AddAnimalVisit(av))
+                {
+                    return false;
+                }
             }
             return true;
-            // var guide = zootour.Tour.Guide;
-            //List<Animal> AnimalsVisited = new List<Animal>();
-            //foreach (var comp in guide.AnimalCompetences)
-            //{
-            //    AnimalsVisited.Add(comp.Animal);
-            //}
-
-            // Method checking each animal
-            // if(Animal.AnimalVisit.ZooDay.TodaysDate < 2)
-            // Ok för att boka tour.
-
-            // Check animals in tour
-
         }
 
+        private async Task<bool> HandleTickets(int NrOfPersons, Tour tour, DateTime visitDate)
+        {
+            List<Visitor> visitors = new List<Visitor>();
+            for (int i = 0; i < NrOfPersons; i++)
+            {
+                Visitor visitor = new Visitor();
+                if (!await _zooRepository.AddVisitor(visitor))
+                {
+                    return false;
+                }
+                visitors.Add(visitor);
+            }
+            foreach (var visitor in visitors)
+            {
+                TourParticipant tp = new TourParticipant(tour, visitor, visitDate);
+                if (!await _zooRepository.AddTourParticipant(tp))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }
 
