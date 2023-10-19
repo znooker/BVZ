@@ -16,8 +16,6 @@
   <ItemGroup>
     <Folder Include="BVZ.Application\Interface\" />
     <Folder Include="BVZ.Application\Common\" />
-    
-    <Folder Include="BVZ.Infrastructure\Repositories\" />
 
     <Folder Include="BVZ.Domain\Visitors\" />
 

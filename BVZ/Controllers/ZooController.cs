@@ -8,19 +8,20 @@ namespace BVZ.Controllers
     public class ZooController : Controller
     {
         private readonly ILogger<ZooController> _logger;
-        private readonly MockTourService _service;
+        private readonly TourService _tourService;
 
         public ZooController(
             ILogger<ZooController> logger,
-            MockTourService service)
+            TourService tourService)
         {
             _logger = logger;
-            _service = service;
+            _tourService = tourService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var serviceResponse = await _service.NewDay();
+            DateTime date = DateTime.Today.AddDays(1);
+            var serviceResponse = await _tourService.NewDay(date);
             if (serviceResponse.IsSuccess)
             {
                 // skapa ViwModel för success
@@ -28,6 +29,7 @@ namespace BVZ.Controllers
             }
             else
             {
+                string ss = serviceResponse.ErrorMessage;
                 // skapa ViwModel för error
                 return View();
             }

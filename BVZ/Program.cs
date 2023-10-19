@@ -16,13 +16,21 @@ builder.Services.AddDbContext<ZooDbContext>(options =>
                    builder => builder.MigrationsAssembly(typeof(ZooDbContext).Assembly.FullName)));
 
 
+<<<<<<< Updated upstream
 builder.Services.AddTransient<MockTourService>();
 builder.Services.AddTransient<AnimalServices>();
 
 
+=======
+>>>>>>> Stashed changes
 //Ska vi bry oss om en separat config för DI repos?
 builder.Services.AddTransient<IAnimalRepository, AnimalRepository>();
 builder.Services.AddTransient<IGuideRepository, GuideRepository>();
+builder.Services.AddTransient<ITourRepository, TourRepository>();
+builder.Services.AddTransient<IZooRepository, ZooRepository>();
+
+// Add application-services
+builder.Services.AddTransient<TourService>();
 
 var app = builder.Build();
 

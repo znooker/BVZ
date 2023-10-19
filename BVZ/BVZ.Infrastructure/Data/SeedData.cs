@@ -90,6 +90,8 @@ namespace BVZ.BVZ.Infrastructure.Data
 
 
             // Guides with competences
+
+            // HJALMAR
             modelBuilder.Entity<Guide>().HasData(
             new Guide
             {
@@ -124,6 +126,7 @@ namespace BVZ.BVZ.Infrastructure.Data
             });
 
 
+            // NISSE
             modelBuilder.Entity<Guide>().HasData(
             new Guide
             {
@@ -173,9 +176,30 @@ namespace BVZ.BVZ.Infrastructure.Data
                  Id = new Guid("00000000-0000-0000-0000-444000000000"),
                  TourName = "Djungel-Expeditionen",
                  Description = "Se djungelns mäktigaste djur..",
-                 DailyBookingCount = 0,
                  GuideId = new Guid("00000000-0000-0000-0000-000000000009"),
              });
+
+                    modelBuilder.Entity<ZooTour>().HasData(
+                     new ZooTour
+                     {
+                         Id = new Guid("00000000-0000-0000-0000-999000000000"),
+                         ZooDayId = new Guid("00000000-0000-0000-0000-123000000000"),
+                         TourID = new Guid("00000000-0000-0000-0000-444000000000"),
+                         IsMorningTour = true,
+                         DateOfTour = DateTime.Today
+                    });
+
+                    modelBuilder.Entity<ZooTour>().HasData(
+                     new ZooTour
+                     {
+                         Id = new Guid("00000000-0000-1000-0000-899000000000"),
+                         ZooDayId = new Guid("00000000-0000-0000-0000-123000000000"),
+                         TourID = new Guid("00000000-0000-0000-0000-444000000000"),
+                         IsMorningTour = false,
+                         DateOfTour = DateTime.Today
+                     });
+
+
 
             modelBuilder.Entity<Tour>().HasData(
              new Tour
@@ -183,9 +207,27 @@ namespace BVZ.BVZ.Infrastructure.Data
                  Id = new Guid("00000000-0000-0000-0000-444400000000"),
                  TourName = "Aqua-expedition",
                  Description = "Se havets vidunder!",
-                 DailyBookingCount = 0,
                  GuideId = new Guid("00000000-0000-0000-0000-000000000099"),
              });
+                    modelBuilder.Entity<ZooTour>().HasData(
+                        new ZooTour
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-999070000000"),
+                            ZooDayId = new Guid("00000000-0000-0000-0000-123000000000"),
+                            TourID = new Guid("00000000-0000-0000-0000-444400000000"),
+                            IsMorningTour = true,
+                            DateOfTour = DateTime.Today
+                        });
+
+                    modelBuilder.Entity<ZooTour>().HasData(
+                        new ZooTour
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-999070000600"),
+                            ZooDayId = new Guid("00000000-0000-0000-0000-123000000000"),
+                            TourID = new Guid("00000000-0000-0000-0000-444400000000"),
+                            IsMorningTour = false,
+                            DateOfTour = DateTime.Today
+                        });
         }
     
     }

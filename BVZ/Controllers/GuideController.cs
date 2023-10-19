@@ -8,14 +8,11 @@ namespace BVZ.Controllers
     public class GuideController : Controller
     {
         private readonly ILogger<GuideController> _logger;
-        private readonly GuideServices _guideServices;
 
         public GuideController(
-            ILogger<GuideController> logger,
-            GuideServices guideServices)
+            ILogger<GuideController> logger)
         {
             _logger = logger;
-            _guideServices = guideServices;
         }
 
         public IActionResult Index()
