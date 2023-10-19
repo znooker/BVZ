@@ -20,7 +20,6 @@ namespace BVZ.Controllers
 
         public IActionResult Index()
         {
-            _guideServices.GetGuide();
             return View();
         }
 

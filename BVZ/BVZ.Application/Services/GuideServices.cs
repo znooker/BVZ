@@ -21,24 +21,5 @@ namespace BVZ.BVZ.Application.Services
             _context = context;
         }
 
-        public void GetGuide()
-        {
-            Guide guide = new Guide("Nisse");
-            _context.Guides.Add(guide);
-
-            BaldEagle baldEagle = new BaldEagle("Fritiof", 1000);
-            _context.Animals.Add(baldEagle);
-
-            Cheetah cheetah = new Cheetah("Leo");
-            _context.Animals.Add(cheetah);
-
-            AnimalCompetence ac = new AnimalCompetence(baldEagle, guide);
-            _context.AnimalCompetences.Add(ac);
-
-            AnimalCompetence ac2 = new AnimalCompetence(cheetah, guide);
-            _context.AnimalCompetences.Add(ac2);
-
-            _context.SaveChanges();
-        }
     }
 }

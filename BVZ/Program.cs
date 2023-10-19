@@ -16,7 +16,9 @@ builder.Services.AddDbContext<ZooDbContext>(options =>
                    builder => builder.MigrationsAssembly(typeof(ZooDbContext).Assembly.FullName)));
 
 
-//Ska vi bry oss om en separat config för DI repos?
+builder.Services.AddTransient<MockTourService>();
+
+//Ska vi bry oss om en separat config fÃ¶r DI repos?
 builder.Services.AddTransient<IAnimalRepository, AnimalRepository>();
 builder.Services.AddTransient<IGuideRepository, GuideRepository>();
 

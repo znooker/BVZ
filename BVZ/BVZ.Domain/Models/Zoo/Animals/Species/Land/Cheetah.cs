@@ -5,7 +5,6 @@ namespace BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Land
 {
     public class Cheetah : LandHabitat
     {
-        public string? Name { get; set; }
         public override double Speed { get; set; }
 
         public Cheetah()
@@ -14,8 +13,7 @@ namespace BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Land
         public Cheetah(string? name)
         {
             Id = Guid.NewGuid();
-            AnimalName = "Geopard";
-            Name = name;
+            AnimalName = "Cheetah";
             Specie = Specie.Mammal;
             DailyVisits = 0;
             Speed = 70;

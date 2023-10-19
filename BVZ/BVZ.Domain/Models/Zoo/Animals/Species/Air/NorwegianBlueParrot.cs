@@ -5,8 +5,6 @@ namespace BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Air
 {
     public class NorwegianBlueParrot : AirHabitat
     {
-        public Guid Id { get; set; }
-        public string? Name { get; set; }   
         public string FeatherColor { get; set; }
         public bool CanSpeak { get; set; }
 
@@ -15,10 +13,9 @@ namespace BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Air
         public NorwegianBlueParrot()
         {
         }
-        public NorwegianBlueParrot(string? name, string color, bool canSpeak)
+        public NorwegianBlueParrot(string color, bool canSpeak)
         {
             Id = Guid.NewGuid();
-            Name = name;
             AnimalName = "Norwegian Blue Parrot";
             FeatherColor = color;   
             CanSpeak = canSpeak;

@@ -1,4 +1,6 @@
-﻿using BVZ.BVZ.Domain.Models.Zoo.Animals;
+﻿using BVZ.BVZ.Domain.Models.Visitors;
+using BVZ.BVZ.Domain.Models.Zoo;
+using BVZ.BVZ.Domain.Models.Zoo.Animals;
 using BVZ.BVZ.Domain.Models.Zoo.Animals.Habitats;
 using BVZ.BVZ.Domain.Models.Zoo.Animals.Species;
 using BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Air;
@@ -25,9 +27,25 @@ namespace BVZ.BVZ.Infrastructure.Data
         public DbSet<ZooDay> ZooDays { get; set; } = null!;
         public DbSet<AnimalVisit> AnimalVisits { get; set; } = null!;
 
+        public DbSet<Visitor> Visitors { get; set; } = null!;
+        public DbSet<TourParticipant> TourParticipants { get; set; } = null!;
+        public DbSet<Tour> Tours { get; set; } = null!;
+        public DbSet<ZooTour> ZooTours { get; set; } = null!;
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer("your_connection_string_here");
+            }
+
+            optionsBuilder.EnableSensitiveDataLogging(); 
+        }
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Seed();
+            builder.SeedAllData();
+;
+
 
             builder.Entity<Animal>()
                 .ToTable("Animals")

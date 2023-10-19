@@ -5,18 +5,16 @@ namespace BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Air
 {
     public class BaldEagle : AirHabitat
     {
-        public string? Name { get; set; }
         public double Wingspan { get; set; }
         public override double MaxAltitude { get; set; }
 
         public BaldEagle()
         {
         }
-        public BaldEagle(string? name, double wingspan)
+        public BaldEagle(double wingspan)
         {
             Id = Guid.NewGuid();
             AnimalName = "Bald Eagle";
-            Name = name;
             Wingspan = wingspan;
             Specie = Specie.Bird;
             DailyVisits = 0;
