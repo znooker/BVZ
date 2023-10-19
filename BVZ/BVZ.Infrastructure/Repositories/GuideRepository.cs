@@ -63,5 +63,15 @@ namespace BVZ.BVZ.Infrastructure.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public async Task<List<Guid>> GetAnimalsByGuideId(Guid id)
+        {
+            var animalIds = await _context.AnimalCompetences
+                            .Where(ac => ac.GuideId == id)
+                            .Select(ac => ac.AnimalId)
+                            .ToListAsync();
+
+            return animalIds;
+        }
     }
 }

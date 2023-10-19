@@ -21,8 +21,6 @@
 
     <Folder Include="Models\Guide\" />
 
-    <Folder Include="Models\Tour\" />
-
     <Folder Include="Models\Zoo\" />
 
   </ItemGroup>

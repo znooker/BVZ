@@ -14,6 +14,7 @@ namespace BVZ.BVZ.Domain.Models.Visitors
 
         public DateTime DateOfTour { get; set; }
         public bool IsMorningTour { get; set; }
+        public int NrOfParticipants { get; set; } = 0;
 
         public ZooTour() { }
 

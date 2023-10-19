@@ -11,6 +11,8 @@ namespace BVZ.BVZ.Application.Interfaces
         Task<IEnumerable<Guide>> GetAllGuides();
         Task<Guide> GetGuideById(Guid id);
 
-       
+
+        Task<List<Guid>> GetAnimalsByGuideId(Guid id);
+
     }
 }

@@ -20,20 +20,7 @@ namespace BVZ.Controllers
 
         public async Task<IActionResult> Index()
         {
-            DateTime date = DateTime.Today.AddDays(1);
-            var serviceResponse = await _tourService.NewDay(date);
-            if (serviceResponse.IsSuccess)
-            {
-                // skapa ViwModel för success
-                return View();
-            }
-            else
-            {
-                string ss = serviceResponse.ErrorMessage;
-                // skapa ViwModel för error
-                return View();
-            }
-
+            return View();
         }
 
 

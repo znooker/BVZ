@@ -18,18 +18,18 @@
     </div>
 }
 else if (Model is DisplayAllToursViewModel displayModel)
-{
-    @foreach (var tour in displayModel.ToursOfTheDay)
-    {
-        <div class="card-group">
-
-            <div class="card">
+{ 
+    <div class="card-group-tours">
+    
+        @foreach (var tour in displayModel.ToursOfTheDay)
+        {
+            <div class="card-tours">
                 @*<img src="..." class="card-img-top" alt="...">*@
                 <div class="card-body">
                     <h5 class="card-title">@tour.Tour.TourName</h5>
                     <p class="card-text">@tour.Tour.Description</p>
                 </div>
-                <div class="card-footer">
+                <div class="card-footer-tours">
                     @if(!@tour.IsMorningTour)
                     {
                         <small class="text-muted">Morgontur (09:00 - 12:00)</small>
@@ -38,16 +38,33 @@ else if (Model is DisplayAllToursViewModel displayModel)
                     {
                         <small class="text-muted">Eftermiddagstur (13:00 - 16:00)</small>
                     }
-                    <small 
-                        class="text-muted"
-                        style="space-x-4">
-                        Guide: @tour.Tour.Guide.Name
-                        
+                    <small class="text-muted">
+                        @tour.Tour.Guide.Name
                     </small>
                 </div>
+               
+                <form asp-controller="Tour" asp-action="BookTour" method="post">
+                    <select class="form-select" name="NrOfPersons">
+                             <option selected>Välj antal personer</option>
+                             <option value="1">1</option>
+                             <option value="2">2</option>
+                             <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                    </select>
+                    <input type="hidden" value="@tour.Id" name="Id"/>
+                    <button type="submit" class="btn btn-primary">
+                        Boka
+                    </button>
+                </form>
             </div>
+        }
+    </div>
+   
+}
+@if (Model is BookingConfirmationViewModel bcVM)
+{
+   
 
-        </div>
-    }
 }
 

@@ -1,5 +1,6 @@
 ﻿using BVZ.BVZ.Application;
 using BVZ.BVZ.Application.Services;
+using BVZ.BVZ.Domain.Models.Visitors;
 using BVZ.Models;
 using BVZ.Models.Tour;
 using Microsoft.AspNetCore.Mvc;
@@ -37,6 +38,22 @@ namespace BVZ.Controllers
 
             return View(displayVM);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> BookTour(Guid Id, int NrOfPersons)
+        {
+            // Service anrop för att se om plats finns för denna.
+            var response = await _tourService.BookZooTour(Id, NrOfPersons);
+
+
+            BookingConfirmationViewModel bcVM = new BookingConfirmationViewModel
+            {
+                BookingSuccessful = true,
+                UserMessage = "Det här gick kanon!"
+            };
+            return View("/views/Tour/index.cshtml", bcVM);
+        }
+
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -35,5 +35,19 @@ namespace BVZ.BVZ.Infrastructure.Repositories
                         .Where(z => z.DateOfTour == day)
                         .ToListAsync();
         }
+
+        public async Task<ZooTour> GetZooTourById(Guid id)
+        {
+            return await _context.ZooTours
+                            .Include(z => z.Tour)
+                               .ThenInclude(t => t.Guide)
+                            .Where(zt => zt.Id == id).SingleOrDefaultAsync();   
+        }
+
+        public async Task<bool> UpdateZooTour(ZooTour zootour)
+        {
+            _context.ZooTours.Update(zootour);
+            return await Task.FromResult(_context.SaveChanges() > 0);
+        }
     }
 }
