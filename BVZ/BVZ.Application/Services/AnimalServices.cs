@@ -27,6 +27,8 @@ namespace BVZ.BVZ.Application.Services
                 response.IsSuccess = false;
                 response.ErrorMessage = "List of animals is null or empty.";
                 return response;
+
+                //In med ILogger
             } 
 
             response.IsSuccess = true;
