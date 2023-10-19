@@ -39,6 +39,11 @@ namespace BVZ.BVZ.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
+        public Task<bool> SaveChangesAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<bool> UpdateGuide(Guide guide)
         {
             throw new NotImplementedException();

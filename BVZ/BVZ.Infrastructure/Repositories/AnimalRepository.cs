@@ -38,6 +38,11 @@ namespace BVZ.BVZ.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
+        public Task<bool> SaveChangesAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<bool> UpdateAnimal(Animal animal)
         {
             throw new NotImplementedException();
