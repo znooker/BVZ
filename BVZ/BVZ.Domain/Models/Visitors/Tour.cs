@@ -1,6 +1,9 @@
-﻿using BVZ.BVZ.Domain.Models.Zoo;
+﻿using BVZ.BVZ.Domain.DomainExceptions;
+using BVZ.BVZ.Domain.Models.Visitors;
+using BVZ.BVZ.Domain.Models.Zoo;
 using BVZ.BVZ.Domain.Models.Zoo.Guides;
 using BVZ.Models;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BVZ.BVZ.Domain.Models.Visitors
 {
@@ -9,6 +12,7 @@ namespace BVZ.BVZ.Domain.Models.Visitors
         public Guid Id { get; set; }
         public string TourName { get; set; }
         public string Description { get; set; }
+        [NotMapped]
         public int DailyBookingCount { get; set; } = 0;
         public int NrOfParticipants { get; private set; } = 0;
         public bool TourCompleted { get; private set; } = false;
@@ -43,12 +47,34 @@ namespace BVZ.BVZ.Domain.Models.Visitors
             return true;
         }
 
-    
-   
+        public async Task<List<ZooTour>> CreateDailyTours(Tour tour, ZooDay zooDay)
+        {
+            List<ZooTour> listHolder = new List<ZooTour>();
+            while (tour.DailyBookingCount < 2)
+            {
+                if (tour.DailyBookingCount < 1)
+                {
+                    ZooTour zt = new ZooTour(tour, zooDay, true, zooDay.TodaysDate);
+                    tour.DailyBookingCount++;
+                    listHolder.Add(zt);
+                }
+                else
+                {
+                    ZooTour zt = new ZooTour(tour, zooDay, false, zooDay.TodaysDate);
+                    tour.DailyBookingCount++;
+                    listHolder.Add(zt);
+                }
+            }
+            return listHolder;
+        }
 
         private void StartTour(Tour tour)
         {
             tour.TourCompleted = true;
         }
+
+        
     }
 }
+
+

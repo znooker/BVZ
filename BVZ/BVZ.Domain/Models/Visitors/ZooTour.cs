@@ -13,13 +13,16 @@ namespace BVZ.BVZ.Domain.Models.Visitors
         public Guid ZooDayId { get; set; }
 
         public DateTime DateOfTour { get; set; }
+        public bool IsMorningTour { get; set; }
 
         public ZooTour() { }
 
-        public ZooTour(Tour tour, ZooDay zooDay)
+        public ZooTour(Tour tour, ZooDay zooDay, bool isMorningTour, DateTime dateOfTour)
         {
             Tour = tour;
             ZooDay = zooDay;
+            IsMorningTour = isMorningTour;
+            DateOfTour= dateOfTour;
         }
     }
 }

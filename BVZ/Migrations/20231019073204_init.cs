@@ -39,7 +39,8 @@ namespace BVZ.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsUnavailable = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -103,7 +104,6 @@ namespace BVZ.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TourName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DailyBookingCount = table.Column<int>(type: "int", nullable: false),
                     NrOfParticipants = table.Column<int>(type: "int", nullable: false),
                     TourCompleted = table.Column<bool>(type: "bit", nullable: false),
                     GuideId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
@@ -177,7 +177,8 @@ namespace BVZ.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TourID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ZooDayId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DateOfTour = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    DateOfTour = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsMorningTour = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -232,17 +233,17 @@ namespace BVZ.Migrations
 
             migrationBuilder.InsertData(
                 table: "Guides",
-                columns: new[] { "Id", "Name" },
+                columns: new[] { "Id", "IsUnavailable", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("00000000-0000-0000-0000-000000000009"), "Hjalmar" },
-                    { new Guid("00000000-0000-0000-0000-000000000099"), "Nisse" }
+                    { new Guid("00000000-0000-0000-0000-000000000009"), false, "Hjalmar" },
+                    { new Guid("00000000-0000-0000-0000-000000000099"), false, "Nisse" }
                 });
 
             migrationBuilder.InsertData(
                 table: "ZooDays",
                 columns: new[] { "Id", "Archived", "TodaysDate" },
-                values: new object[] { new Guid("00000000-0000-0000-0000-123000000000"), false, new DateTime(2023, 10, 18, 0, 0, 0, 0, DateTimeKind.Local) });
+                values: new object[] { new Guid("00000000-0000-0000-0000-123000000000"), false, new DateTime(2023, 10, 19, 0, 0, 0, 0, DateTimeKind.Local) });
 
             migrationBuilder.InsertData(
                 table: "AnimalCompetences",
@@ -259,11 +260,11 @@ namespace BVZ.Migrations
 
             migrationBuilder.InsertData(
                 table: "Tours",
-                columns: new[] { "Id", "DailyBookingCount", "Description", "GuideId", "NrOfParticipants", "TourCompleted", "TourName" },
+                columns: new[] { "Id", "Description", "GuideId", "NrOfParticipants", "TourCompleted", "TourName" },
                 values: new object[,]
                 {
-                    { new Guid("00000000-0000-0000-0000-444000000000"), 0, "Se djungelns mäktigaste djur..", new Guid("00000000-0000-0000-0000-000000000009"), 0, false, "Djungel-Expeditionen" },
-                    { new Guid("00000000-0000-0000-0000-444400000000"), 0, "Se havets vidunder!", new Guid("00000000-0000-0000-0000-000000000099"), 0, false, "Aqua-expedition" }
+                    { new Guid("00000000-0000-0000-0000-444000000000"), "Se djungelns mäktigaste djur..", new Guid("00000000-0000-0000-0000-000000000009"), 0, false, "Djungel-Expeditionen" },
+                    { new Guid("00000000-0000-0000-0000-444400000000"), "Se havets vidunder!", new Guid("00000000-0000-0000-0000-000000000099"), 0, false, "Aqua-expedition" }
                 });
 
             migrationBuilder.CreateIndex(

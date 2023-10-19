@@ -18,10 +18,20 @@ namespace BVZ.Controllers
             _service = service;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            _service.NewDay();
-            return View();
+            var serviceResponse = await _service.NewDay();
+            if (serviceResponse.IsSuccess)
+            {
+                // skapa ViwModel för success
+                return View();
+            }
+            else
+            {
+                // skapa ViwModel för error
+                return View();
+            }
+
         }
 
 

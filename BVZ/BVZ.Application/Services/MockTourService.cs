@@ -1,7 +1,9 @@
-﻿using BVZ.BVZ.Domain.Models.Visitors;
+﻿using BVZ.BVZ.Domain.DomainExceptions;
+using BVZ.BVZ.Domain.Models.Visitors;
 using BVZ.BVZ.Domain.Models.Zoo;
 using BVZ.BVZ.Domain.Models.Zoo.Animals;
 using BVZ.BVZ.Infrastructure.Data;
+using BVZ.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Drawing.Imaging;
 
@@ -16,71 +18,48 @@ namespace BVZ.BVZ.Application.Services
             _context = context;
         }
 
-        public void NewDay()
+        public async Task<ServiceResponse<List<ZooTour>>>NewDay()
         {
-            // Arkivera gamla zooday?
-
+            ServiceResponse<List<ZooTour>> response = new ServiceResponse<List<ZooTour>>();
             ZooDay zooDay = new ZooDay();
+            // Spara zooDay i DB..
 
             var tours = _context.Tours.ToList();
-            CreateZooTours(zooDay, tours);
-
-        }
-
-        public void CreateZooTours(ZooDay zooDay, List<Tour> tours)
-        {
-            if (tours == null || !tours.Any()) return;
-
-            List<string> listOfTours = new List<string>();
-            foreach (var tour in tours)
+            if (tours == null || !tours.Any())
             {
-                
-                listOfTours.Add(tour.TourName);
+                response.IsSuccess = false;
+                response.ErrorMessage = "List of tours is null or empty.";
+                return response;
+            }
 
-                foreach (var newTour in listOfTours)
+            List<ZooTour> DailyBookableTours = new List<ZooTour>();
+            foreach(var tour in tours)
+            {
+                //if (tour.Guide.IsUnavailable == true) throw new Exception("Temp fix");
+
+                var twoDailyTours = await tour.CreateDailyTours(tour, zooDay);
+                if (twoDailyTours != null)
                 {
-                    if(tour.Guide.IsUnavailable == true) break;
-                   
-                    if(newTour == tour.TourName)
+                    foreach(var singleTour in twoDailyTours)
                     {
-                        if(tour.DailyBookingCount < 2)
-                        {
-                            CreateZooTour(tour, zooDay);
-                            tour.DailyBookingCount++;
-                            break;
-                        }
-
-                        if (tour.DailyBookingCount >= 2)
-                        {
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        if (tour.DailyBookingCount < 2)
-                        {
-                            CreateZooTour(tour, zooDay);
-                            tour.DailyBookingCount++;
-                            break;
-                        }
-
-                        if (tour.DailyBookingCount >= 2)
-                        {
-                            break;
-                        }
+                        CreateDailyTour(singleTour);
+                        DailyBookableTours.Add(singleTour);
                     }
                 }
+                else break;
             }
+            response.IsSuccess = true;
+            response.Data = DailyBookableTours;
+            return response;
+
         }
-        private void CreateZooTour(Tour tour, ZooDay zooDay)
+    
+        // Senare ett repository-anrop istället..
+        private void CreateDailyTour(ZooTour zooTour)
         {
-            var zooTour = new ZooTour(tour, zooDay);
             _context.ZooTours.Add(zooTour);
-            _context.Tours.Update(tour);
             _context.SaveChanges();
         }
-
-
 
 
         public void BookTour(ZooTour zootour)
@@ -102,7 +81,7 @@ namespace BVZ.BVZ.Application.Services
             ZooDay zooDay = new ZooDay();
 
             var tours = _context.Tours.ToList();
-            CreateZooTours(zooDay, tours);
+            //CreateZooTours(zooDay, tours);
 
         }
     }

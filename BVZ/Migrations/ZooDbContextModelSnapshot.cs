@@ -28,9 +28,6 @@ namespace BVZ.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("DailyBookingCount")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -58,7 +55,6 @@ namespace BVZ.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-444000000000"),
-                            DailyBookingCount = 0,
                             Description = "Se djungelns mäktigaste djur..",
                             GuideId = new Guid("00000000-0000-0000-0000-000000000009"),
                             NrOfParticipants = 0,
@@ -68,7 +64,6 @@ namespace BVZ.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-444400000000"),
-                            DailyBookingCount = 0,
                             Description = "Se havets vidunder!",
                             GuideId = new Guid("00000000-0000-0000-0000-000000000099"),
                             NrOfParticipants = 0,
@@ -121,6 +116,9 @@ namespace BVZ.Migrations
 
                     b.Property<DateTime>("DateOfTour")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsMorningTour")
+                        .HasColumnType("bit");
 
                     b.Property<Guid>("TourID")
                         .HasColumnType("uniqueidentifier");
@@ -255,6 +253,9 @@ namespace BVZ.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("IsUnavailable")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -267,11 +268,13 @@ namespace BVZ.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000009"),
+                            IsUnavailable = false,
                             Name = "Hjalmar"
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000099"),
+                            IsUnavailable = false,
                             Name = "Nisse"
                         });
                 });
@@ -297,7 +300,7 @@ namespace BVZ.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-123000000000"),
                             Archived = false,
-                            TodaysDate = new DateTime(2023, 10, 18, 0, 0, 0, 0, DateTimeKind.Local)
+                            TodaysDate = new DateTime(2023, 10, 19, 0, 0, 0, 0, DateTimeKind.Local)
                         });
                 });
 
