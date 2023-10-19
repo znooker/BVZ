@@ -3,11 +3,29 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-</div>
 
-@foreach(var animal in Model.ZooAnimals)
-{
-    <p>@animal.AnimalName</p>
-}
+<h3>Our Lovely Animals</h3>
+<div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+    </div>
+    <div class="container">
+
+        <h3>Our Lovely Animals</h3>
+        
+        <div class="row">
+            @foreach (var animal in Model.ZooAnimals){
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <img class="card-img-top" src="/img/zoo-gate-icon-black-white_755164-13783.jpg" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">@animal.AnimalName</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">@animal.Specie</h6>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+        }
+            
+        </div>
+
+    </div>
