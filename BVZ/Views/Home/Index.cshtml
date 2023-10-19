@@ -19,8 +19,13 @@
                     <img class="card-img-top" src="/img/zoo-gate-icon-black-white_755164-13783.jpg" alt="Card image cap">
                     <div class="card-body">
                         <h5 class="card-title">@animal.AnimalName</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">@animal.Specie</h6>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                         <h6 class="card-subtitle mb-2 text-muted">@animal.Specie</h6>
+                         <h6 class="card-subtitle mb-2 text-muted">Tag: @animal.Id</h6>
+                        <div class="btn-group">
+                            <a asp-controller="Home" asp-action="Details" asp-route-id="@animal.Id" type="button" class="btn btn-sm btn-outline-secondary">Details</a>
+                            
+                        </div>
+                        @* <button asp-controller="Home" asp-action="Details" asp-route="@animal.Id" type="button" class="btn btn-primary">Details</button> *@
                     </div>
                 </div>
             </div>

@@ -8,6 +8,7 @@ namespace BVZ.BVZ.Domain.Models.Zoo.Animals
     {
         public Guid Id { get; set; }
         public string AnimalName { get; set; }
+        public  string AnimalType { get; set; }
         public Specie Specie { get; set; }
         public int DailyVisits { get; set; }
 

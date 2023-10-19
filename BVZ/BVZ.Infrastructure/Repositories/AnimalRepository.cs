@@ -1,4 +1,5 @@
 ﻿using BVZ.BVZ.Application.Interfaces;
+
 using BVZ.BVZ.Domain.Models.Zoo.Animals;
 using BVZ.BVZ.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -32,12 +33,15 @@ namespace BVZ.BVZ.Infrastructure.Repositories
         public async Task<IEnumerable<Animal>> GetAllAnimals()
         {
             var result = await _context.Animals.ToListAsync();
+           
             return result;
         }
 
-        public Task<Animal> GetAnimalById(Guid id)
+        public async Task<Animal> GetAnimalById(Guid id)
         {
-            throw new NotImplementedException();
+            var result = await _context.Animals.FirstOrDefaultAsync(x => x.Id == id );
+            
+            return result;
         }
 
 
