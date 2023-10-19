@@ -1,6 +1,7 @@
 ﻿using BVZ.BVZ.Application.Interfaces;
 using BVZ.BVZ.Domain.Models.Zoo.Guides;
 using BVZ.BVZ.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace BVZ.BVZ.Infrastructure.Repositories
 {
@@ -14,14 +15,32 @@ namespace BVZ.BVZ.Infrastructure.Repositories
         }
 
 
-        public Task<bool> AddGuide(Guide guide)
+        public async Task<bool> AddGuide(Guide guide)
         {
-            throw new NotImplementedException();
+            
+                _context.Guides.Add(guide);
+                await _context.SaveChangesAsync();
+                return true;
+           
+
         }
 
-        public Task<bool> DeleteGuide(Guide guide)
+        public async Task<bool> DeleteGuide(Guide guide)
         {
-            throw new NotImplementedException();
+
+            try
+            {
+                _context.Guides.Remove(guide);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+                
+            }
+           
         }
 
         public Task<bool> DeleteGuideById(Guid id)
@@ -39,10 +58,6 @@ namespace BVZ.BVZ.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<bool> SaveChangesAsync()
-        {
-            throw new NotImplementedException();
-        }
 
         public Task<bool> UpdateGuide(Guide guide)
         {
