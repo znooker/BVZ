@@ -17,6 +17,8 @@ builder.Services.AddDbContext<ZooDbContext>(options =>
 
 
 builder.Services.AddTransient<MockTourService>();
+builder.Services.AddTransient<AnimalServices>();
+
 
 //Ska vi bry oss om en separat config för DI repos?
 builder.Services.AddTransient<IAnimalRepository, AnimalRepository>();
