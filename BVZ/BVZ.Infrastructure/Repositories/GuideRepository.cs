@@ -16,7 +16,7 @@ namespace BVZ.BVZ.Infrastructure.Repositories
             _context = context;
         }
 
-
+        //Add try catch? - Andreas frågar
         public async Task<bool> AddGuide(Guide guide)
         {
             _context.Guides.Add(guide);
@@ -44,9 +44,13 @@ namespace BVZ.BVZ.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Guide>> GetAllGuides()
+        public async Task<List<Guide>> GetAllGuides()
         {
-            throw new NotImplementedException();
+            return await _context.Guides
+                .Include(ac => ac.AnimalCompetences)
+                .ThenInclude(a => a.Animal)
+                .ToListAsync();
+
         }
 
         public Task<Guide> GetGuideById(Guid id)
