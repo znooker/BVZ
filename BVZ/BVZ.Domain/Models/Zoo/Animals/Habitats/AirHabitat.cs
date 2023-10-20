@@ -9,19 +9,19 @@ namespace BVZ.BVZ.Domain.Models.Zoo.Animals.Habitats
     {
         public abstract double MaxAltitude { get; set; }
 
-        public virtual void Fly()
+        public virtual string Fly()
         {
-            Console.WriteLine("Fågeln flyger fram i luften.");
+           return "Fågeln flyger fram i luften.";
         }
 
-        public virtual void MakeSound()
+        public virtual string MakeSound()
         {
-            Console.WriteLine("Fågeln utstöter ett krakande läte.");
+            return "Fågeln utstöter ett krakande läte.";
         }
 
-        public virtual void Move()
+        public virtual string Move()
         {
-            Fly();
+            return Fly();
         }
     }
 }

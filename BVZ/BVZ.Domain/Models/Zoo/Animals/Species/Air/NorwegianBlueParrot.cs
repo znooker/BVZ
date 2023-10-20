@@ -24,14 +24,14 @@ namespace BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Air
             MaxAltitude = 1000;
         }
         
-        public override void Fly()
+        public override string Fly()
         {
-            Console.WriteLine("Den norska blå papegojan flyger endast berusad.");
+            return "Den norska blå papegojan flyger endast berusad.";
         }
 
-        public override void MakeSound()
+        public override string MakeSound()
         {
-            Console.WriteLine("Den norska blå papegojan pratar finska!?");
+            return "Den norska blå papegojan pratar finska!?";
         }
     }
 }

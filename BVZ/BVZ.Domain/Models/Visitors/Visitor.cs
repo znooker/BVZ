@@ -8,7 +8,7 @@
 
         public Visitor()
         {
-
+            Id = Guid.NewGuid();
         }
         public Visitor(string? alias)
         {

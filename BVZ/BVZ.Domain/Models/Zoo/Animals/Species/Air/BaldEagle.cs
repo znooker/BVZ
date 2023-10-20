@@ -25,14 +25,14 @@ namespace BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Air
             }
         }
 
-        public override void Fly()
+        public override string Fly()
         {
-            Console.WriteLine("Örnen svävar majestätiskt, högt, högt uppe i luften.");
+            return "Örnen svävar majestätiskt, högt, högt uppe i luften.";
         }
 
-        public override void MakeSound()
+        public override string MakeSound()
         {
-            Console.WriteLine("Ett väldigt skri signalerar att örnen är på jakt!");
+            return "Ett väldigt skri signalerar att örnen är på jakt!";
         }
 
         private double SetMaxAltitudeForBaldEagle()

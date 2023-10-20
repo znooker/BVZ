@@ -5,6 +5,7 @@ using BVZ.BVZ.Domain.Models.Visitors;
 using BVZ.Models;
 using BVZ.Models.Tour;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Diagnostics;
 
 namespace BVZ.Controllers
@@ -70,7 +71,7 @@ namespace BVZ.Controllers
                 Visitors = response.Data
             };
 
-            return RedirectToAction("Index");
+            return View("/views/Tour/BookingConfirmation.cshtml", bcVM);
         }
 
 
