@@ -32,6 +32,21 @@ namespace BVZ.BVZ.Application.Services
             _baseRepository = baseRepository;
         }
 
+        public async Task<ServiceResponse<List<Tour>>> GetAllTours()
+        {
+            ServiceResponse<List<Tour>> response = new ServiceResponse<List<Tour>>();
+            var list = await _tourRepository.GetAllTours();
+            if(list == null || list.Count==0) 
+            {
+                response.IsSuccess = false;
+                response.UserInfo = "Finns ännu inga tours att visa, var god skapa en ny tour.";
+                return response;
+            }
+            response.IsSuccess = true;
+            response.Data = list;
+            return response;
+        }
+
         public async Task<ServiceResponse<List<ZooTour>>> GetCurrentDayZooTours(DateTime currentDate)
         {
             ServiceResponse<List<ZooTour>> response = new ServiceResponse<List<ZooTour>>();

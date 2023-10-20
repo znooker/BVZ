@@ -1,4 +1,6 @@
-﻿@*
+﻿@using BVZ.Models.Tour;
+@model object
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
@@ -11,36 +13,54 @@
 <h2 class="text-secondary">Tour History</h2>
 <button type="button" class="btn btn-success">New Tour</button>
 
-<div class="table-responsive">
-    <table class="table table-striped table-sm">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Header</th>
-                <th>Header</th>
-                <th>Header</th>
-                <th>Header</th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1,001</td>
-                <td>Lorem</td>
-                <td>ipsum</td>
-                <td>dolor</td>
-                <td>sit</td>
-                <td>
-                </td>
-                <td>
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-dark">Details</button>
-                        <button type="button" class="btn btn-secondary">Update</button>
-                        <button type="button" class="btn btn-danger">Delete</button>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+@if(Model is ErrorViewModel errorModel)
+{
+    <div style="color:darkred;">
+        <p>@errorModel.ValidationErrorMessage</p>
+    </div>
+}
+
+@if (Model is DisplayAllToursViewModel daVM)
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Namn</th>
+                    <th>Beskrivning</th>
+                    <th>Guide</th>
+                    <th>Deltagare</th>
+                    <th>Utförd</th>
+                    <th>Header</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var row in daVM.AllTours)
+                {
+                    <tr>
+                        <td>@row.Id</td>
+                        <td>@row.TourName</td>
+                        <td>@row.Description</td>
+                        <td>@row.Guide.Name</td>
+                        <td>@row.TourParticipants.Count()</td>
+                        <td>@row.TourCompleted</td>
+                        <td>
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button type="button" class="btn btn-dark">Details</button>
+                                <button type="button" class="btn btn-secondary">Update</button>
+                                <button type="button" class="btn btn-danger">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+               
+            </tbody>
+        </table>
+    </div>
+}
+

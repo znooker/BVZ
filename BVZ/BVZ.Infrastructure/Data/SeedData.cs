@@ -284,6 +284,7 @@ namespace BVZ.BVZ.Infrastructure.Data
                         IsMorningTour = false,
                         DateOfTour = DateTime.Now
                     });
+            
         }
     }
 }
