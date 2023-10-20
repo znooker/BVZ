@@ -22,6 +22,7 @@ namespace BVZ.BVZ.Infrastructure.Repositories
         {
             return await _context.Tours
                             .Include(t => t.Guide)
+                            .Include(tp => tp.TourParticipants)
                             .ToListAsync();
 
         }

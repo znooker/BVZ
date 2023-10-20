@@ -21,6 +21,8 @@
 
     <Folder Include="Models\Guide\" />
 
+    <Folder Include="Models\Admin\" />
+
     <Folder Include="Models\Zoo\" />
 
     <Folder Include="Views\Test\" />
