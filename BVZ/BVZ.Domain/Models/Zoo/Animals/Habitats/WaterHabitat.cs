@@ -7,14 +7,14 @@ namespace BVZ.BVZ.Domain.Models.Zoo.Animals.Habitats
     {
         public abstract double DivingDepth { get; set; }
 
-        public void Swim()
+        public string Swim()
         {
-            Console.WriteLine("Vattendjuret glider sakta fram i vattnet.");
+            return "Vattendjuret glider sakta fram i vattnet.";
         }
 
-        public override void Move()
+        public override string Move()
         {
-            Swim();
+           return Swim();
         }
     }
 }

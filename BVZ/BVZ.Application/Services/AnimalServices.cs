@@ -73,25 +73,25 @@ namespace BVZ.BVZ.Application.Services
             ServiceResponse<Animal> response = new ServiceResponse<Animal>();
             var animal = await _animalRepository.GetAnimalById(id);
 
-            if (animal != null)
-            {
-                var animalType = animal.GetType();
-                var idProperty = animalType.GetProperty("Id");
-                var landProperty = animalType.GetProperty("Speed");
-                var airProperty = animalType.GetProperty("MaxAltitude");
+            //if (animal != null)
+            //{
+            //    var animalType = animal.GetType();
+            //    var idProperty = animalType.GetProperty("Id");
+            //    var landProperty = animalType.GetProperty("Speed");
+            //    var airProperty = animalType.GetProperty("MaxAltitude");
                 
-                var airLandMethod = animalType.GetProperty("Move");
-                var habitatMethod = animalType.GetProperty("MakeSound");
+            //    var airLandMethod = animalType.GetProperty("Move");
+            //    var habitatMethod = animalType.GetProperty("MakeSound");
 
 
-                var ozelotMethod = animalType.GetMethod("Ozelotmetod");
-            }
-            else
-            {
-                response.IsSuccess = false;
-                response.ErrorMessage = $"Animal with id:{id} was not found.";
-                return response;
-            }
+            //    var ozelotMethod = animalType.GetMethod("Ozelotmetod");
+            //}
+            //else
+            //{
+            //    response.IsSuccess = false;
+            //    response.ErrorMessage = $"Animal with id:{id} was not found.";
+            //    return response;
+            //}
 
             response.IsSuccess = true;
             response.Data = animal;

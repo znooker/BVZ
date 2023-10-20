@@ -20,7 +20,7 @@ namespace BVZ.BVZ.Infrastructure.Data
         {
         }
         public DbSet<Animal> Animals { get; set; } = null!;
-
+        public DbSet<Ozelot> Ozelots { get; set; } = null!;
         public DbSet<Guide> Guides { get; set; } = null!;
         public DbSet<AnimalCompetence> AnimalCompetences { get; set; } = null!;
 

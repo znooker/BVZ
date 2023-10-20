@@ -9,19 +9,19 @@ namespace BVZ.BVZ.Domain.Models.Zoo.Animals.Habitats
     {
         public abstract double Speed { get; set; }
 
-        public virtual void Move()
+        public virtual string Move()
         {
-            Run();
+            return Run();
         }
 
-        public virtual void Run()
+        public virtual string Run()
         {
-            Console.WriteLine("Djuret utstötet ett läte.");
+            return "Djuret utstötet ett läte.";
         }
 
-        public virtual void MakeSound()
+        public virtual string MakeSound()
         {
-           Console.WriteLine("Djuret springer fram över marken.");
+           return "Djuret springer fram över marken.";
         }
     }
 }

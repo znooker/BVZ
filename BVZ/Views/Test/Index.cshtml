@@ -1,0 +1,191 @@
+﻿@using BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Air;
+@using BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Land;
+@using BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Water;
+@using BVZ.BVZ.Domain.Models.Zoo.Animals.ValueTypes;
+@using BVZ.Models.Home;
+@model object
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@if (Model is HomeViewModel hVM)
+{
+    <h3>Our Lovely Animals</h3>
+    <div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+    </div>
+    <div class="container">
+        <h3>Our Lovely Animals</h3>
+
+        <div class="row">
+            @foreach (var animal in hVM.ZooAnimals)
+            {
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <img class="card-img-top" src="/img/zoo-gate-icon-black-white_755164-13783.jpg" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">@animal.AnimalName</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">@animal.Specie</h6>
+                            <h6 class="card-subtitle mb-2 text-muted">Tag: @animal.Id</h6>
+                            <div class="btn-group">
+                                <a asp-controller="Test" asp-action="Details" asp-route-id="@animal.Id" type="button" class="btn btn-sm btn-outline-secondary">Details</a>
+
+                            </div>
+                            @* <button asp-controller="Home" asp-action="Details" asp-route="@animal.Id" type="button" class="btn btn-primary">Details</button> *@
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+
+@if (Model is TestViewModel tVM)
+{
+    <h1>@tVM.Animal.AnimalName</h1>
+    <p>
+        Särskilda förmågor: 
+        @{
+            
+        }
+    </p>
+    <button onclick="showMove()">
+        Se film
+    </button>
+
+    <button onclick="showSound()">
+        Djurläte
+    </button>
+
+
+    <button onclick="showAbilities()">
+        Djurläte
+    </button>
+
+    <div id="moveDisplay" style="display:none;">
+        @if (tVM.Animal is Ozelot ozelot)
+        {
+            <h3>@ozelot.Move()</h3>
+        }
+        
+        else if (tVM.Animal is Okapi okapi) 
+        { 
+            <h3>@okapi.Move()</h3> 
+        }
+        else if (tVM.Animal is Cheetah cheetah) 
+        { 
+            <h3>@cheetah.Move()</h3> 
+        }
+
+        else if (tVM.Animal is BaldEagle baldEagle)
+        { 
+            <h3>@baldEagle.Move()</h3>
+        }
+        else if (tVM.Animal is NorwegianBlueParrot norwegianBlueParrot)
+        {
+            <h3>@norwegianBlueParrot.Move()</h3>
+        }
+
+        else if (tVM.Animal is MorayEel morayEel)
+        {
+            <h3>@morayEel.Move()</h3>
+        }
+        else if (tVM.Animal is ElectricEel electricEel)
+        {
+            <h3>@electricEel.Move()</h3>
+        }
+        else
+        {
+            <h3>@tVM.Animal.Move()</h3>
+        }
+    </div>
+
+    <div id="abilitiesDisplay" style="display:none;">
+        @if (tVM.Animal is Ozelot ozelot2)
+        {
+            <h3>@ozelot2.Move()</h3>
+        }
+
+        else if (tVM.Animal is Okapi okapi)
+        {
+            <h3>@okapi.Move()</h3>
+        }
+        else if (tVM.Animal is Cheetah cheetah)
+        {
+            <h3>@cheetah.Move()</h3>
+        }
+
+        else if (tVM.Animal is BaldEagle baldEagle)
+        {
+            <h3>@baldEagle.Wingspan</h3>
+        }
+        else if (tVM.Animal is NorwegianBlueParrot norwegianBlueParrot)
+        {
+            <h3>@norwegianBlueParrot.Move()</h3>
+        }
+
+        else if (tVM.Animal is MorayEel morayEel)
+        {
+            <h3>@morayEel.Move()</h3>
+        }
+        else if (tVM.Animal is ElectricEel electricEel)
+        {
+            <h3>@electricEel.Move()</h3>
+        }
+        else
+        {
+            <h3>@tVM.Animal.Move()</h3>
+        }
+    </div>
+
+    <div id="soundDisplay" style="display:none;">
+        @if (tVM.Animal is Ozelot ozelot1)
+        {
+            <h3>@ozelot1.MakeSound()</h3>
+        }
+        else if (tVM.Animal is Okapi okapi)
+        {
+            <h3>@okapi.MakeSound()</h3>
+        }
+        else if (tVM.Animal.Specie is Specie.Fish)
+        {
+            <h3>I vattnet hör ingen dig gråta</h3>
+        }
+        else
+        {
+            <h3>Animal movement not specified.</h3>
+        }
+    </div>
+}
+
+@{
+    <script>
+        function showMove() {
+            var moveDisplay = document.getElementById("moveDisplay");
+            if (moveDisplay.style.display === "none") {
+                moveDisplay.style.display = "block";
+            } else {
+                moveDisplay.style.display = "none";
+            }
+        }
+
+        function showSound() {
+            var soundDisplay = document.getElementById("soundDisplay");
+            if (soundDisplay.style.display === "none") {
+                soundDisplay.style.display = "block";
+            } else {
+                soundDisplay.style.display = "none";
+            }
+        }
+
+        function showAbilities() {
+            var abilitiesDisplay = document.getElementById("abilitiesDisplay");
+            if (abilitiesDisplay.style.display === "none") {
+                abilitiesDisplay.style.display = "block";
+            } else {
+                abilitiesDisplay.style.display = "none";
+            }
+        }
+    </script>
+}

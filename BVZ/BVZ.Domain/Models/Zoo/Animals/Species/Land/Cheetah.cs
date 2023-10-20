@@ -19,14 +19,14 @@ namespace BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Land
             Speed = 70;
         }
 
-        public override void Run()
+        public override string Run()
         {
-            Console.WriteLine("Det går så fort så fort..");
+            return "Det går så fort så fort..";
         }
 
-        public override void MakeSound()
+        public override string MakeSound()
         {
-            Console.WriteLine("Ett rullande morrande från det höga gräset innan det är klippt..");
+            return "Ett rullande morrande från det höga gräset innan det är klippt..";
         }
 
    

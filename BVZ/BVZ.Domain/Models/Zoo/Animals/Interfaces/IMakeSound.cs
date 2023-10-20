@@ -2,6 +2,6 @@
 {
     public interface IMakeSound
     {
-        void MakeSound();
+        string MakeSound();
     }
 }

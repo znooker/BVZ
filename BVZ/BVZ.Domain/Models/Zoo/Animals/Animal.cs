@@ -15,9 +15,9 @@ namespace BVZ.BVZ.Domain.Models.Zoo.Animals
         public ICollection<AnimalVisit> AnimalVisits { get; set; }
         public ICollection<AnimalCompetence> AnimalCompentencies { get; set; }
 
-        public virtual void Move()
+        public virtual string Move()
         {
-            Console.WriteLine("Varelsen rör sig framåt på något okänt sätt..");
+            return "Varelsen rör sig framåt på något okänt sätt..";
         }
     }
 }
