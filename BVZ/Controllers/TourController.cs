@@ -1,4 +1,9 @@
-﻿using BVZ.Models;
+﻿using Azure.Core;
+using BVZ.BVZ.Application;
+using BVZ.BVZ.Application.Services;
+using BVZ.BVZ.Domain.Models.Visitors;
+using BVZ.Models;
+using BVZ.Models.Tour;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -7,16 +12,67 @@ namespace BVZ.Controllers
     public class TourController : Controller
     {
         private readonly ILogger<TourController> _logger;
+        private readonly TourService _tourService;
 
-        public TourController(ILogger<TourController> logger)
+        public TourController(
+            ILogger<TourController> logger,
+            TourService tourService)
         {
             _logger = logger;
+            _tourService = tourService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var getTours = await _tourService.GetCurrentDayZooTours(DateTime.Today);
+            if (!getTours.IsSuccess)
+            {
+                ErrorViewModel ewm = new ErrorViewModel();
+                ewm.ValidationErrorMessage = "Det gick inte att hitta några " +
+                    "tillgängliga turer för det aktuella datumet.";
+                return View(ewm);
+            }
+            DisplayAllToursViewModel displayVM = new DisplayAllToursViewModel
+            {
+                ToursOfTheDay = getTours.Data
+            };
+
+            return View(displayVM);
         }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> BookTour(Guid Id, int NrOfPersons)
+        {
+            // Service anrop för att se om plats finns för denna.
+            var response = await _tourService.BookZooTour(Id, NrOfPersons);
+
+            if(!response.IsSuccess)
+            {
+                ErrorViewModel eVM = new ErrorViewModel();
+
+                if (response.UserInfo != null)
+                {
+                    eVM.ValidationErrorMessage = response.UserInfo;
+                    return View("/views/Tour/index.cshtml", eVM);
+                }
+                else
+                {
+                    eVM.RequestId = response.ErrorMessage;
+                    return RedirectToAction("Error", "Home", eVM);
+                }        
+            }
+
+            BookingConfirmationViewModel bcVM = new BookingConfirmationViewModel
+            {
+                BookingSuccessful = true,
+                ClientReceipts = response.Data
+            };
+
+            return RedirectToAction("Index");
+        }
+
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

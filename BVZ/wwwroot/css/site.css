@@ -31,3 +31,19 @@ body {
     color: black;
     width: 50vh;
 }
+
+.card-group-tours {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-tours {
+    padding: 20px;
+    border-bottom: 1px solid #b9c5c5;
+    width: 50%;
+    margin-top: 25px;
+}
+
+.card-footer-tours {
+    background-color: #ffffff;
+}

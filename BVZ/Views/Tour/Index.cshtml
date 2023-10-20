@@ -1,66 +1,79 @@
-﻿@model TourVievModel
+﻿@using BVZ.Models.Tour;
+@model object
 @{
     ViewData["Title"] = "Guidade turer";
 }
 
 <div class="text-left">
-    <h1 class="display-4">Guidade turer i Beverly Hills Zoo!</h1>
+    <h1 class="display-4">Tillgängliga guidade turer på Beverly Hills Zoo!</h1>
 </div>
 
-
-<div class="card-group">
-    <div class="card">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-        </div>
-        <div class="card-footer">
-            <small class="text-muted">Last updated 3 mins ago</small>
-        </div>
+@if (Model is ErrorViewModel errorModel)
+{
+    <div style="color:darkred;">
+        <p>@errorModel.ValidationErrorMessage</p>
     </div>
-    <div class="card">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-        </div>
-        <div class="card-footer">
-            <small class="text-muted">Last updated 3 mins ago</small>
-        </div>
+}
+
+@if (Model is BookingConfirmationViewModel bcVM)
+{
+    <h1>Din bokning har blivit registrerad!</h1>
+    <p>Var vänlig att spara ditt kvitto-nummer, för reklamationer eller om du har undringar om ditt besök vid ett senare tillfälle.</p>
+    @foreach (var receipt in bcVM.ClientReceipts)
+    {
+        <p style="text-decoration:wavy;">@receipt</p>
+    }
+
+}
+
+@if (Model is DisplayAllToursViewModel displayModel)
+{ 
+    <div class="card-group-tours">
+
+       
+
+        
+        
+        @foreach (var tour in displayModel.ToursOfTheDay)
+        {
+            <div class="card-tours">
+                @*<img src="..." class="card-img-top" alt="...">*@
+                <div class="card-body">
+                    <h5 class="card-title">@tour.Tour.TourName</h5>
+                    <p class="card-text">@tour.Tour.Description</p>
+                </div>
+                <div class="card-footer-tours">
+                    @if(!@tour.IsMorningTour)
+                    {
+                        <small class="text-muted">Morgontur (09:00 - 12:00)</small>
+                    }
+                    else
+                    {
+                        <small class="text-muted">Eftermiddagstur (13:00 - 16:00)</small>
+                    }
+                    <small class="text-muted">
+                        @tour.Tour.Guide.Name
+                    </small>
+                </div>
+               
+                <form asp-controller="Tour" asp-action="BookTour" method="post">
+                    <select class="form-select" name="NrOfPersons">
+                             <option selected>Välj antal personer</option>
+                             <option value="1">1</option>
+                             <option value="2">2</option>
+                             <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                    </select>
+                    <input type="hidden" value="@tour.Id" name="Id"/>
+                    <button type="submit" class="btn btn-primary">
+                        Boka
+                    </button>
+                </form>
+            </div>
+        }
     </div>
-    <div class="card">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
-        </div>
-        <div class="card-footer">
-            <small class="text-muted">Last updated 3 mins ago</small>
-        </div>
-    </div>
-</div>
+   
+}
 
 
-<h1>TEST AV H1 Till GIT!!</h1>
-
-<div class="card" style="width: 18rem;">
-  <img src="..." class="card-img-top" alt="...">
-  <div class="card-body">
-        <h5 class="card-title">Guidad tur:</h5>
-        <p class="card-text">Guide-beskrivning..</p>
-  </div>
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item">An item</li>
-    <li class="list-group-item">A second item</li>
-    <li class="list-group-item">A third item</li>
-  </ul>
-  <div class="card-body">
-    <a href="#" class="card-link">
-        <h6>
-            Guide: Nisse
-        </h6>
-    </a>
-    <a href="#" class="card-link">Another link</a>
-  </div>
-</div>

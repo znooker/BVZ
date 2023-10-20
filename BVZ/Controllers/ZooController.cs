@@ -8,30 +8,19 @@ namespace BVZ.Controllers
     public class ZooController : Controller
     {
         private readonly ILogger<ZooController> _logger;
-        private readonly MockTourService _service;
+        private readonly TourService _tourService;
 
         public ZooController(
             ILogger<ZooController> logger,
-            MockTourService service)
+            TourService tourService)
         {
             _logger = logger;
-            _service = service;
+            _tourService = tourService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var serviceResponse = await _service.NewDay();
-            if (serviceResponse.IsSuccess)
-            {
-                // skapa ViwModel för success
-                return View();
-            }
-            else
-            {
-                // skapa ViwModel för error
-                return View();
-            }
-
+            return View();
         }
 
 

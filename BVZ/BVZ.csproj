@@ -16,14 +16,10 @@
   <ItemGroup>
     <Folder Include="BVZ.Application\Interface\" />
     <Folder Include="BVZ.Application\Common\" />
-    
-    <Folder Include="BVZ.Infrastructure\Repositories\" />
 
     <Folder Include="BVZ.Domain\Visitors\" />
 
     <Folder Include="Models\Guide\" />
-
-    <Folder Include="Models\Tour\" />
 
     <Folder Include="Models\Zoo\" />
 

@@ -1,4 +1,5 @@
-﻿using BVZ.BVZ.Domain.Models.Zoo.Guides;
+﻿using BVZ.BVZ.Domain.Models.Zoo.Animals;
+using BVZ.BVZ.Domain.Models.Zoo.Guides;
 
 namespace BVZ.BVZ.Application.Interfaces
 {
@@ -11,6 +12,12 @@ namespace BVZ.BVZ.Application.Interfaces
         Task<IEnumerable<Guide>> GetAllGuides();
         Task<Guide> GetGuideById(Guid id);
 
-       
+
+        Task<List<Guid>> GetAnimalsByGuideId(Guid id);
+
+
+        //Temporär, flyttas till animalInterface/Repo sen
+        Task<int> GetAnimalVisitsByDateAndAnimal(Guid id, DateTime dateOfVisit);
+        Task<bool> AddAnimalVisit(AnimalVisit animalVisit);
     }
 }

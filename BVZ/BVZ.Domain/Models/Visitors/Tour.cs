@@ -14,7 +14,6 @@ namespace BVZ.BVZ.Domain.Models.Visitors
         public string Description { get; set; }
         [NotMapped]
         public int DailyBookingCount { get; set; } = 0;
-        public int NrOfParticipants { get; private set; } = 0;
         public bool TourCompleted { get; private set; } = false;
 
         public ICollection<ZooTour> ZooTours { get; set; }
@@ -32,20 +31,20 @@ namespace BVZ.BVZ.Domain.Models.Visitors
         }
         public Tour() { }
 
-        private bool CheckIfSpotIsAvailable(Tour tour, int nrOfPersonsToBookTour)
-        {
-            if (tour.NrOfParticipants >= 5) 
-            {
-                return false;
-            }
+        //private bool CheckIfSpotIsAvailable(Tour tour, int nrOfPersonsToBookTour)
+        //{
+        //    if (tour.NrOfParticipants >= 5) 
+        //    {
+        //        return false;
+        //    }
 
-            if ((tour.NrOfParticipants + nrOfPersonsToBookTour) >= 5)
-            {
-                return false;
-            }
-            tour.NrOfParticipants = tour.NrOfParticipants + nrOfPersonsToBookTour;
-            return true;
-        }
+        //    if ((tour.NrOfParticipants + nrOfPersonsToBookTour) >= 5)
+        //    {
+        //        return false;
+        //    }
+        //    tour.NrOfParticipants = tour.NrOfParticipants + nrOfPersonsToBookTour;
+        //    return true;
+        //}
 
         public async Task<List<ZooTour>> CreateDailyTours(Tour tour, ZooDay zooDay)
         {

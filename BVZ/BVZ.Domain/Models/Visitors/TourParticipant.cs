@@ -10,12 +10,15 @@
         public Visitor Visitor { get; set; }
         public Guid VisitorId { get; set; }
 
+        public DateTime VisitDate { get; set; }
+
         public TourParticipant() { }
 
-        public TourParticipant(Tour tour, Visitor visitor)
+        public TourParticipant(Tour tour, Visitor visitor, DateTime visitDate)
         {
             Tour = tour;
             Visitor = visitor;
+            VisitDate = visitDate;
         }
     }
 }

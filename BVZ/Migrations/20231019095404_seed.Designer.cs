@@ -4,6 +4,7 @@ using BVZ.BVZ.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BVZ.Migrations
 {
     [DbContext(typeof(ZooDbContext))]
-    partial class ZooDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231019095404_seed")]
+    partial class seed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,6 +38,9 @@ namespace BVZ.Migrations
                     b.Property<Guid>("GuideId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("NrOfParticipants")
+                        .HasColumnType("int");
+
                     b.Property<bool>("TourCompleted")
                         .HasColumnType("bit");
 
@@ -54,24 +60,18 @@ namespace BVZ.Migrations
                             Id = new Guid("00000000-0000-0000-0000-444000000000"),
                             Description = "Se djungelns mäktigaste djur..",
                             GuideId = new Guid("00000000-0000-0000-0000-000000000009"),
+                            NrOfParticipants = 0,
                             TourCompleted = false,
                             TourName = "Djungel-Expeditionen"
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-444400000000"),
-                            Description = "Se havets vidunder.. Obs, det sker på egen risk då redan åtskilliga besökare skadats av dom livsfarliga elektriska undervattensbestarna.",
+                            Description = "Se havets vidunder!",
                             GuideId = new Guid("00000000-0000-0000-0000-000000000099"),
+                            NrOfParticipants = 0,
                             TourCompleted = false,
                             TourName = "Aqua-expedition"
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0060-444405030000"),
-                            Description = "En rasslande upplevelse bland trädens toppar. Följ med in i vindlande raviner och höga alptoppar, på jakt efter den gäckande örnen. Har vi tur får vi se, eller höra, den fåniga norska blåa papegojan. Sedan, en liten överraskning..",
-                            GuideId = new Guid("00000000-0000-0000-0000-000700100099"),
-                            TourCompleted = false,
-                            TourName = "Flygande vidunder och en liten överraskning"
                         });
                 });
 
@@ -83,9 +83,6 @@ namespace BVZ.Migrations
 
                     b.Property<Guid>("TourID")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("VisitDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("VisitorId")
                         .HasColumnType("uniqueidentifier");
@@ -105,6 +102,10 @@ namespace BVZ.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("VisitorCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Visitors");
@@ -121,9 +122,6 @@ namespace BVZ.Migrations
 
                     b.Property<bool>("IsMorningTour")
                         .HasColumnType("bit");
-
-                    b.Property<int>("NrOfParticipants")
-                        .HasColumnType("int");
 
                     b.Property<Guid>("TourID")
                         .HasColumnType("uniqueidentifier");
@@ -143,55 +141,33 @@ namespace BVZ.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-999000000000"),
-                            DateOfTour = new DateTime(2023, 10, 20, 7, 52, 48, 457, DateTimeKind.Local).AddTicks(474),
+                            DateOfTour = new DateTime(2023, 10, 19, 0, 0, 0, 0, DateTimeKind.Local),
                             IsMorningTour = true,
-                            NrOfParticipants = 0,
                             TourID = new Guid("00000000-0000-0000-0000-444000000000"),
                             ZooDayId = new Guid("00000000-0000-0000-0000-123000000000")
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-1000-0000-899000000000"),
-                            DateOfTour = new DateTime(2023, 10, 20, 7, 52, 48, 457, DateTimeKind.Local).AddTicks(497),
+                            DateOfTour = new DateTime(2023, 10, 19, 0, 0, 0, 0, DateTimeKind.Local),
                             IsMorningTour = false,
-                            NrOfParticipants = 0,
                             TourID = new Guid("00000000-0000-0000-0000-444000000000"),
                             ZooDayId = new Guid("00000000-0000-0000-0000-123000000000")
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-999070000000"),
-                            DateOfTour = new DateTime(2023, 10, 20, 7, 52, 48, 457, DateTimeKind.Local).AddTicks(534),
+                            DateOfTour = new DateTime(2023, 10, 19, 0, 0, 0, 0, DateTimeKind.Local),
                             IsMorningTour = true,
-                            NrOfParticipants = 0,
                             TourID = new Guid("00000000-0000-0000-0000-444400000000"),
                             ZooDayId = new Guid("00000000-0000-0000-0000-123000000000")
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-999070000600"),
-                            DateOfTour = new DateTime(2023, 10, 20, 7, 52, 48, 457, DateTimeKind.Local).AddTicks(555),
+                            DateOfTour = new DateTime(2023, 10, 19, 0, 0, 0, 0, DateTimeKind.Local),
                             IsMorningTour = false,
-                            NrOfParticipants = 0,
                             TourID = new Guid("00000000-0000-0000-0000-444400000000"),
-                            ZooDayId = new Guid("00000000-0000-0000-0000-123000000000")
-                        },
-                        new
-                        {
-                            Id = new Guid("00000080-9090-0909-0000-999070000000"),
-                            DateOfTour = new DateTime(2023, 10, 20, 7, 52, 48, 457, DateTimeKind.Local).AddTicks(591),
-                            IsMorningTour = true,
-                            NrOfParticipants = 0,
-                            TourID = new Guid("00000000-0000-0000-0060-444405030000"),
-                            ZooDayId = new Guid("00000000-0000-0000-0000-123000000000")
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0023-5070-0000-999070000600"),
-                            DateOfTour = new DateTime(2023, 10, 20, 7, 52, 48, 457, DateTimeKind.Local).AddTicks(617),
-                            IsMorningTour = false,
-                            NrOfParticipants = 0,
-                            TourID = new Guid("00000000-0000-0000-0060-444405030000"),
                             ZooDayId = new Guid("00000000-0000-0000-0000-123000000000")
                         });
                 });
@@ -284,8 +260,8 @@ namespace BVZ.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-1000-000002050046"),
-                            AnimalId = new Guid("00000000-0000-0000-0000-001000000000"),
+                            Id = new Guid("00000000-0000-0000-1000-000000000046"),
+                            AnimalId = new Guid("00000000-0000-0000-0000-300000000000"),
                             GuideId = new Guid("00000000-0000-0000-0000-000000000009")
                         },
                         new
@@ -302,21 +278,9 @@ namespace BVZ.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-1002-0000-1040-000000000030"),
-                            AnimalId = new Guid("00000000-0000-0000-0000-001000000000"),
-                            GuideId = new Guid("00000000-0000-0000-0000-000700100099")
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0040-1030-000000000031"),
-                            AnimalId = new Guid("00000000-0000-0000-0000-030000000000"),
-                            GuideId = new Guid("00000000-0000-0000-0000-000700100099")
-                        },
-                        new
-                        {
-                            Id = new Guid("05043020-0000-0000-1000-000000000032"),
+                            Id = new Guid("00000000-0000-0000-1000-000000000032"),
                             AnimalId = new Guid("00000000-0000-0000-0000-300000000000"),
-                            GuideId = new Guid("00000000-0000-0000-0000-000700100099")
+                            GuideId = new Guid("00000000-0000-0000-0000-000000000099")
                         });
                 });
 
@@ -349,12 +313,6 @@ namespace BVZ.Migrations
                             Id = new Guid("00000000-0000-0000-0000-000000000099"),
                             IsUnavailable = false,
                             Name = "Nisse"
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000700100099"),
-                            IsUnavailable = false,
-                            Name = "Ronny"
                         });
                 });
 
@@ -379,7 +337,7 @@ namespace BVZ.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-123000000000"),
                             Archived = false,
-                            TodaysDate = new DateTime(2023, 10, 20, 7, 52, 48, 457, DateTimeKind.Local).AddTicks(426)
+                            TodaysDate = new DateTime(2023, 10, 19, 0, 0, 0, 0, DateTimeKind.Local)
                         });
                 });
 
