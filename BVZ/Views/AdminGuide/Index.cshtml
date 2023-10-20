@@ -1,8 +1,10 @@
-﻿@*
+﻿@using BVZ.Models.Guide;
+@model object
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-    ViewData["Title"] = "Admin Animals";
+    ViewData["Title"] = "Admin Guides";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -11,36 +13,51 @@
 <h2 class="text-secondary">All Guides</h2>
 <button type="button" class="btn btn-success">Hire Guide</button>
 
-<div class="table-responsive">
-    <table class="table table-striped table-sm">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Header</th>
-                <th>Header</th>
-                <th>Header</th>
-                <th>Header</th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1,001</td>
-                <td>Lorem</td>
-                <td>ipsum</td>
-                <td>dolor</td>
-                <td>sit</td>
-                <td>
-                </td>
-                <td>
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-dark">Details</button>
-                        <button type="button" class="btn btn-secondary">Update</button>
-                        <button type="button" class="btn btn-danger">Fire</button>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+@if (Model is ErrorViewModel errorModel)
+{
+    <div style="color:darkred;">
+        <p>@errorModel.ValidationErrorMessage</p>
+    </div>
+}
+
+ @if (Model is DisplayAllGuidesViewModel dgVM)
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Namn</th>
+                    <th>Kompetenser</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var row in dgVM.Guides)
+                {
+                    <tr>
+                        <td>@row.Id</td>
+                        <td>@row.Name</td>
+                        <td>@foreach(var comp in row.AnimalCompetences)
+                            {
+                                <ul class="list-group">
+                                    <li class="list-group-item">@comp.Animal.AnimalType</li>
+                                </ul>
+                            }
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button type="button" class="btn btn-dark">Details</button>
+                                <button type="button" class="btn btn-secondary">Update</button>
+                                <button type="button" class="btn btn-danger">Fire</button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+}
+

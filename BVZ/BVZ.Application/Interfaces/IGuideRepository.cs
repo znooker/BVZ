@@ -9,7 +9,7 @@ namespace BVZ.BVZ.Application.Interfaces
         Task<bool> UpdateGuide(Guide guide);
         Task<bool> DeleteGuide(Guide guide);
         Task<bool> DeleteGuideById(Guid id);
-        Task<IEnumerable<Guide>> GetAllGuides();
+        Task<List<Guide>> GetAllGuides();
         Task<Guide> GetGuideById(Guid id);
     }
 }

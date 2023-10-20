@@ -29,6 +29,7 @@ builder.Services.AddTransient<ITransaction, BaseRepository>();
 // Add application-services
 builder.Services.AddTransient<TourService>();
 builder.Services.AddTransient<AnimalServices>();
+builder.Services.AddTransient<GuideServices>();
 
 var app = builder.Build();
 
