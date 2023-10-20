@@ -48,9 +48,12 @@ namespace BVZ.BVZ.Application.Services
             return response;
         }
 
-        public async Task<ServiceResponse<List<string>>> BookZooTour(Guid zooTourId, int NrOfPersonsToBook)
+        public async Task<ServiceResponse<List<Visitor>>> BookZooTour
+                                                            (Guid zooTourId, 
+                                                            int NrOfPersonsToBook,
+                                                            List<string>? personNames)
         {
-            ServiceResponse<List<string>> response = new ServiceResponse<List<string>>();
+            ServiceResponse<List<Visitor>> response = new ServiceResponse<List<Visitor>>();
             var transaction = _baseRepository.BeginTransaction();
 
             try
@@ -66,8 +69,7 @@ namespace BVZ.BVZ.Application.Services
                 if (!await CheckAnimalFatigue(
                                 zootour.Tour.GuideId,
                                 zootour.ZooDay,
-                                zootour.DateOfTour,
-                                transaction))
+                                zootour.DateOfTour))
                 {
                     await transaction.RollbackAsync();
                     response.IsSuccess = false;
@@ -99,15 +101,15 @@ namespace BVZ.BVZ.Application.Services
                 // Add tickets
                 try
                 {
-                    var tickets = await HandleTickets(NrOfPersonsToBook, zootour.Tour, zootour.DateOfTour, transaction);
-                    if (tickets == null)
+                    var visitors = await HandleTickets(NrOfPersonsToBook, personNames, zootour.Tour, zootour.DateOfTour);
+                    if (visitors == null)
                     {
                         response.IsSuccess = false;
                         response.UserInfo = "Fel vid biljettadministration, försök igen senare eller kontakta receptionen.";
                         return response;
                     }
                     await transaction.CommitAsync();
-                    response.Data = tickets;
+                    response.Data = visitors;
                 }
                 catch (DbUpdateException ex)
                 {
@@ -132,14 +134,13 @@ namespace BVZ.BVZ.Application.Services
 
         private async Task<bool> CheckAnimalFatigue(Guid guideId, 
                                                     ZooDay zooday, 
-                                                    DateTime tourDate,
-                                                    ITransaction transaction)
+                                                    DateTime tourDate)
         {
-            var animalsIds = await _guideRepository.GetAnimalsByGuideId(guideId);
+            var animalsIds = await _animalRepository.GetAnimalsByGuideId(guideId);
 
             foreach (var animalId in animalsIds)
             {
-                int nrOfVisits = await _guideRepository.GetAnimalVisitsByDateAndAnimal(animalId, tourDate);
+                int nrOfVisits = await _animalRepository.GetAnimalVisitsByDateAndAnimal(animalId, tourDate);
                 if (nrOfVisits >= 2)
                 {
                     return false;
@@ -148,9 +149,9 @@ namespace BVZ.BVZ.Application.Services
 
             foreach (var animalId in animalsIds)
             {
-                var animal = await _zooRepository.GetAnimalById(animalId);
+                var animal = await _animalRepository.GetAnimalById(animalId);
                 AnimalVisit av = new AnimalVisit(zooday, animal);
-                if (!await _guideRepository.AddAnimalVisit(av))
+                if (!await _animalRepository.AddAnimalVisit(av))
                 {
                     return false;
                 }
@@ -158,17 +159,17 @@ namespace BVZ.BVZ.Application.Services
             return true;
         }
 
-        private async Task<List<string>> HandleTickets(
-                                        int NrOfPersons, 
+        private async Task<List<Visitor>> HandleTickets(
+                                        int NrOfPersons,
+                                        List<string>? personNames,
                                         Tour tour, 
-                                        DateTime visitDate,
-                                        ITransaction transaction)
+                                        DateTime visitDate)
         {
             List<Visitor> visitors = new List<Visitor>();
-            List<string> visitorTickets = new List<string>();
             for (int i = 0; i < NrOfPersons; i++)
             {
                 Visitor visitor = new Visitor();
+                if (personNames[i] != null) visitor.Alias = personNames[i];
                 if (!await _zooRepository.AddVisitor(visitor))
                 {
                     throw new DbUpdateException();
@@ -178,14 +179,13 @@ namespace BVZ.BVZ.Application.Services
             foreach (var visitor in visitors)
             {
                 TourParticipant tp = new TourParticipant(tour, visitor, visitDate);
-                visitorTickets.Add(tp.VisitorId.ToString());
                 if (!await _zooRepository.AddTourParticipant(tp))
                 {
                     throw new DbUpdateException();
                 }  
             }
 
-            return visitorTickets;
+            return visitors;
         }
     }
 }

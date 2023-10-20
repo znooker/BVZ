@@ -6,7 +6,7 @@ namespace BVZ.Models.Tour
     {
         public bool BookingSuccessful { get; set; }
         public string? UserMessage { get; set; }
-        public List<string>? ClientReceipts { get; set; }
+        public List<Visitor>? Visitors { get; set; }
 
     }
 }

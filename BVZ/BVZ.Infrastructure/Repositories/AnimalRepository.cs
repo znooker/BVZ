@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BVZ.BVZ.Infrastructure.Repositories
 {
-    public class AnimalRepository : IAnimalRepository
+    public class AnimalRepository : BaseRepository, IAnimalRepository
     {
         
         private readonly ZooDbContext _context;
-        public AnimalRepository(ZooDbContext context)
+        public AnimalRepository(ZooDbContext context) : base(context) 
         {
             _context = context;
         }
@@ -37,23 +37,38 @@ namespace BVZ.BVZ.Infrastructure.Repositories
             return result;
         }
 
-        //public async Task<Animal> GetAnimalById(Guid id)
-        //{
-        //    var result = await _context.Animals.FirstOrDefaultAsync(x => x.Id == id );
-            
-        //    return result;
-        //}
-
         public async Task<Animal> GetAnimalById(Guid id)
         {
-            var result = await _context.Animals.FirstOrDefaultAsync(x => x.Id == id);
-
-            return result;
+            return await _context.Animals.Where(x => x.Id == id).SingleOrDefaultAsync();
         }
 
-        public Task<bool> UpdateAnimal(Animal animal)
+        public async Task<bool> UpdateAnimal(Animal animal)
         {
-            throw new NotImplementedException();
+            _context.Animals.Update(animal);
+            return await Save();
+        }
+
+        public async Task<List<Guid>> GetAnimalsByGuideId(Guid id)
+        {
+            var animalIds = await _context.AnimalCompetences
+                            .Where(ac => ac.GuideId == id)
+                            .Select(ac => ac.AnimalId)
+                            .ToListAsync();
+            return animalIds;
+        }
+
+        public async Task<int> GetAnimalVisitsByDateAndAnimal(Guid id, DateTime dateOfVisit)
+        {
+            int NrOfVisit = await _context.AnimalVisits
+                                    .Where(av => av.ZooDay.TodaysDate.Date == dateOfVisit.Date
+                                    && av.AnimalId == id)
+                                    .CountAsync();
+            return NrOfVisit;
+        }
+        public async Task<bool> AddAnimalVisit(AnimalVisit animalVisit)
+        {
+            _context.AnimalVisits.Add(animalVisit);
+            return await Task.FromResult(_context.SaveChanges() > 0);
         }
     }
 }

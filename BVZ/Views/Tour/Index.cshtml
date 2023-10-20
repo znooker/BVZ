@@ -19,9 +19,10 @@
 {
     <h1>Din bokning har blivit registrerad!</h1>
     <p>Var vänlig att spara ditt kvitto-nummer, för reklamationer eller om du har undringar om ditt besök vid ett senare tillfälle.</p>
-    @foreach (var receipt in bcVM.ClientReceipts)
+    @foreach (var visitor in bcVM.Visitors)
     {
-        <p style="text-decoration:wavy;">@receipt</p>
+        <p style="text-decoration:wavy;">Angivet namn: @visitor.Alias</p>
+        <p style="text-decoration:wavy;">Kvittonr/referens: @visitor.Id</p>
     }
 
 }
@@ -29,10 +30,6 @@
 @if (Model is DisplayAllToursViewModel displayModel)
 { 
     <div class="card-group-tours">
-
-       
-
-        
         
         @foreach (var tour in displayModel.ToursOfTheDay)
         {
@@ -53,27 +50,29 @@
                     }
                     <small class="text-muted">
                         @tour.Tour.Guide.Name
+                        @tour.NrOfParticipants
                     </small>
                 </div>
-               
+
+
                 <form asp-controller="Tour" asp-action="BookTour" method="post">
                     <select class="form-select" name="NrOfPersons">
-                             <option selected>Välj antal personer</option>
-                             <option value="1">1</option>
-                             <option value="2">2</option>
-                             <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
+                        <option selected>Välj antal personer</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
                     </select>
-                    <input type="hidden" value="@tour.Id" name="Id"/>
-                    <button type="submit" class="btn btn-primary">
-                        Boka
-                    </button>
+                    <input type="hidden" value="@tour.Id" name="Id" />
+                    <button type="submit" class="btn btn-primary">Boka</button>
                 </form>
             </div>
+
         }
     </div>
    
 }
+
 
 
