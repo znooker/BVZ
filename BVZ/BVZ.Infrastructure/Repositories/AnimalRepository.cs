@@ -37,13 +37,19 @@ namespace BVZ.BVZ.Infrastructure.Repositories
             return result;
         }
 
+        //public async Task<Animal> GetAnimalById(Guid id)
+        //{
+        //    var result = await _context.Animals.FirstOrDefaultAsync(x => x.Id == id );
+            
+        //    return result;
+        //}
+
         public async Task<Animal> GetAnimalById(Guid id)
         {
-            var result = await _context.Animals.FirstOrDefaultAsync(x => x.Id == id );
-            
+            var result = await _context.Animals.FirstOrDefaultAsync(x => x.Id == id);
+
             return result;
         }
-
 
         public Task<bool> UpdateAnimal(Animal animal)
         {
