@@ -5,6 +5,7 @@ namespace BVZ.Models.Tour
     public class DisplayAllToursViewModel
     {
         public List<ZooTour> ToursOfTheDay { get; set; }
+        public List<Visitor>? Confirmation { get; set; }
 
     }
 }

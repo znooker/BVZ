@@ -94,31 +94,30 @@ namespace BVZ.BVZ.Application.Services
                     response.IsSuccess = false;
                     response.UserInfo = "Fel i databas, försök igen senare.";
                     return response;
-                }
-                await transaction.CommitAsync();
-
+                } 
 
                 // Add tickets
                 try
                 {
-                    var visitors = await HandleTickets(NrOfPersonsToBook, personNames, zootour.Tour, zootour.DateOfTour);
+                    var visitors = await HandleTickets(NrOfPersonsToBook, /*personNames,*/ zootour.Tour, zootour.DateOfTour);
                     if (visitors == null)
                     {
                         response.IsSuccess = false;
                         response.UserInfo = "Fel vid biljettadministration, försök igen senare eller kontakta receptionen.";
                         return response;
                     }
-                    await transaction.CommitAsync();
                     response.Data = visitors;
                 }
                 catch (DbUpdateException ex)
                 {
+                    await transaction.RollbackAsync();
                     response.IsSuccess = false;
                     response.UserInfo = "Fel vid biljettadministration, försök igen senare eller kontakta receptionen.";
                     return response;
                 }
-                
+
                 // Happy path :)
+                await transaction.CommitAsync();
                 response.IsSuccess = true;
                 return response;
             } 
@@ -161,7 +160,7 @@ namespace BVZ.BVZ.Application.Services
 
         private async Task<List<Visitor>> HandleTickets(
                                         int NrOfPersons,
-                                        List<string>? personNames,
+                                        //List<string>? personNames,
                                         Tour tour, 
                                         DateTime visitDate)
         {
@@ -169,7 +168,7 @@ namespace BVZ.BVZ.Application.Services
             for (int i = 0; i < NrOfPersons; i++)
             {
                 Visitor visitor = new Visitor();
-                if (personNames[i] != null) visitor.Alias = personNames[i];
+                //if (personNames[i] != null) visitor.Alias = personNames[i];
                 if (!await _zooRepository.AddVisitor(visitor))
                 {
                     throw new DbUpdateException();

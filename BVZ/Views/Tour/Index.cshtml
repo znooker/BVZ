@@ -15,17 +15,6 @@
     </div>
 }
 
-@if (Model is BookingConfirmationViewModel bcVM)
-{
-    <h1>Din bokning har blivit registrerad!</h1>
-    <p>Var vänlig att spara ditt kvitto-nummer, för reklamationer eller om du har undringar om ditt besök vid ett senare tillfälle.</p>
-    @foreach (var visitor in bcVM.Visitors)
-    {
-        <p style="text-decoration:wavy;">Angivet namn: @visitor.Alias</p>
-        <p style="text-decoration:wavy;">Kvittonr/referens: @visitor.Id</p>
-    }
-
-}
 
 @if (Model is DisplayAllToursViewModel displayModel)
 { 
