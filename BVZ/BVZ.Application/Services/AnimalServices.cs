@@ -6,6 +6,7 @@ using BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Land;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.EntityFrameworkCore.Query;
+using System.Reflection;
 using System.Security.Permissions;
 
 namespace BVZ.BVZ.Application.Services
@@ -66,6 +67,58 @@ namespace BVZ.BVZ.Application.Services
             return response;
         }
 
+
+        public async Task<ServiceResponse<Animal>> GetAnimalByIdTest(Guid id)
+        {
+            ServiceResponse<Animal> response = new ServiceResponse<Animal>();
+            var animal = await _animalRepository.GetAnimalById(id);
+
+            if (animal != null)
+            {
+                var animalType = animal.GetType();
+                var idProperty = animalType.GetProperty("Id");
+                var landProperty = animalType.GetProperty("Speed");
+                var airProperty = animalType.GetProperty("MaxAltitude");
+                
+                var airLandMethod = animalType.GetProperty("Move");
+                var habitatMethod = animalType.GetProperty("MakeSound");
+
+
+                var ozelotMethod = animalType.GetMethod("Ozelotmetod");
+            }
+            else
+            {
+                response.IsSuccess = false;
+                response.ErrorMessage = $"Animal with id:{id} was not found.";
+                return response;
+            }
+
+            response.IsSuccess = true;
+            response.Data = animal;
+            return response;
+        }
+        public async Task<List<string>> DisplayAnimalPropertiesAndMethods(Animal animal)
+        {
+            Type animalType = animal.GetType();
+            Console.WriteLine($"Animal type: {animalType.Name}");
+            List<string> Animalproperties = new List<string>();
+            PropertyInfo[] properties = animalType.GetProperties();
+            Console.WriteLine("Properties:");
+            foreach (PropertyInfo property in properties)
+            {
+                Console.WriteLine(property.Name);
+                Animalproperties.Add(property.Name);
+            }
+
+            Console.WriteLine("Methods:");
+            MethodInfo[] methods = animalType.GetMethods();
+            foreach (MethodInfo method in methods)
+            {
+                Console.WriteLine(method.Name);
+                Animalproperties.Add(method.Name);
+            }
+            return Animalproperties;
+        }
 
 
     }

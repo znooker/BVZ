@@ -3,12 +3,17 @@
     public class Visitor
     {
         public Guid Id { get; set; }
-
+        public string? Alias { get; set; } = "undefined";
         public ICollection<TourParticipant> TourParticipants { get; set;}
 
         public Visitor()
         {
+
+        }
+        public Visitor(string? alias)
+        {
             Id = Guid.NewGuid();
+            Alias = alias;
         }
     }
 }

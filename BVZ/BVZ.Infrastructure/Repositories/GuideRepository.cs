@@ -60,27 +60,5 @@ namespace BVZ.BVZ.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<List<Guid>> GetAnimalsByGuideId(Guid id)
-        {
-            var animalIds = await _context.AnimalCompetences
-                            .Where(ac => ac.GuideId == id)
-                            .Select(ac => ac.AnimalId)
-                            .ToListAsync();
-            return animalIds;
-        }
-
-        public async Task<int> GetAnimalVisitsByDateAndAnimal(Guid id, DateTime dateOfVisit)
-        {
-            int NrOfVisit = await _context.AnimalVisits
-                                    .Where(av => av.ZooDay.TodaysDate.Date == dateOfVisit.Date 
-                                    && av.AnimalId == id)
-                                    .CountAsync();
-            return NrOfVisit;
-        }
-        public async Task<bool> AddAnimalVisit(AnimalVisit animalVisit)
-        {
-            _context.AnimalVisits.Add(animalVisit);
-            return await Task.FromResult(_context.SaveChanges() > 0);
-        }
     }
 }

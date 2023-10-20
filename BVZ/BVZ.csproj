@@ -23,6 +23,8 @@
 
     <Folder Include="Models\Zoo\" />
 
+    <Folder Include="Views\Test\" />
+
   </ItemGroup>
 
   <ItemGroup>

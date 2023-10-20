@@ -43,10 +43,10 @@ namespace BVZ.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> BookTour(Guid Id, int NrOfPersons)
+        public async Task<IActionResult> BookTour(Guid Id, int NrOfPersons, List<string>? PersonNames)
         {
             // Service anrop för att se om plats finns för denna.
-            var response = await _tourService.BookZooTour(Id, NrOfPersons);
+            var response = await _tourService.BookZooTour(Id, NrOfPersons, PersonNames);
 
             if(!response.IsSuccess)
             {
@@ -57,7 +57,7 @@ namespace BVZ.Controllers
                     eVM.ValidationErrorMessage = response.UserInfo;
                     return View("/views/Tour/index.cshtml", eVM);
                 }
-                else
+                if (response.ErrorMessage != null)
                 {
                     eVM.RequestId = response.ErrorMessage;
                     return RedirectToAction("Error", "Home", eVM);
@@ -67,7 +67,7 @@ namespace BVZ.Controllers
             BookingConfirmationViewModel bcVM = new BookingConfirmationViewModel
             {
                 BookingSuccessful = true,
-                ClientReceipts = response.Data
+                Visitors = response.Data
             };
 
             return RedirectToAction("Index");

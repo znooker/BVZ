@@ -31,7 +31,8 @@ namespace BVZ.BVZ.Infrastructure.Repositories
             return await _context.ZooTours
                         .Include(z => z.Tour)
                             .ThenInclude(t => t.Guide)
-                        .Where(z => z.DateOfTour.Date == day.Date) 
+                        .Where(z => z.DateOfTour.Date == day.Date 
+                        && z.NrOfParticipants < 5)
                         .ToListAsync();
         }
 

@@ -43,6 +43,7 @@ namespace BVZ.Controllers
         
         public async Task<IActionResult> Details(Guid id)
         {
+            var animal1 = await _animalServices.GetAnimalByIdTest(id);
             var animal = await _animalServices.GetAnimalById(id);
             if (!animal.IsSuccess)
             {
@@ -51,7 +52,7 @@ namespace BVZ.Controllers
             }
             else
             {
-                
+
                 //var viewModel = new BaldEagle
                 //{
                 //    Id = animal.Data.Id,
@@ -59,6 +60,7 @@ namespace BVZ.Controllers
                 //    Specie = animal.Data.Specie
 
                 //};
+                var result = await _animalServices.DisplayAnimalPropertiesAndMethods(animal1.Data);
                 return View();
             }
             //return View(animal);
