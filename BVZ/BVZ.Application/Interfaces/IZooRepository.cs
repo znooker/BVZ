@@ -1,6 +1,7 @@
 ﻿using BVZ.BVZ.Domain.Models.Visitors;
 using BVZ.BVZ.Domain.Models.Zoo;
 using BVZ.BVZ.Domain.Models.Zoo.Animals;
+using BVZ.BVZ.Infrastructure.Repositories;
 
 namespace BVZ.BVZ.Application.Interfaces
 {
@@ -13,5 +14,6 @@ namespace BVZ.BVZ.Application.Interfaces
 
         Task<bool> AddVisitor(Visitor visitor);
         Task<bool> AddTourParticipant(TourParticipant tourParticipant);
+        Task<Animal> GetAnimalById(Guid id);
     }
 }

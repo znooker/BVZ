@@ -7,11 +7,11 @@ using System;
 
 namespace BVZ.BVZ.Infrastructure.Repositories
 {
-    public class GuideRepository : IGuideRepository
+    public class GuideRepository : BaseRepository, IGuideRepository
     {
 
         private readonly ZooDbContext _context;
-        public GuideRepository(ZooDbContext context)
+        public GuideRepository(ZooDbContext context) : base(context) 
         {
             _context = context;
         }
@@ -73,7 +73,7 @@ namespace BVZ.BVZ.Infrastructure.Repositories
         public async Task<int> GetAnimalVisitsByDateAndAnimal(Guid id, DateTime dateOfVisit)
         {
             int NrOfVisit = await _context.AnimalVisits
-                                    .Where(av => av.ZooDay.TodaysDate == dateOfVisit 
+                                    .Where(av => av.ZooDay.TodaysDate.Date == dateOfVisit.Date 
                                     && av.AnimalId == id)
                                     .CountAsync();
             return NrOfVisit;

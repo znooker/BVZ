@@ -10,17 +10,30 @@
 
 @if (Model is ErrorViewModel errorModel)
 {
-    <div class="text-left">
-        <h1 class="display-4">Error</h1>
-    </div>
-    <div>
+    <div style="color:darkred;">
         <p>@errorModel.ValidationErrorMessage</p>
     </div>
 }
-else if (Model is DisplayAllToursViewModel displayModel)
+
+@if (Model is BookingConfirmationViewModel bcVM)
+{
+    <h1>Din bokning har blivit registrerad!</h1>
+    <p>Var vänlig att spara ditt kvitto-nummer, för reklamationer eller om du har undringar om ditt besök vid ett senare tillfälle.</p>
+    @foreach (var receipt in bcVM.ClientReceipts)
+    {
+        <p style="text-decoration:wavy;">@receipt</p>
+    }
+
+}
+
+@if (Model is DisplayAllToursViewModel displayModel)
 { 
     <div class="card-group-tours">
-    
+
+       
+
+        
+        
         @foreach (var tour in displayModel.ToursOfTheDay)
         {
             <div class="card-tours">
@@ -62,9 +75,5 @@ else if (Model is DisplayAllToursViewModel displayModel)
     </div>
    
 }
-@if (Model is BookingConfirmationViewModel bcVM)
-{
-   
 
-}
 

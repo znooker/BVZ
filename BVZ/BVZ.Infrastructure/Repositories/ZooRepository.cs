@@ -3,14 +3,14 @@ using BVZ.BVZ.Domain.Models.Visitors;
 using BVZ.BVZ.Domain.Models.Zoo;
 using BVZ.BVZ.Domain.Models.Zoo.Animals;
 using BVZ.BVZ.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace BVZ.BVZ.Infrastructure.Repositories
 {
-    public class ZooRepository : IZooRepository
+    public class ZooRepository : BaseRepository, IZooRepository
     {
         private readonly ZooDbContext _context;
-
-        public ZooRepository(ZooDbContext context)
+        public ZooRepository(ZooDbContext context) : base(context)
         {
             _context = context;
         }
@@ -38,12 +38,17 @@ namespace BVZ.BVZ.Infrastructure.Repositories
         public async Task<bool> AddVisitor(Visitor visitor)
         {
             _context.Visitors.Add(visitor);
-            return await Task.FromResult(_context.SaveChanges() > 0);
+            return await Save();
         }
         public async Task<bool> AddTourParticipant(TourParticipant tourParticipant)
         {
             _context.TourParticipants.Add(tourParticipant);
-            return await Task.FromResult(_context.SaveChanges() > 0);
+            return await Save();
+        }
+
+        public async Task<Animal> GetAnimalById(Guid id)
+        { 
+            return await _context.Animals.Where(a => a.Id == id).SingleOrDefaultAsync();   
         }
     }
 }

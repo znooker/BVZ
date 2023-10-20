@@ -24,6 +24,7 @@ builder.Services.AddTransient<IAnimalRepository, AnimalRepository>();
 builder.Services.AddTransient<IGuideRepository, GuideRepository>();
 builder.Services.AddTransient<ITourRepository, TourRepository>();
 builder.Services.AddTransient<IZooRepository, ZooRepository>();
+builder.Services.AddTransient<ITransaction, BaseRepository>();
 
 // Add application-services
 builder.Services.AddTransient<TourService>();

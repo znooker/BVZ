@@ -1,4 +1,5 @@
-﻿using BVZ.BVZ.Application;
+﻿using Azure.Core;
+using BVZ.BVZ.Application;
 using BVZ.BVZ.Application.Services;
 using BVZ.BVZ.Domain.Models.Visitors;
 using BVZ.Models;
@@ -24,20 +25,22 @@ namespace BVZ.Controllers
         public async Task<IActionResult> Index()
         {
             var getTours = await _tourService.GetCurrentDayZooTours(DateTime.Today);
-            if(!getTours.IsSuccess)
+            if (!getTours.IsSuccess)
             {
                 ErrorViewModel ewm = new ErrorViewModel();
                 ewm.ValidationErrorMessage = "Det gick inte att hitta några " +
                     "tillgängliga turer för det aktuella datumet.";
                 return View(ewm);
             }
-            DisplayAllToursViewModel displayVM = new DisplayAllToursViewModel 
-            { 
-                ToursOfTheDay = getTours.Data 
+            DisplayAllToursViewModel displayVM = new DisplayAllToursViewModel
+            {
+                ToursOfTheDay = getTours.Data
             };
 
             return View(displayVM);
         }
+
+
 
         [HttpPost]
         public async Task<IActionResult> BookTour(Guid Id, int NrOfPersons)
@@ -45,13 +48,29 @@ namespace BVZ.Controllers
             // Service anrop för att se om plats finns för denna.
             var response = await _tourService.BookZooTour(Id, NrOfPersons);
 
+            if(!response.IsSuccess)
+            {
+                ErrorViewModel eVM = new ErrorViewModel();
+
+                if (response.UserInfo != null)
+                {
+                    eVM.ValidationErrorMessage = response.UserInfo;
+                    return View("/views/Tour/index.cshtml", eVM);
+                }
+                else
+                {
+                    eVM.RequestId = response.ErrorMessage;
+                    return RedirectToAction("Error", "Home", eVM);
+                }        
+            }
 
             BookingConfirmationViewModel bcVM = new BookingConfirmationViewModel
             {
                 BookingSuccessful = true,
-                UserMessage = "Det här gick kanon!"
+                ClientReceipts = response.Data
             };
-            return View("/views/Tour/index.cshtml", bcVM);
+
+            return RedirectToAction("Index");
         }
 
 

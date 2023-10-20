@@ -66,7 +66,6 @@ namespace BVZ.BVZ.Infrastructure.Data
              DivingDepth = 79
          });
 
-
             //Air
             modelBuilder.Entity<BaldEagle>().HasData(
          new BaldEagle
@@ -89,15 +88,15 @@ namespace BVZ.BVZ.Infrastructure.Data
        });
 
 
-            // Guides with competences
+        // Guides with competences
 
-            // HJALMAR
-            modelBuilder.Entity<Guide>().HasData(
-            new Guide
-            {
-                Id = new Guid("00000000-0000-0000-0000-000000000009"),
-                Name = "Hjalmar"
-            });
+        // HJALMAR
+        modelBuilder.Entity<Guide>().HasData(
+        new Guide
+        {
+            Id = new Guid("00000000-0000-0000-0000-000000000009"),
+            Name = "Hjalmar"
+        });
 
             //Cheetah
             modelBuilder.Entity<AnimalCompetence>().HasData(
@@ -116,23 +115,24 @@ namespace BVZ.BVZ.Infrastructure.Data
                 AnimalId = new Guid("00000000-0000-0000-0000-010000000000"),
                 GuideId = new Guid("00000000-0000-0000-0000-000000000009")
             });
-            // Bald Eagle
+
+            // Ozelot
             modelBuilder.Entity<AnimalCompetence>().HasData(
             new AnimalCompetence
             {
-                Id = new Guid("00000000-0000-0000-1000-000000000046"),
-                AnimalId = new Guid("00000000-0000-0000-0000-300000000000"),
+                Id = new Guid("00000000-0000-0000-1000-000002050046"),
+                AnimalId = new Guid("00000000-0000-0000-0000-001000000000"),
                 GuideId = new Guid("00000000-0000-0000-0000-000000000009")
             });
 
 
-            // NISSE
-            modelBuilder.Entity<Guide>().HasData(
-            new Guide
-            {
-                Id = new Guid("00000000-0000-0000-0000-000000000099"),
-                Name = "Nisse"
-            });
+        // NISSE
+        modelBuilder.Entity<Guide>().HasData(
+        new Guide
+        {
+            Id = new Guid("00000000-0000-0000-0000-000000000099"),
+            Name = "Nisse"
+        });
 
             // Electric Eel
             modelBuilder.Entity<AnimalCompetence>().HasData(
@@ -151,25 +151,51 @@ namespace BVZ.BVZ.Infrastructure.Data
                     AnimalId = new Guid("00000000-0000-0000-0000-020000000000"),
                     GuideId = new Guid("00000000-0000-0000-0000-000000000099")
                 });
+        
+        // RONNY
+        modelBuilder.Entity<Guide>().HasData(
+        new Guide
+        {
+            Id = new Guid("00000000-0000-0000-0000-000700100099"),
+            Name = "Ronny"
+        });
 
+            // Ozelot
+            modelBuilder.Entity<AnimalCompetence>().HasData(
+            new AnimalCompetence
+            {
+                Id = new Guid("00000000-1002-0000-1040-000000000030"),
+                AnimalId = new Guid("00000000-0000-0000-0000-001000000000"),
+                GuideId = new Guid("00000000-0000-0000-0000-000700100099")
+            });
+
+            // Norwegian Blue Parrot
+            modelBuilder.Entity<AnimalCompetence>().HasData(
+                new AnimalCompetence
+                {
+                    Id = new Guid("00000000-0000-0040-1030-000000000031"),
+                    AnimalId = new Guid("00000000-0000-0000-0000-030000000000"),
+                    GuideId = new Guid("00000000-0000-0000-0000-000700100099")
+                });
             //BaldEagle
             modelBuilder.Entity<AnimalCompetence>().HasData(
                  new AnimalCompetence
                  {
-                     Id = new Guid("00000000-0000-0000-1000-000000000032"),
+                     Id = new Guid("05043020-0000-0000-1000-000000000032"),
                      AnimalId = new Guid("00000000-0000-0000-0000-300000000000"),
-                     GuideId = new Guid("00000000-0000-0000-0000-000000000099")
+                     GuideId = new Guid("00000000-0000-0000-0000-000700100099")
                  });
 
-            // Seed start-day object
-            modelBuilder.Entity<ZooDay>().HasData(
-             new ZooDay
-             {
-                 Id = new Guid("00000000-0000-0000-0000-123000000000"),
-                 TodaysDate = DateTime.Today,
-                 Archived = false,
-             });
+        // Seed start-day object
+        modelBuilder.Entity<ZooDay>().HasData(
+            new ZooDay
+            {
+                Id = new Guid("00000000-0000-0000-0000-123000000000"),
+                TodaysDate = DateTime.Now,
+                Archived = false,
+            });
 
+            //Hjalmars guidade tur
             modelBuilder.Entity<Tour>().HasData(
              new Tour
              {
@@ -186,7 +212,7 @@ namespace BVZ.BVZ.Infrastructure.Data
                          ZooDayId = new Guid("00000000-0000-0000-0000-123000000000"),
                          TourID = new Guid("00000000-0000-0000-0000-444000000000"),
                          IsMorningTour = true,
-                         DateOfTour = DateTime.Today
+                         DateOfTour = DateTime.Now
                     });
 
                     modelBuilder.Entity<ZooTour>().HasData(
@@ -196,17 +222,17 @@ namespace BVZ.BVZ.Infrastructure.Data
                          ZooDayId = new Guid("00000000-0000-0000-0000-123000000000"),
                          TourID = new Guid("00000000-0000-0000-0000-444000000000"),
                          IsMorningTour = false,
-                         DateOfTour = DateTime.Today
+                         DateOfTour = DateTime.Now
                      });
 
 
-
+            //Nisses guidade tur
             modelBuilder.Entity<Tour>().HasData(
              new Tour
              {
                  Id = new Guid("00000000-0000-0000-0000-444400000000"),
                  TourName = "Aqua-expedition",
-                 Description = "Se havets vidunder!",
+                 Description = "Se havets vidunder.. Obs, det sker på egen risk då redan åtskilliga besökare skadats av dom livsfarliga elektriska undervattensbestarna.",
                  GuideId = new Guid("00000000-0000-0000-0000-000000000099"),
              });
                     modelBuilder.Entity<ZooTour>().HasData(
@@ -216,7 +242,7 @@ namespace BVZ.BVZ.Infrastructure.Data
                             ZooDayId = new Guid("00000000-0000-0000-0000-123000000000"),
                             TourID = new Guid("00000000-0000-0000-0000-444400000000"),
                             IsMorningTour = true,
-                            DateOfTour = DateTime.Today
+                            DateOfTour = DateTime.Now
                         });
 
                     modelBuilder.Entity<ZooTour>().HasData(
@@ -226,9 +252,38 @@ namespace BVZ.BVZ.Infrastructure.Data
                             ZooDayId = new Guid("00000000-0000-0000-0000-123000000000"),
                             TourID = new Guid("00000000-0000-0000-0000-444400000000"),
                             IsMorningTour = false,
-                            DateOfTour = DateTime.Today
+                            DateOfTour = DateTime.Now
                         });
+
+            //Ronnys guidade tur
+            modelBuilder.Entity<Tour>().HasData(
+             new Tour
+             {
+                 Id = new Guid("00000000-0000-0000-0060-444405030000"),
+                 TourName = "Flygande vidunder och en liten överraskning",
+                 Description = "En rasslande upplevelse bland trädens toppar. Följ med in i vindlande raviner och höga alptoppar, på jakt efter den gäckande örnen. Har vi tur får vi se, eller höra, den fåniga norska blåa papegojan. Sedan, en liten överraskning..",
+                 GuideId = new Guid("00000000-0000-0000-0000-000700100099"),
+             });
+
+                modelBuilder.Entity<ZooTour>().HasData(
+                    new ZooTour
+                    {
+                        Id = new Guid("00000080-9090-0909-0000-999070000000"),
+                        ZooDayId = new Guid("00000000-0000-0000-0000-123000000000"),
+                        TourID = new Guid("00000000-0000-0000-0060-444405030000"),
+                        IsMorningTour = true,
+                        DateOfTour = DateTime.Now
+                    });
+
+                modelBuilder.Entity<ZooTour>().HasData(
+                    new ZooTour
+                    {
+                        Id = new Guid("00000000-0023-5070-0000-999070000600"),
+                        ZooDayId = new Guid("00000000-0000-0000-0000-123000000000"),
+                        TourID = new Guid("00000000-0000-0000-0060-444405030000"),
+                        IsMorningTour = false,
+                        DateOfTour = DateTime.Now
+                    });
         }
-    
     }
 }

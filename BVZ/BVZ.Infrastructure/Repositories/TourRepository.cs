@@ -5,18 +5,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BVZ.BVZ.Infrastructure.Repositories
 {
-    public class TourRepository : ITourRepository
+    public class TourRepository : BaseRepository, ITourRepository
     {
         private readonly ZooDbContext _context;
-
-        public TourRepository(ZooDbContext context)
+        public TourRepository(ZooDbContext context) : base(context)
         {
             _context = context;
         }
         public async Task<bool> AddZooTour(ZooTour zootour)
         {
             _context.Add(zootour);
-            return await Task.FromResult(_context.SaveChanges() > 0);
+            return await Save();
         }
 
         public async Task<List<Tour>> GetAllTours()
@@ -32,7 +31,7 @@ namespace BVZ.BVZ.Infrastructure.Repositories
             return await _context.ZooTours
                         .Include(z => z.Tour)
                             .ThenInclude(t => t.Guide)
-                        .Where(z => z.DateOfTour == day)
+                        .Where(z => z.DateOfTour.Date == day.Date) 
                         .ToListAsync();
         }
 
@@ -41,13 +40,14 @@ namespace BVZ.BVZ.Infrastructure.Repositories
             return await _context.ZooTours
                             .Include(z => z.Tour)
                                .ThenInclude(t => t.Guide)
+                            .Include(z => z.ZooDay)
                             .Where(zt => zt.Id == id).SingleOrDefaultAsync();   
         }
 
         public async Task<bool> UpdateZooTour(ZooTour zootour)
         {
             _context.ZooTours.Update(zootour);
-            return await Task.FromResult(_context.SaveChanges() > 0);
+            return await Save();
         }
     }
 }
