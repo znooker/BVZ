@@ -6,6 +6,7 @@ using BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Land;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.EntityFrameworkCore.Query;
+using System.Security.Permissions;
 
 namespace BVZ.BVZ.Application.Services
 {
@@ -50,6 +51,7 @@ namespace BVZ.BVZ.Application.Services
                 var ozId = test.Id;
                 var speed = test.Speed;
                 string ozTest = test.Ozelotmetod();
+               
             }
             
             if(animal == null)
