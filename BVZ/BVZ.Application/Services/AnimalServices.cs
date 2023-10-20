@@ -2,7 +2,9 @@
 using BVZ.BVZ.Domain.Models.Visitors;
 using BVZ.BVZ.Domain.Models.Zoo;
 using BVZ.BVZ.Domain.Models.Zoo.Animals;
+using BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Land;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.EntityFrameworkCore.Query;
 
 namespace BVZ.BVZ.Application.Services
@@ -35,6 +37,31 @@ namespace BVZ.BVZ.Application.Services
             response.Data = animals.ToList();
             return response;
 
+        }
+
+        public async Task<ServiceResponse<Animal>> GetAnimalById(Guid id)
+        {
+            ServiceResponse<Animal> response = new ServiceResponse<Animal>();
+            var animal = await _animalRepository.GetAnimalById(id);
+
+            if(animal.GetType() == typeof(Ozelot)) 
+            {
+                var test = (Ozelot)animal;
+                var ozId = test.Id;
+                var speed = test.Speed;
+                string ozTest = test.Ozelotmetod();
+            }
+            
+            if(animal == null)
+            {
+                response.IsSuccess = false;
+                response.ErrorMessage = $"Animal with id:{id} was not found.";
+                return response;
+            }
+
+            response.IsSuccess = true;
+            response.Data = animal;
+            return response;
         }
 
 
