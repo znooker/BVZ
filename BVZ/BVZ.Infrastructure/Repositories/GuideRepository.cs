@@ -66,7 +66,6 @@ namespace BVZ.BVZ.Infrastructure.Repositories
                             .Where(ac => ac.GuideId == id)
                             .Select(ac => ac.AnimalId)
                             .ToListAsync();
-
             return animalIds;
         }
 
