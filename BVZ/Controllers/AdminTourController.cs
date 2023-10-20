@@ -34,20 +34,6 @@ namespace BVZ.Controllers
             };
             return View(displayVM);
             
-            //var getTours = await _tourService.GetCurrentDayZooTours(DateTime.Today);
-            //if (!getTours.IsSuccess)
-            //{
-            //    ErrorViewModel ewm = new ErrorViewModel();
-            //    ewm.ValidationErrorMessage = "Det gick inte att hitta några " +
-            //        "tillgängliga turer för det aktuella datumet.";
-            //    return View(ewm);
-            //}
-            //DisplayAllToursViewModel displayVM = new DisplayAllToursViewModel
-            //{
-            //    ToursOfTheDay = getTours.Data
-            //};
-
-            //return View(displayVM);
         }
     }
 }
