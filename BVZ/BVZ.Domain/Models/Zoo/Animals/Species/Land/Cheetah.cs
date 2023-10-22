@@ -1,4 +1,5 @@
 ﻿using BVZ.BVZ.Domain.Models.Zoo.Animals.Habitats;
+using BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Air;
 using BVZ.BVZ.Domain.Models.Zoo.Animals.ValueTypes;
 
 namespace BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Land
@@ -26,10 +27,18 @@ namespace BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Land
 
         public override string MakeSound()
         {
-            return "Ett rullande morrande från det höga gräset innan det är klippt..";
+            return "Ett rullande morrande från det höga gräset.. Nu är det är klippt!";
         }
 
-   
+        public override string DisplayAnimalProperties(Animal? animal)
+        {
+            if (animal is Cheetah cheetah && animal is not null)
+            {
+                return "Den här geopardens maxhastighet är: " + cheetah.Speed + " km/h.";
+            }
+            return "Det finns inga nämnvärda egenskaper för den här djurarten.";
+        }
+
     }
 }
 
