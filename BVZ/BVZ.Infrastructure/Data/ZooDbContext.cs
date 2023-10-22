@@ -9,6 +9,7 @@ using BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Water;
 using BVZ.BVZ.Domain.Models.Zoo.Animals.ValueTypes;
 using BVZ.BVZ.Domain.Models.Zoo.Guides;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System.Reflection.Emit;
 
 namespace BVZ.BVZ.Infrastructure.Data
@@ -36,7 +37,7 @@ namespace BVZ.BVZ.Infrastructure.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("your_connection_string_here");
+                optionsBuilder.UseSqlServer("DefaultConnection");
             }
 
             optionsBuilder.EnableSensitiveDataLogging(); 
@@ -45,8 +46,6 @@ namespace BVZ.BVZ.Infrastructure.Data
         {
             builder.SeedAllData();
 ;
-
-
             builder.Entity<Animal>()
                 .ToTable("Animals")
                 .HasDiscriminator<string>("AnimalType")

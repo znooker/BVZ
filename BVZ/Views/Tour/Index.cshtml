@@ -31,11 +31,12 @@
                 <div class="card-footer-tours">
                     @if(!@tour.IsMorningTour)
                     {
-                        <small class="text-muted">Morgontur (09:00 - 12:00)</small>
+                        <small class="text-muted">Eftermiddagstur (13:00 - 16:00)</small>
                     }
                     else
                     {
-                        <small class="text-muted">Eftermiddagstur (13:00 - 16:00)</small>
+                        
+                        <small class="text-muted">Morgontur (09:00 - 12:00)</small>
                     }
                     <small class="text-muted">
                         @tour.Tour.Guide.Name
@@ -44,7 +45,7 @@
                 </div>
 
 
-                <form asp-controller="Tour" asp-action="BookTour" method="post">
+                <form asp-controller="Tour" asp-action="BookingStepOne" method="post">
                     <select class="form-select" name="NrOfPersons">
                         <option selected>Välj antal personer</option>
                         <option value="1">1</option>
@@ -53,6 +54,10 @@
                         <option value="4">4</option>
                         <option value="5">5</option>
                     </select>
+                        <input type="radio" id="option1" name="hasTickets" value="1">
+                        <label for="option1">Har dagsbiljett till zoo</label><br>
+                    <input type="radio" id="option2" name="hasTickets" value="2">
+                        <label for="option2">Har inte biljett</label><br>
                     <input type="hidden" value="@tour.Id" name="Id" />
                     <button type="submit" class="btn btn-primary">Boka</button>
                 </form>

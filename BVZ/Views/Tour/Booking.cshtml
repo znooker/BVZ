@@ -1,0 +1,42 @@
+﻿@using BVZ.Models.Tour;
+@model RegisterTicketsOrNamesViewModel
+
+
+@if (Model.HasTickets == "1")
+{
+
+    ViewData["Title"] = "Fyll i biljett-nummer";
+
+    <h1>Fyll i alla deltagares besöksnummer.</h1>
+    <p>Om det är en eller flera i sällskapet som inte har biljett, behöver ni tyävrr göra två separata bokning, en för sällskap med befintlig biljett och en utan.</p>
+
+<form asp-controller="Tour" asp-action="BookTourWithTicket" method="post">
+        @for (int i = 0; i < Model.NrOfParticipants; i++)
+        {
+            <input type="text" name="tickets" placeholder="Biljett @(i+1)" />
+        }
+        <input type="hidden" value="@Model.Id" name="Id" />
+        <input type="hidden" value="@Model.NrOfParticipants" name="NrOfPersons" />
+        <button type="submit" class="btn btn-primary">Boka</button>
+    </form>
+}
+
+
+else
+{
+
+    ViewData["Title"] = "Fyll i deltagares namn";
+
+    <h1>Fyll i alla deltagares namn</h1>
+    <p>Vi behöver namnet på alla deltagare. I och med att du bokar den här turen åläggs du också avgift för entré till Beverly Hills Zoo. Om du vill boka fler turer kan du bara lägga till koden som du fått ioch med detta köpet för att gratis boka nästa tur.</p>
+
+    <form asp-controller="Tour" asp-action="BookTourWithoutTicket" method="post">
+        @for (int i = 0; i < Model.NrOfParticipants; i++)
+        {
+                <input type="text" name="persons" placeholder="Person @(i+1)" />
+        }
+        <input type="hidden" value="@Model.Id" name="Id" />
+        <input type="hidden" value="@Model.NrOfParticipants" name="NrOfPersons" />
+        <button type="submit" class="btn btn-primary">Boka</button>
+    </form>
+}

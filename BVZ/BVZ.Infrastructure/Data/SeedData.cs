@@ -1,4 +1,5 @@
 ﻿using BVZ.BVZ.Domain.Models.Visitors;
+using BVZ.BVZ.Domain.Models.Visitors.ValueTypes;
 using BVZ.BVZ.Domain.Models.Zoo;
 using BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Air;
 using BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Land;
@@ -186,7 +187,7 @@ namespace BVZ.BVZ.Infrastructure.Data
                      GuideId = new Guid("00000000-0000-0000-0000-000700100099")
                  });
 
-        // Seed start-day object
+        // Seed daefault start-day object
         modelBuilder.Entity<ZooDay>().HasData(
             new ZooDay
             {
@@ -212,8 +213,9 @@ namespace BVZ.BVZ.Infrastructure.Data
                          ZooDayId = new Guid("00000000-0000-0000-0000-123000000000"),
                          TourID = new Guid("00000000-0000-0000-0000-444000000000"),
                          IsMorningTour = true,
-                         DateOfTour = DateTime.Now
-                    });
+                         DateOfTour = DateTime.Now,
+                         NrOfParticipants = 0,
+                     });
 
                     modelBuilder.Entity<ZooTour>().HasData(
                      new ZooTour
@@ -222,7 +224,8 @@ namespace BVZ.BVZ.Infrastructure.Data
                          ZooDayId = new Guid("00000000-0000-0000-0000-123000000000"),
                          TourID = new Guid("00000000-0000-0000-0000-444000000000"),
                          IsMorningTour = false,
-                         DateOfTour = DateTime.Now
+                         DateOfTour = DateTime.Now,
+                         NrOfParticipants = 0,
                      });
 
 
@@ -242,7 +245,8 @@ namespace BVZ.BVZ.Infrastructure.Data
                             ZooDayId = new Guid("00000000-0000-0000-0000-123000000000"),
                             TourID = new Guid("00000000-0000-0000-0000-444400000000"),
                             IsMorningTour = true,
-                            DateOfTour = DateTime.Now
+                            DateOfTour = DateTime.Now,
+                            NrOfParticipants = 0,
                         });
 
                     modelBuilder.Entity<ZooTour>().HasData(
@@ -252,7 +256,8 @@ namespace BVZ.BVZ.Infrastructure.Data
                             ZooDayId = new Guid("00000000-0000-0000-0000-123000000000"),
                             TourID = new Guid("00000000-0000-0000-0000-444400000000"),
                             IsMorningTour = false,
-                            DateOfTour = DateTime.Now
+                            DateOfTour = DateTime.Now,
+                            NrOfParticipants = 0,
                         });
 
             //Ronnys guidade tur
@@ -272,7 +277,8 @@ namespace BVZ.BVZ.Infrastructure.Data
                         ZooDayId = new Guid("00000000-0000-0000-0000-123000000000"),
                         TourID = new Guid("00000000-0000-0000-0060-444405030000"),
                         IsMorningTour = true,
-                        DateOfTour = DateTime.Now
+                        DateOfTour = DateTime.Now,
+                        NrOfParticipants = 0,
                     });
 
                 modelBuilder.Entity<ZooTour>().HasData(
@@ -282,9 +288,143 @@ namespace BVZ.BVZ.Infrastructure.Data
                         ZooDayId = new Guid("00000000-0000-0000-0000-123000000000"),
                         TourID = new Guid("00000000-0000-0000-0060-444405030000"),
                         IsMorningTour = false,
-                        DateOfTour = DateTime.Now
+                        DateOfTour = DateTime.Now,
+                        NrOfParticipants = 0,
                     });
-            
+
+
+            // Seed yesterdays zoo-day
+            modelBuilder.Entity<ZooDay>().HasData(
+            new ZooDay
+            {
+                Id = new Guid("00000000-0000-0000-0350-123000964000"),
+                TodaysDate = DateTime.Now.AddDays(-1),
+                Archived = false,
+            });
+
+                 // Daily tour yesterday
+                 modelBuilder.Entity<ZooTour>().HasData(
+                 new ZooTour
+                 {
+                     Id = new Guid("00240600-0800-0200-0000-999000000000"),
+                     ZooDayId = new Guid("00000000-0000-0000-0350-123000964000"),
+                     TourID = new Guid("00000000-0000-0000-0000-444000000000"),
+                     IsMorningTour = true,
+                     DateOfTour = DateTime.Now.AddDays(-1),
+                     NrOfParticipants = 0
+                 });
+
+                 modelBuilder.Entity<ZooTour>().HasData(
+                 new ZooTour
+                 {
+                     Id = new Guid("11241100-0000-1000-0000-899000000000"),
+                     ZooDayId = new Guid("00000000-0000-0000-0350-123000964000"),
+                     TourID = new Guid("00000000-0000-0000-0000-444000000000"),
+                     IsMorningTour = false,
+                     DateOfTour = DateTime.Now.AddDays(-1),
+                     NrOfParticipants = 0,
+                 });
+
+                modelBuilder.Entity<ZooTour>().HasData(
+                new ZooTour
+                {
+                    Id = new Guid("11303450-0000-0000-0000-999070000000"),
+                    ZooDayId = new Guid("00000000-0000-0000-0350-123000964000"),
+                    TourID = new Guid("00000000-0000-0000-0000-444400000000"),
+                    IsMorningTour = true,
+                    DateOfTour = DateTime.Now.AddDays(-1),
+                    NrOfParticipants = 0,
+                });
+    
+                modelBuilder.Entity<ZooTour>().HasData(
+                new ZooTour
+                {
+                    Id = new Guid("11303451-0000-0000-0000-999070000600"),
+                    ZooDayId = new Guid("00000000-0000-0000-0350-123000964000"),
+                    TourID = new Guid("00000000-0000-0000-0000-444400000000"),
+                    IsMorningTour = false,
+                    DateOfTour = DateTime.Now.AddDays(-1),
+                    NrOfParticipants = 0,
+                });
+
+                modelBuilder.Entity<ZooTour>().HasData(
+                new ZooTour
+                {
+                    Id = new Guid("00000080-9090-0909-0090-192070300400"),
+                    ZooDayId = new Guid("00000000-0000-0000-0350-123000964000"),
+                    TourID = new Guid("00000000-0000-0000-0060-444405030000"),
+                    IsMorningTour = true,
+                    DateOfTour = DateTime.Now.AddDays(-1),
+                    NrOfParticipants = 0,
+                });
+
+                modelBuilder.Entity<ZooTour>().HasData(
+                new ZooTour
+                {
+                    Id = new Guid("00000000-0023-5070-0000-994073020600"),
+                    ZooDayId = new Guid("00000000-0000-0000-0350-123000964000"),
+                    TourID = new Guid("00000000-0000-0000-0060-444405030000"),
+                    IsMorningTour = false,
+                    DateOfTour = DateTime.Now.AddDays(-1),
+                    NrOfParticipants = 2,
+                });
+
+
+
+                // Visitors
+                modelBuilder.Entity<Visitor>().HasData(
+                new Visitor
+                {
+                    Id = new Guid("00000000-0000-0000-0000-999000000000"),
+                    Alias = "Mikael",
+                    TicketDate = DateTime.Now.AddDays(-1),
+                });
+
+                    modelBuilder.Entity<TourParticipant>().HasData(
+                        new TourParticipant
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-999000000000"),
+                            TourID = new Guid("00000000-0000-0000-0060-444405030000"),
+                            VisitorId = new Guid("00000000-0000-0000-0000-999000000000"),
+                            VisitDate = DateTime.Now.AddDays(-1),
+                            TourSession = TourSession.Afternoon
+                        });
+
+                modelBuilder.Entity<Visitor>().HasData(
+                new Visitor
+                {
+                    Id = new Guid("00700500-2340-0000-0000-999002000000"),
+                    Alias = "Hans",
+                    TicketDate = DateTime.Now.AddDays(-1),
+                });
+                    
+                        modelBuilder.Entity<TourParticipant>().HasData(
+                        new TourParticipant
+                        {
+                            Id = new Guid("00002040-8888-0000-0000-999000000000"),
+                            TourID = new Guid("00000000-0000-0000-0060-444405030000"),
+                            VisitorId = new Guid("00700500-2340-0000-0000-999002000000"),
+                            VisitDate = DateTime.Now.AddDays(-1),
+                            TourSession = TourSession.Afternoon
+                        });
+
+                modelBuilder.Entity<Visitor>().HasData(
+                new Visitor
+                {
+                    Id = new Guid("00000000-0000-0000-0000-999030000900"),
+                    Alias = "Raul",
+                    TicketDate = DateTime.Now.AddDays(-1),
+                });
+
+                modelBuilder.Entity<Visitor>().HasData(
+                new Visitor
+                {
+                    Id = new Guid("00005000-0000-0300-0000-999000076000"),
+                    Alias = "Lena",
+                    TicketDate = DateTime.Now.AddDays(-1),
+                });
+
+
         }
     }
 }

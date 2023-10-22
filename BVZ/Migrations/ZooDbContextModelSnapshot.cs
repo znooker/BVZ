@@ -84,6 +84,9 @@ namespace BVZ.Migrations
                     b.Property<Guid>("TourID")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("TourSession")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("VisitDate")
                         .HasColumnType("datetime2");
 
@@ -97,6 +100,24 @@ namespace BVZ.Migrations
                     b.HasIndex("VisitorId");
 
                     b.ToTable("TourParticipants");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-999000000000"),
+                            TourID = new Guid("00000000-0000-0000-0060-444405030000"),
+                            TourSession = 1,
+                            VisitDate = new DateTime(2023, 10, 21, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5169),
+                            VisitorId = new Guid("00000000-0000-0000-0000-999000000000")
+                        },
+                        new
+                        {
+                            Id = new Guid("00002040-8888-0000-0000-999000000000"),
+                            TourID = new Guid("00000000-0000-0000-0060-444405030000"),
+                            TourSession = 1,
+                            VisitDate = new DateTime(2023, 10, 21, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5223),
+                            VisitorId = new Guid("00700500-2340-0000-0000-999002000000")
+                        });
                 });
 
             modelBuilder.Entity("BVZ.BVZ.Domain.Models.Visitors.Visitor", b =>
@@ -106,11 +127,41 @@ namespace BVZ.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Alias")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TicketDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.ToTable("Visitors");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-999000000000"),
+                            Alias = "Mikael",
+                            TicketDate = new DateTime(2023, 10, 21, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5153)
+                        },
+                        new
+                        {
+                            Id = new Guid("00700500-2340-0000-0000-999002000000"),
+                            Alias = "Hans",
+                            TicketDate = new DateTime(2023, 10, 21, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5185)
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-999030000900"),
+                            Alias = "Raul",
+                            TicketDate = new DateTime(2023, 10, 21, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5238)
+                        },
+                        new
+                        {
+                            Id = new Guid("00005000-0000-0300-0000-999000076000"),
+                            Alias = "Lena",
+                            TicketDate = new DateTime(2023, 10, 21, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5252)
+                        });
                 });
 
             modelBuilder.Entity("BVZ.BVZ.Domain.Models.Visitors.ZooTour", b =>
@@ -146,7 +197,7 @@ namespace BVZ.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-999000000000"),
-                            DateOfTour = new DateTime(2023, 10, 20, 11, 0, 49, 505, DateTimeKind.Local).AddTicks(5330),
+                            DateOfTour = new DateTime(2023, 10, 22, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(4951),
                             IsMorningTour = true,
                             NrOfParticipants = 0,
                             TourID = new Guid("00000000-0000-0000-0000-444000000000"),
@@ -155,7 +206,7 @@ namespace BVZ.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-1000-0000-899000000000"),
-                            DateOfTour = new DateTime(2023, 10, 20, 11, 0, 49, 505, DateTimeKind.Local).AddTicks(5343),
+                            DateOfTour = new DateTime(2023, 10, 22, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(4966),
                             IsMorningTour = false,
                             NrOfParticipants = 0,
                             TourID = new Guid("00000000-0000-0000-0000-444000000000"),
@@ -164,7 +215,7 @@ namespace BVZ.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-999070000000"),
-                            DateOfTour = new DateTime(2023, 10, 20, 11, 0, 49, 505, DateTimeKind.Local).AddTicks(5367),
+                            DateOfTour = new DateTime(2023, 10, 22, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(4989),
                             IsMorningTour = true,
                             NrOfParticipants = 0,
                             TourID = new Guid("00000000-0000-0000-0000-444400000000"),
@@ -173,7 +224,7 @@ namespace BVZ.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-999070000600"),
-                            DateOfTour = new DateTime(2023, 10, 20, 11, 0, 49, 505, DateTimeKind.Local).AddTicks(5380),
+                            DateOfTour = new DateTime(2023, 10, 22, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5002),
                             IsMorningTour = false,
                             NrOfParticipants = 0,
                             TourID = new Guid("00000000-0000-0000-0000-444400000000"),
@@ -182,7 +233,7 @@ namespace BVZ.Migrations
                         new
                         {
                             Id = new Guid("00000080-9090-0909-0000-999070000000"),
-                            DateOfTour = new DateTime(2023, 10, 20, 11, 0, 49, 505, DateTimeKind.Local).AddTicks(5403),
+                            DateOfTour = new DateTime(2023, 10, 22, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5024),
                             IsMorningTour = true,
                             NrOfParticipants = 0,
                             TourID = new Guid("00000000-0000-0000-0060-444405030000"),
@@ -191,11 +242,65 @@ namespace BVZ.Migrations
                         new
                         {
                             Id = new Guid("00000000-0023-5070-0000-999070000600"),
-                            DateOfTour = new DateTime(2023, 10, 20, 11, 0, 49, 505, DateTimeKind.Local).AddTicks(5418),
+                            DateOfTour = new DateTime(2023, 10, 22, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5038),
                             IsMorningTour = false,
                             NrOfParticipants = 0,
                             TourID = new Guid("00000000-0000-0000-0060-444405030000"),
                             ZooDayId = new Guid("00000000-0000-0000-0000-123000000000")
+                        },
+                        new
+                        {
+                            Id = new Guid("00240600-0800-0200-0000-999000000000"),
+                            DateOfTour = new DateTime(2023, 10, 21, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5066),
+                            IsMorningTour = true,
+                            NrOfParticipants = 0,
+                            TourID = new Guid("00000000-0000-0000-0000-444000000000"),
+                            ZooDayId = new Guid("00000000-0000-0000-0350-123000964000")
+                        },
+                        new
+                        {
+                            Id = new Guid("11241100-0000-1000-0000-899000000000"),
+                            DateOfTour = new DateTime(2023, 10, 21, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5079),
+                            IsMorningTour = false,
+                            NrOfParticipants = 0,
+                            TourID = new Guid("00000000-0000-0000-0000-444000000000"),
+                            ZooDayId = new Guid("00000000-0000-0000-0350-123000964000")
+                        },
+                        new
+                        {
+                            Id = new Guid("11303450-0000-0000-0000-999070000000"),
+                            DateOfTour = new DateTime(2023, 10, 21, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5092),
+                            IsMorningTour = true,
+                            NrOfParticipants = 0,
+                            TourID = new Guid("00000000-0000-0000-0000-444400000000"),
+                            ZooDayId = new Guid("00000000-0000-0000-0350-123000964000")
+                        },
+                        new
+                        {
+                            Id = new Guid("11303451-0000-0000-0000-999070000600"),
+                            DateOfTour = new DateTime(2023, 10, 21, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5106),
+                            IsMorningTour = false,
+                            NrOfParticipants = 0,
+                            TourID = new Guid("00000000-0000-0000-0000-444400000000"),
+                            ZooDayId = new Guid("00000000-0000-0000-0350-123000964000")
+                        },
+                        new
+                        {
+                            Id = new Guid("00000080-9090-0909-0090-192070300400"),
+                            DateOfTour = new DateTime(2023, 10, 21, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5118),
+                            IsMorningTour = true,
+                            NrOfParticipants = 0,
+                            TourID = new Guid("00000000-0000-0000-0060-444405030000"),
+                            ZooDayId = new Guid("00000000-0000-0000-0350-123000964000")
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0023-5070-0000-994073020600"),
+                            DateOfTour = new DateTime(2023, 10, 21, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5131),
+                            IsMorningTour = false,
+                            NrOfParticipants = 2,
+                            TourID = new Guid("00000000-0000-0000-0060-444405030000"),
+                            ZooDayId = new Guid("00000000-0000-0000-0350-123000964000")
                         });
                 });
 
@@ -240,14 +345,9 @@ namespace BVZ.Migrations
                     b.Property<DateTime>("VisitDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("ZooDayId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AnimalId");
-
-                    b.HasIndex("ZooDayId");
 
                     b.ToTable("AnimalVisits");
                 });
@@ -382,7 +482,13 @@ namespace BVZ.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-123000000000"),
                             Archived = false,
-                            TodaysDate = new DateTime(2023, 10, 20, 11, 0, 49, 505, DateTimeKind.Local).AddTicks(5298)
+                            TodaysDate = new DateTime(2023, 10, 22, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(4914)
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0350-123000964000"),
+                            Archived = false,
+                            TodaysDate = new DateTime(2023, 10, 21, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5053)
                         });
                 });
 
@@ -625,15 +731,7 @@ namespace BVZ.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BVZ.BVZ.Domain.Models.Zoo.ZooDay", "ZooDay")
-                        .WithMany("AnimalVisits")
-                        .HasForeignKey("ZooDayId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Animal");
-
-                    b.Navigation("ZooDay");
                 });
 
             modelBuilder.Entity("BVZ.BVZ.Domain.Models.Zoo.Guides.AnimalCompetence", b =>
@@ -683,8 +781,6 @@ namespace BVZ.Migrations
 
             modelBuilder.Entity("BVZ.BVZ.Domain.Models.Zoo.ZooDay", b =>
                 {
-                    b.Navigation("AnimalVisits");
-
                     b.Navigation("ZooTours");
                 });
 #pragma warning restore 612, 618
