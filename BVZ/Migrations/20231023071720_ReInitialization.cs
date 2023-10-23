@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BVZ.Migrations
 {
     /// <inheritdoc />
-    public partial class reInit : Migration
+    public partial class ReInitialization : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -242,10 +242,10 @@ namespace BVZ.Migrations
                 columns: new[] { "Id", "Alias", "TicketDate" },
                 values: new object[,]
                 {
-                    { new Guid("00000000-0000-0000-0000-999000000000"), "Mikael", new DateTime(2023, 10, 21, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5153) },
-                    { new Guid("00000000-0000-0000-0000-999030000900"), "Raul", new DateTime(2023, 10, 21, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5238) },
-                    { new Guid("00005000-0000-0300-0000-999000076000"), "Lena", new DateTime(2023, 10, 21, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5252) },
-                    { new Guid("00700500-2340-0000-0000-999002000000"), "Hans", new DateTime(2023, 10, 21, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5185) }
+                    { new Guid("00000000-0000-0000-0000-999000000000"), "Mikael", new DateTime(2023, 10, 22, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(3049) },
+                    { new Guid("00000000-0000-0000-0000-999030000900"), "Raul", new DateTime(2023, 10, 22, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(3139) },
+                    { new Guid("00005000-0000-0300-0000-999000076000"), "Lena", new DateTime(2023, 10, 22, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(3154) },
+                    { new Guid("00700500-2340-0000-0000-999002000000"), "Hans", new DateTime(2023, 10, 22, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(3084) }
                 });
 
             migrationBuilder.InsertData(
@@ -253,8 +253,8 @@ namespace BVZ.Migrations
                 columns: new[] { "Id", "Archived", "TodaysDate" },
                 values: new object[,]
                 {
-                    { new Guid("00000000-0000-0000-0000-123000000000"), false, new DateTime(2023, 10, 22, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(4914) },
-                    { new Guid("00000000-0000-0000-0350-123000964000"), false, new DateTime(2023, 10, 21, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5053) }
+                    { new Guid("00000000-0000-0000-0000-123000000000"), false, new DateTime(2023, 10, 23, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(2813) },
+                    { new Guid("00000000-0000-0000-0350-123000964000"), false, new DateTime(2023, 10, 22, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(2951) }
                 });
 
             migrationBuilder.InsertData(
@@ -287,8 +287,8 @@ namespace BVZ.Migrations
                 columns: new[] { "Id", "TourID", "TourSession", "VisitDate", "VisitorId" },
                 values: new object[,]
                 {
-                    { new Guid("00000000-0000-0000-0000-999000000000"), new Guid("00000000-0000-0000-0060-444405030000"), 1, new DateTime(2023, 10, 21, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5169), new Guid("00000000-0000-0000-0000-999000000000") },
-                    { new Guid("00002040-8888-0000-0000-999000000000"), new Guid("00000000-0000-0000-0060-444405030000"), 1, new DateTime(2023, 10, 21, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5223), new Guid("00700500-2340-0000-0000-999002000000") }
+                    { new Guid("00000000-0000-0000-0000-999000000000"), new Guid("00000000-0000-0000-0060-444405030000"), 1, new DateTime(2023, 10, 22, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(3065), new Guid("00000000-0000-0000-0000-999000000000") },
+                    { new Guid("00002040-8888-0000-0000-999000000000"), new Guid("00000000-0000-0000-0060-444405030000"), 1, new DateTime(2023, 10, 22, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(3096), new Guid("00700500-2340-0000-0000-999002000000") }
                 });
 
             migrationBuilder.InsertData(
@@ -296,18 +296,18 @@ namespace BVZ.Migrations
                 columns: new[] { "Id", "DateOfTour", "IsMorningTour", "NrOfParticipants", "TourID", "ZooDayId" },
                 values: new object[,]
                 {
-                    { new Guid("00000000-0000-0000-0000-999000000000"), new DateTime(2023, 10, 22, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(4951), true, 0, new Guid("00000000-0000-0000-0000-444000000000"), new Guid("00000000-0000-0000-0000-123000000000") },
-                    { new Guid("00000000-0000-0000-0000-999070000000"), new DateTime(2023, 10, 22, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(4989), true, 0, new Guid("00000000-0000-0000-0000-444400000000"), new Guid("00000000-0000-0000-0000-123000000000") },
-                    { new Guid("00000000-0000-0000-0000-999070000600"), new DateTime(2023, 10, 22, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5002), false, 0, new Guid("00000000-0000-0000-0000-444400000000"), new Guid("00000000-0000-0000-0000-123000000000") },
-                    { new Guid("00000000-0000-1000-0000-899000000000"), new DateTime(2023, 10, 22, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(4966), false, 0, new Guid("00000000-0000-0000-0000-444000000000"), new Guid("00000000-0000-0000-0000-123000000000") },
-                    { new Guid("00000000-0023-5070-0000-994073020600"), new DateTime(2023, 10, 21, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5131), false, 2, new Guid("00000000-0000-0000-0060-444405030000"), new Guid("00000000-0000-0000-0350-123000964000") },
-                    { new Guid("00000000-0023-5070-0000-999070000600"), new DateTime(2023, 10, 22, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5038), false, 0, new Guid("00000000-0000-0000-0060-444405030000"), new Guid("00000000-0000-0000-0000-123000000000") },
-                    { new Guid("00000080-9090-0909-0000-999070000000"), new DateTime(2023, 10, 22, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5024), true, 0, new Guid("00000000-0000-0000-0060-444405030000"), new Guid("00000000-0000-0000-0000-123000000000") },
-                    { new Guid("00000080-9090-0909-0090-192070300400"), new DateTime(2023, 10, 21, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5118), true, 0, new Guid("00000000-0000-0000-0060-444405030000"), new Guid("00000000-0000-0000-0350-123000964000") },
-                    { new Guid("00240600-0800-0200-0000-999000000000"), new DateTime(2023, 10, 21, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5066), true, 0, new Guid("00000000-0000-0000-0000-444000000000"), new Guid("00000000-0000-0000-0350-123000964000") },
-                    { new Guid("11241100-0000-1000-0000-899000000000"), new DateTime(2023, 10, 21, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5079), false, 0, new Guid("00000000-0000-0000-0000-444000000000"), new Guid("00000000-0000-0000-0350-123000964000") },
-                    { new Guid("11303450-0000-0000-0000-999070000000"), new DateTime(2023, 10, 21, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5092), true, 0, new Guid("00000000-0000-0000-0000-444400000000"), new Guid("00000000-0000-0000-0350-123000964000") },
-                    { new Guid("11303451-0000-0000-0000-999070000600"), new DateTime(2023, 10, 21, 14, 34, 25, 904, DateTimeKind.Local).AddTicks(5106), false, 0, new Guid("00000000-0000-0000-0000-444400000000"), new Guid("00000000-0000-0000-0350-123000964000") }
+                    { new Guid("00000000-0000-0000-0000-999000000000"), new DateTime(2023, 10, 23, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(2846), true, 0, new Guid("00000000-0000-0000-0000-444000000000"), new Guid("00000000-0000-0000-0000-123000000000") },
+                    { new Guid("00000000-0000-0000-0000-999070000000"), new DateTime(2023, 10, 23, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(2884), true, 0, new Guid("00000000-0000-0000-0000-444400000000"), new Guid("00000000-0000-0000-0000-123000000000") },
+                    { new Guid("00000000-0000-0000-0000-999070000600"), new DateTime(2023, 10, 23, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(2897), false, 0, new Guid("00000000-0000-0000-0000-444400000000"), new Guid("00000000-0000-0000-0000-123000000000") },
+                    { new Guid("00000000-0000-1000-0000-899000000000"), new DateTime(2023, 10, 23, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(2861), false, 0, new Guid("00000000-0000-0000-0000-444000000000"), new Guid("00000000-0000-0000-0000-123000000000") },
+                    { new Guid("00000000-0023-5070-0000-994073020600"), new DateTime(2023, 10, 22, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(3029), false, 2, new Guid("00000000-0000-0000-0060-444405030000"), new Guid("00000000-0000-0000-0350-123000964000") },
+                    { new Guid("00000000-0023-5070-0000-999070000600"), new DateTime(2023, 10, 23, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(2935), false, 0, new Guid("00000000-0000-0000-0060-444405030000"), new Guid("00000000-0000-0000-0000-123000000000") },
+                    { new Guid("00000080-9090-0909-0000-999070000000"), new DateTime(2023, 10, 23, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(2920), true, 0, new Guid("00000000-0000-0000-0060-444405030000"), new Guid("00000000-0000-0000-0000-123000000000") },
+                    { new Guid("00000080-9090-0909-0090-192070300400"), new DateTime(2023, 10, 22, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(3017), true, 0, new Guid("00000000-0000-0000-0060-444405030000"), new Guid("00000000-0000-0000-0350-123000964000") },
+                    { new Guid("00240600-0800-0200-0000-999000000000"), new DateTime(2023, 10, 22, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(2965), true, 0, new Guid("00000000-0000-0000-0000-444000000000"), new Guid("00000000-0000-0000-0350-123000964000") },
+                    { new Guid("11241100-0000-1000-0000-899000000000"), new DateTime(2023, 10, 22, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(2978), false, 0, new Guid("00000000-0000-0000-0000-444000000000"), new Guid("00000000-0000-0000-0350-123000964000") },
+                    { new Guid("11303450-0000-0000-0000-999070000000"), new DateTime(2023, 10, 22, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(2990), true, 0, new Guid("00000000-0000-0000-0000-444400000000"), new Guid("00000000-0000-0000-0350-123000964000") },
+                    { new Guid("11303451-0000-0000-0000-999070000600"), new DateTime(2023, 10, 22, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(3004), false, 0, new Guid("00000000-0000-0000-0000-444400000000"), new Guid("00000000-0000-0000-0350-123000964000") }
                 });
 
             migrationBuilder.CreateIndex(

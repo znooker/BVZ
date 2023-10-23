@@ -3,8 +3,6 @@ using BVZ.BVZ.Domain.Models.Visitors;
 using BVZ.BVZ.Domain.Models.Zoo;
 using BVZ.BVZ.Domain.Models.Zoo.Animals;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System.Linq;
 
 namespace BVZ.BVZ.Application.Services
 {
@@ -12,22 +10,21 @@ namespace BVZ.BVZ.Application.Services
     {
         private readonly ILogger<TourService> _logger;
         private readonly ITourRepository _tourRepository;
-        private readonly IGuideRepository _guideRepository;
         private readonly IAnimalRepository _animalRepository;
         private readonly IZooRepository _zooRepository;
         private readonly ITransaction _baseRepository;
 
+        public object Object { get; }
+
         public TourService(
             ILogger<TourService> logger,
             ITourRepository tourRepository,
-            IGuideRepository guideRepository,
             IAnimalRepository animalRepository,
             IZooRepository zooRepository,
             ITransaction baseRepository)
         {
             _logger = logger;
             _tourRepository = tourRepository;
-            _guideRepository = guideRepository;
             _animalRepository = animalRepository;
             _zooRepository = zooRepository;
             _baseRepository = baseRepository;
