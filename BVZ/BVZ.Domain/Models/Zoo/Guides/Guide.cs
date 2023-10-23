@@ -8,6 +8,7 @@ namespace BVZ.BVZ.Domain.Models.Zoo.Guides
         public Guid Id { get; set; }
         public string Name { get; set; }
         public bool IsUnavailable { get; set; } = false;
+        public bool IsArchived { get; set; } = false;
         public ICollection<AnimalCompetence> AnimalCompetences { get; set; }
         public ICollection<Tour> Tours { get; set; }
 
