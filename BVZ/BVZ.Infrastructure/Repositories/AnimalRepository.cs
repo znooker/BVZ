@@ -60,7 +60,7 @@ namespace BVZ.BVZ.Infrastructure.Repositories
         public async Task<int> GetAnimalVisitsByDateAndAnimal(Guid id, DateTime dateOfVisit)
         {
             int NrOfVisit = await _context.AnimalVisits
-                                    .Where(av => av.ZooDay.TodaysDate.Date == dateOfVisit.Date
+                                    .Where(av => av.VisitDate == dateOfVisit.Date
                                     && av.AnimalId == id)
                                     .CountAsync();
             return NrOfVisit;

@@ -17,5 +17,14 @@ namespace BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Land
         {
             return "It smells!";
         }
+
+        public override string DisplayAnimalProperties(Animal? animal)
+        {
+            if (animal is Ozelot ozelot && animal is not null)
+            {
+                return "Kommer mer info inom kort för " + ozelot.AnimalName + ".";
+            }
+            return "Det finns inga nämnvärda egenskaper för den här djurarten.";
+        }
     }
 }

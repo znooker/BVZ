@@ -19,5 +19,9 @@ namespace BVZ.BVZ.Domain.Models.Zoo.Animals
         {
             return "Varelsen rör sig framåt på något okänt sätt..";
         }
+        public virtual string MakeSound()
+        {
+            return "Djuret frambringar inga som helst ljud";
+        }
     }
 }

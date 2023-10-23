@@ -50,5 +50,12 @@ namespace BVZ.BVZ.Infrastructure.Repositories
         { 
             return await _context.Animals.Where(a => a.Id == id).SingleOrDefaultAsync();   
         }
+
+        public async Task<ICollection<Visitor>> GetDailyZooVisitors(DateTime today)
+        {
+            return await _context.Visitors
+                .Where(v => v.TicketDate.Date == today.Date)
+                .ToListAsync();
+        }
     }
 }

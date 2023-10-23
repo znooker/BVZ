@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BVZ.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class ReInitialization : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,9 +19,9 @@ namespace BVZ.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AnimalName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AnimalType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Specie = table.Column<int>(type: "int", nullable: false),
                     DailyVisits = table.Column<int>(type: "int", nullable: false),
-                    AnimalType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MaxAltitude = table.Column<double>(type: "float", nullable: true),
                     Wingspan = table.Column<double>(type: "float", nullable: true),
                     FeatherColor = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -52,7 +52,8 @@ namespace BVZ.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    VisitorCode = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Alias = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TicketDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -70,6 +71,25 @@ namespace BVZ.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ZooDays", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AnimalVisits",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AnimalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    VisitDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AnimalVisits", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AnimalVisits_Animals_AnimalId",
+                        column: x => x.AnimalId,
+                        principalTable: "Animals",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -104,7 +124,6 @@ namespace BVZ.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TourName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NrOfParticipants = table.Column<int>(type: "int", nullable: false),
                     TourCompleted = table.Column<bool>(type: "bit", nullable: false),
                     GuideId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -120,38 +139,14 @@ namespace BVZ.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AnimalVisits",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AnimalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ZooDayId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    VisitDate = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AnimalVisits", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AnimalVisits_Animals_AnimalId",
-                        column: x => x.AnimalId,
-                        principalTable: "Animals",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AnimalVisits_ZooDays_ZooDayId",
-                        column: x => x.ZooDayId,
-                        principalTable: "ZooDays",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "TourParticipants",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TourID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    VisitorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    VisitorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    VisitDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TourSession = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -178,7 +173,8 @@ namespace BVZ.Migrations
                     TourID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ZooDayId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DateOfTour = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsMorningTour = table.Column<bool>(type: "bit", nullable: false)
+                    IsMorningTour = table.Column<bool>(type: "bit", nullable: false),
+                    NrOfParticipants = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -237,13 +233,29 @@ namespace BVZ.Migrations
                 values: new object[,]
                 {
                     { new Guid("00000000-0000-0000-0000-000000000009"), false, "Hjalmar" },
-                    { new Guid("00000000-0000-0000-0000-000000000099"), false, "Nisse" }
+                    { new Guid("00000000-0000-0000-0000-000000000099"), false, "Nisse" },
+                    { new Guid("00000000-0000-0000-0000-000700100099"), false, "Ronny" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Visitors",
+                columns: new[] { "Id", "Alias", "TicketDate" },
+                values: new object[,]
+                {
+                    { new Guid("00000000-0000-0000-0000-999000000000"), "Mikael", new DateTime(2023, 10, 22, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(3049) },
+                    { new Guid("00000000-0000-0000-0000-999030000900"), "Raul", new DateTime(2023, 10, 22, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(3139) },
+                    { new Guid("00005000-0000-0300-0000-999000076000"), "Lena", new DateTime(2023, 10, 22, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(3154) },
+                    { new Guid("00700500-2340-0000-0000-999002000000"), "Hans", new DateTime(2023, 10, 22, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(3084) }
                 });
 
             migrationBuilder.InsertData(
                 table: "ZooDays",
                 columns: new[] { "Id", "Archived", "TodaysDate" },
-                values: new object[] { new Guid("00000000-0000-0000-0000-123000000000"), false, new DateTime(2023, 10, 19, 0, 0, 0, 0, DateTimeKind.Local) });
+                values: new object[,]
+                {
+                    { new Guid("00000000-0000-0000-0000-123000000000"), false, new DateTime(2023, 10, 23, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(2813) },
+                    { new Guid("00000000-0000-0000-0350-123000964000"), false, new DateTime(2023, 10, 22, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(2951) }
+                });
 
             migrationBuilder.InsertData(
                 table: "AnimalCompetences",
@@ -252,19 +264,50 @@ namespace BVZ.Migrations
                 {
                     { new Guid("00000000-0000-0000-1000-000000000030"), new Guid("00000000-0000-0000-0000-200000000000"), new Guid("00000000-0000-0000-0000-000000000099") },
                     { new Guid("00000000-0000-0000-1000-000000000031"), new Guid("00000000-0000-0000-0000-020000000000"), new Guid("00000000-0000-0000-0000-000000000099") },
-                    { new Guid("00000000-0000-0000-1000-000000000032"), new Guid("00000000-0000-0000-0000-300000000000"), new Guid("00000000-0000-0000-0000-000000000099") },
                     { new Guid("00000000-0000-0000-1000-000000000044"), new Guid("00000000-0000-0000-0000-100000000000"), new Guid("00000000-0000-0000-0000-000000000009") },
                     { new Guid("00000000-0000-0000-1000-000000000045"), new Guid("00000000-0000-0000-0000-010000000000"), new Guid("00000000-0000-0000-0000-000000000009") },
-                    { new Guid("00000000-0000-0000-1000-000000000046"), new Guid("00000000-0000-0000-0000-300000000000"), new Guid("00000000-0000-0000-0000-000000000009") }
+                    { new Guid("00000000-0000-0000-1000-000002050046"), new Guid("00000000-0000-0000-0000-001000000000"), new Guid("00000000-0000-0000-0000-000000000009") },
+                    { new Guid("00000000-0000-0040-1030-000000000031"), new Guid("00000000-0000-0000-0000-030000000000"), new Guid("00000000-0000-0000-0000-000700100099") },
+                    { new Guid("00000000-1002-0000-1040-000000000030"), new Guid("00000000-0000-0000-0000-001000000000"), new Guid("00000000-0000-0000-0000-000700100099") },
+                    { new Guid("05043020-0000-0000-1000-000000000032"), new Guid("00000000-0000-0000-0000-300000000000"), new Guid("00000000-0000-0000-0000-000700100099") }
                 });
 
             migrationBuilder.InsertData(
                 table: "Tours",
-                columns: new[] { "Id", "Description", "GuideId", "NrOfParticipants", "TourCompleted", "TourName" },
+                columns: new[] { "Id", "Description", "GuideId", "TourCompleted", "TourName" },
                 values: new object[,]
                 {
-                    { new Guid("00000000-0000-0000-0000-444000000000"), "Se djungelns mäktigaste djur..", new Guid("00000000-0000-0000-0000-000000000009"), 0, false, "Djungel-Expeditionen" },
-                    { new Guid("00000000-0000-0000-0000-444400000000"), "Se havets vidunder!", new Guid("00000000-0000-0000-0000-000000000099"), 0, false, "Aqua-expedition" }
+                    { new Guid("00000000-0000-0000-0000-444000000000"), "Se djungelns mäktigaste djur..", new Guid("00000000-0000-0000-0000-000000000009"), false, "Djungel-Expeditionen" },
+                    { new Guid("00000000-0000-0000-0000-444400000000"), "Se havets vidunder.. Obs, det sker på egen risk då redan åtskilliga besökare skadats av dom livsfarliga elektriska undervattensbestarna.", new Guid("00000000-0000-0000-0000-000000000099"), false, "Aqua-expedition" },
+                    { new Guid("00000000-0000-0000-0060-444405030000"), "En rasslande upplevelse bland trädens toppar. Följ med in i vindlande raviner och höga alptoppar, på jakt efter den gäckande örnen. Har vi tur får vi se, eller höra, den fåniga norska blåa papegojan. Sedan, en liten överraskning..", new Guid("00000000-0000-0000-0000-000700100099"), false, "Flygande vidunder och en liten överraskning" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "TourParticipants",
+                columns: new[] { "Id", "TourID", "TourSession", "VisitDate", "VisitorId" },
+                values: new object[,]
+                {
+                    { new Guid("00000000-0000-0000-0000-999000000000"), new Guid("00000000-0000-0000-0060-444405030000"), 1, new DateTime(2023, 10, 22, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(3065), new Guid("00000000-0000-0000-0000-999000000000") },
+                    { new Guid("00002040-8888-0000-0000-999000000000"), new Guid("00000000-0000-0000-0060-444405030000"), 1, new DateTime(2023, 10, 22, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(3096), new Guid("00700500-2340-0000-0000-999002000000") }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ZooTours",
+                columns: new[] { "Id", "DateOfTour", "IsMorningTour", "NrOfParticipants", "TourID", "ZooDayId" },
+                values: new object[,]
+                {
+                    { new Guid("00000000-0000-0000-0000-999000000000"), new DateTime(2023, 10, 23, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(2846), true, 0, new Guid("00000000-0000-0000-0000-444000000000"), new Guid("00000000-0000-0000-0000-123000000000") },
+                    { new Guid("00000000-0000-0000-0000-999070000000"), new DateTime(2023, 10, 23, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(2884), true, 0, new Guid("00000000-0000-0000-0000-444400000000"), new Guid("00000000-0000-0000-0000-123000000000") },
+                    { new Guid("00000000-0000-0000-0000-999070000600"), new DateTime(2023, 10, 23, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(2897), false, 0, new Guid("00000000-0000-0000-0000-444400000000"), new Guid("00000000-0000-0000-0000-123000000000") },
+                    { new Guid("00000000-0000-1000-0000-899000000000"), new DateTime(2023, 10, 23, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(2861), false, 0, new Guid("00000000-0000-0000-0000-444000000000"), new Guid("00000000-0000-0000-0000-123000000000") },
+                    { new Guid("00000000-0023-5070-0000-994073020600"), new DateTime(2023, 10, 22, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(3029), false, 2, new Guid("00000000-0000-0000-0060-444405030000"), new Guid("00000000-0000-0000-0350-123000964000") },
+                    { new Guid("00000000-0023-5070-0000-999070000600"), new DateTime(2023, 10, 23, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(2935), false, 0, new Guid("00000000-0000-0000-0060-444405030000"), new Guid("00000000-0000-0000-0000-123000000000") },
+                    { new Guid("00000080-9090-0909-0000-999070000000"), new DateTime(2023, 10, 23, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(2920), true, 0, new Guid("00000000-0000-0000-0060-444405030000"), new Guid("00000000-0000-0000-0000-123000000000") },
+                    { new Guid("00000080-9090-0909-0090-192070300400"), new DateTime(2023, 10, 22, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(3017), true, 0, new Guid("00000000-0000-0000-0060-444405030000"), new Guid("00000000-0000-0000-0350-123000964000") },
+                    { new Guid("00240600-0800-0200-0000-999000000000"), new DateTime(2023, 10, 22, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(2965), true, 0, new Guid("00000000-0000-0000-0000-444000000000"), new Guid("00000000-0000-0000-0350-123000964000") },
+                    { new Guid("11241100-0000-1000-0000-899000000000"), new DateTime(2023, 10, 22, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(2978), false, 0, new Guid("00000000-0000-0000-0000-444000000000"), new Guid("00000000-0000-0000-0350-123000964000") },
+                    { new Guid("11303450-0000-0000-0000-999070000000"), new DateTime(2023, 10, 22, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(2990), true, 0, new Guid("00000000-0000-0000-0000-444400000000"), new Guid("00000000-0000-0000-0350-123000964000") },
+                    { new Guid("11303451-0000-0000-0000-999070000600"), new DateTime(2023, 10, 22, 9, 17, 20, 30, DateTimeKind.Local).AddTicks(3004), false, 0, new Guid("00000000-0000-0000-0000-444400000000"), new Guid("00000000-0000-0000-0350-123000964000") }
                 });
 
             migrationBuilder.CreateIndex(
@@ -281,11 +324,6 @@ namespace BVZ.Migrations
                 name: "IX_AnimalVisits_AnimalId",
                 table: "AnimalVisits",
                 column: "AnimalId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AnimalVisits_ZooDayId",
-                table: "AnimalVisits",
-                column: "ZooDayId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TourParticipants_TourID",

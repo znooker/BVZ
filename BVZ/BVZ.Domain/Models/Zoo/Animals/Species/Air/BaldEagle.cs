@@ -1,5 +1,6 @@
 ﻿using BVZ.BVZ.Domain.Models.Zoo.Animals.Habitats;
 using BVZ.BVZ.Domain.Models.Zoo.Animals.ValueTypes;
+using Newtonsoft.Json;
 
 namespace BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Air
 {
@@ -35,6 +36,7 @@ namespace BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Air
             return "Ett väldigt skri signalerar att örnen är på jakt!";
         }
 
+
         private double SetMaxAltitudeForBaldEagle()
         {
             if (Wingspan > 1.5)
@@ -48,6 +50,16 @@ namespace BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Air
                 return MaxAltitude = 1750;
             }
             else return 0;
+        }
+
+        public override string DisplayAnimalProperties(Animal? animal)
+        {
+            if (animal is BaldEagle baldEagle && animal is not null)
+            {
+                return "Havsörnen har ett vingspann på " + baldEagle.Wingspan +
+                    " och kan uppnå en maxhöjd på " + baldEagle.MaxAltitude + " meter.";
+            }
+            return "Det finns inga nämnvärda egenskaper för den här djurarten.";
         }
     }
 }

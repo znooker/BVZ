@@ -16,12 +16,13 @@ namespace BVZ.BVZ.Domain.Models.Zoo.Animals.Habitats
 
         public virtual string Run()
         {
-            return "Djuret utstötet ett läte.";
+            return "Djuret springer fram över marken.";
         }
 
         public virtual string MakeSound()
         {
-           return "Djuret springer fram över marken.";
+           return "Djuret utstötet ett läte.";
         }
+
     }
 }

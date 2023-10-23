@@ -3,7 +3,6 @@ using BVZ.BVZ.Domain.Models.Visitors;
 using BVZ.BVZ.Domain.Models.Zoo;
 using BVZ.BVZ.Domain.Models.Zoo.Animals;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace BVZ.BVZ.Application.Services
 {
@@ -11,22 +10,21 @@ namespace BVZ.BVZ.Application.Services
     {
         private readonly ILogger<TourService> _logger;
         private readonly ITourRepository _tourRepository;
-        private readonly IGuideRepository _guideRepository;
         private readonly IAnimalRepository _animalRepository;
         private readonly IZooRepository _zooRepository;
         private readonly ITransaction _baseRepository;
 
+        public object Object { get; }
+
         public TourService(
             ILogger<TourService> logger,
             ITourRepository tourRepository,
-            IGuideRepository guideRepository,
             IAnimalRepository animalRepository,
             IZooRepository zooRepository,
             ITransaction baseRepository)
         {
             _logger = logger;
             _tourRepository = tourRepository;
-            _guideRepository = guideRepository;
             _animalRepository = animalRepository;
             _zooRepository = zooRepository;
             _baseRepository = baseRepository;
@@ -64,14 +62,16 @@ namespace BVZ.BVZ.Application.Services
         }
 
         public async Task<ServiceResponse<List<Visitor>>> BookZooTour
-                                                            (Guid zooTourId, 
-                                                            int NrOfPersonsToBook,
-                                                            List<string>? personNames)
+                                                        (Guid zooTourId, 
+                                                        int NrOfPersonsToBook,
+                                                        List<string> bookers,
+                                                        bool hasTickets)
         {
             ServiceResponse<List<Visitor>> response = new ServiceResponse<List<Visitor>>();
-            var transaction = _baseRepository.BeginTransaction();
+            // Allow us to make rollbakcs if something fails somewhere along the chain of the entire method
+            var transaction = _baseRepository.BeginTransaction(); 
 
-            try
+            try // Wraps entire method, allowing for proper commits or rollbacks
             {
                 var zootour = await _tourRepository.GetZooTourById(zooTourId);
                 if (zootour == null)
@@ -109,12 +109,18 @@ namespace BVZ.BVZ.Application.Services
                     response.IsSuccess = false;
                     response.UserInfo = "Fel i databas, försök igen senare.";
                     return response;
-                } 
+                }
 
-                // Add tickets
+                // Method handling tickets or lack of ticket
                 try
                 {
-                    var visitors = await HandleTickets(NrOfPersonsToBook, /*personNames,*/ zootour.Tour, zootour.DateOfTour);
+                    var visitors = await HandleTickets(
+                                        NrOfPersonsToBook,
+                                        bookers, 
+                                        zootour.Tour,
+                                        zootour.DateOfTour,
+                                        zootour.IsMorningTour,
+                                        hasTickets);
                     if (visitors == null)
                     {
                         response.IsSuccess = false;
@@ -123,19 +129,23 @@ namespace BVZ.BVZ.Application.Services
                     }
                     response.Data = visitors;
                 }
-                catch (DbUpdateException ex)
+                catch (Exception ex)
                 {
-                    await transaction.RollbackAsync();
-                    response.IsSuccess = false;
-                    response.UserInfo = "Fel vid biljettadministration, försök igen senare eller kontakta receptionen.";
-                    return response;
+                    if (ex is DbUpdateException || ex is InvalidDataException || ex is FormatException)
+                    {
+                        await transaction.RollbackAsync();
+                        response.IsSuccess = false;
+                        response.UserInfo = "Fel vid biljettadministration, försök igen senare eller kontakta receptionen.";
+                        _logger.LogInformation(ex.Message);
+                        return response;
+                    }
                 }
 
                 // Happy path :)
                 await transaction.CommitAsync();
                 response.IsSuccess = true;
                 return response;
-            } 
+            }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
@@ -152,6 +162,7 @@ namespace BVZ.BVZ.Application.Services
         {
             var animalsIds = await _animalRepository.GetAnimalsByGuideId(guideId);
 
+            // Make sure no specific specie has received more than two visit on the same day.
             foreach (var animalId in animalsIds)
             {
                 int nrOfVisits = await _animalRepository.GetAnimalVisitsByDateAndAnimal(animalId, tourDate);
@@ -160,11 +171,11 @@ namespace BVZ.BVZ.Application.Services
                     return false;
                 }
             }
-
+            // Register a visit for each or the tours species that is visited.
             foreach (var animalId in animalsIds)
             {
                 var animal = await _animalRepository.GetAnimalById(animalId);
-                AnimalVisit av = new AnimalVisit(zooday, animal);
+                AnimalVisit av = new AnimalVisit(animal);
                 if (!await _animalRepository.AddAnimalVisit(av))
                 {
                     return false;
@@ -174,31 +185,60 @@ namespace BVZ.BVZ.Application.Services
         }
 
         private async Task<List<Visitor>> HandleTickets(
-                                        int NrOfPersons,
-                                        //List<string>? personNames,
-                                        Tour tour, 
-                                        DateTime visitDate)
+                                            int NrOfPersons,
+                                            List<string> bookers,
+                                            Tour tour, 
+                                            DateTime visitDate,
+                                            bool isMorningTour,
+                                            bool hasTickets)
         {
+
             List<Visitor> visitors = new List<Visitor>();
-            for (int i = 0; i < NrOfPersons; i++)
-            {
-                Visitor visitor = new Visitor();
-                //if (personNames[i] != null) visitor.Alias = personNames[i];
-                if (!await _zooRepository.AddVisitor(visitor))
+
+            // Handles the case if bookers of tour dont have a zoo-ticket
+            if (!hasTickets)
+            {   
+                for (int i = 0; i < NrOfPersons; i++)
                 {
-                    throw new DbUpdateException();
+                    Visitor visitor = new Visitor();
+                    if (bookers[i] != null) visitor.Alias = bookers[i];
+                    else throw new InvalidDataException();
+                    if (!await _zooRepository.AddVisitor(visitor))
+                    {
+                        throw new DbUpdateException();
+                    }
+                    visitors.Add(visitor);
                 }
-                visitors.Add(visitor);
             }
+
+            // Handles the case where visitor claim to have a ticket and validate if the claim is legit
+            else
+            {
+                var dailyVisitors = await _zooRepository.GetDailyZooVisitors(DateTime.Today);
+
+                if (NrOfPersons != bookers.Count) throw new InvalidDataException("Nr of persons does not match nr of tickets provided.");
+
+                foreach (var booker in bookers)
+                {
+                    Guid ticketId = Guid.Parse(booker);
+                    var visitor = dailyVisitors.Where(visitor => visitor.Id == ticketId).SingleOrDefault();
+                    if(visitor != null)
+                    {
+                        visitors.Add(visitor);
+                    }
+                    else throw new InvalidDataException("Ticket can not be found in database."); 
+                }
+            }
+
+            // Register each booker as a participant of the particular tour-type.
             foreach (var visitor in visitors)
             {
-                TourParticipant tp = new TourParticipant(tour, visitor, visitDate);
+                TourParticipant tp = new TourParticipant(tour, visitor, visitDate, isMorningTour);
                 if (!await _zooRepository.AddTourParticipant(tp))
                 {
                     throw new DbUpdateException();
                 }  
             }
-
             return visitors;
         }
     }

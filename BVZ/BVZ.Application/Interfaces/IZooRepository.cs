@@ -13,6 +13,7 @@ namespace BVZ.BVZ.Application.Interfaces
         Task<bool> DeleteAnimal(Animal animal);
 
         Task<bool> AddVisitor(Visitor visitor);
+        Task<ICollection<Visitor>> GetDailyZooVisitors(DateTime today);
         Task<bool> AddTourParticipant(TourParticipant tourParticipant);
         Task<Animal> GetAnimalById(Guid id);
     }

@@ -1,8 +1,10 @@
-﻿@using BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Air;
+﻿@using BVZ.BVZ.Domain.Models.Zoo.Animals.Interfaces;
+@using BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Air;
 @using BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Land;
 @using BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Water;
 @using BVZ.BVZ.Domain.Models.Zoo.Animals.ValueTypes;
 @using BVZ.Models.Home;
+@using System.Reflection;
 @model object
 @{
     ViewData["Title"] = "Home Page";
@@ -39,153 +41,96 @@
         </div>
     </div>
 }
-
-
 @if (Model is TestViewModel tVM)
 {
     <h1>@tVM.Animal.AnimalName</h1>
     <p>
-        Särskilda förmågor: 
-        @{
-            
-        }
+        Särskilda förmågor:
     </p>
-    <button onclick="showMove()">
+    <button onclick="toggleDisplay('moveDisplay')">
         Se film
     </button>
 
-    <button onclick="showSound()">
+    <button onclick="toggleDisplay('soundDisplay')">
         Djurläte
     </button>
 
-
-    <button onclick="showAbilities()">
-        Djurläte
+    <button onclick="toggleDisplay('abilitiesDisplay')">
+        Förmågor
     </button>
 
     <div id="moveDisplay" style="display:none;">
-        @if (tVM.Animal is Ozelot ozelot)
-        {
-            <h3>@ozelot.Move()</h3>
-        }
-        
-        else if (tVM.Animal is Okapi okapi) 
-        { 
-            <h3>@okapi.Move()</h3> 
-        }
-        else if (tVM.Animal is Cheetah cheetah) 
-        { 
-            <h3>@cheetah.Move()</h3> 
-        }
-
-        else if (tVM.Animal is BaldEagle baldEagle)
-        { 
-            <h3>@baldEagle.Move()</h3>
-        }
-        else if (tVM.Animal is NorwegianBlueParrot norwegianBlueParrot)
-        {
-            <h3>@norwegianBlueParrot.Move()</h3>
-        }
-
-        else if (tVM.Animal is MorayEel morayEel)
-        {
-            <h3>@morayEel.Move()</h3>
-        }
-        else if (tVM.Animal is ElectricEel electricEel)
-        {
-            <h3>@electricEel.Move()</h3>
-        }
-        else
-        {
-            <h3>@tVM.Animal.Move()</h3>
-        }
+        <h3>@GetMove(tVM.Animal)</h3>
     </div>
 
     <div id="abilitiesDisplay" style="display:none;">
-        @if (tVM.Animal is Ozelot ozelot2)
-        {
-            <h3>@ozelot2.Move()</h3>
-        }
-
-        else if (tVM.Animal is Okapi okapi)
-        {
-            <h3>@okapi.Move()</h3>
-        }
-        else if (tVM.Animal is Cheetah cheetah)
-        {
-            <h3>@cheetah.Move()</h3>
-        }
-
-        else if (tVM.Animal is BaldEagle baldEagle)
-        {
-            <h3>@baldEagle.Wingspan</h3>
-        }
-        else if (tVM.Animal is NorwegianBlueParrot norwegianBlueParrot)
-        {
-            <h3>@norwegianBlueParrot.Move()</h3>
-        }
-
-        else if (tVM.Animal is MorayEel morayEel)
-        {
-            <h3>@morayEel.Move()</h3>
-        }
-        else if (tVM.Animal is ElectricEel electricEel)
-        {
-            <h3>@electricEel.Move()</h3>
-        }
-        else
-        {
-            <h3>@tVM.Animal.Move()</h3>
-        }
+        <h3>@GetAbilities(tVM.Animal)</h3>
     </div>
 
     <div id="soundDisplay" style="display:none;">
-        @if (tVM.Animal is Ozelot ozelot1)
-        {
-            <h3>@ozelot1.MakeSound()</h3>
-        }
-        else if (tVM.Animal is Okapi okapi)
-        {
-            <h3>@okapi.MakeSound()</h3>
-        }
-        else if (tVM.Animal.Specie is Specie.Fish)
-        {
-            <h3>I vattnet hör ingen dig gråta</h3>
-        }
-        else
-        {
-            <h3>Animal movement not specified.</h3>
-        }
+        <h3>@GetSound(tVM.Animal)</h3>
     </div>
 }
 
 @{
-    <script>
-        function showMove() {
-            var moveDisplay = document.getElementById("moveDisplay");
-            if (moveDisplay.style.display === "none") {
-                moveDisplay.style.display = "block";
-            } else {
-                moveDisplay.style.display = "none";
-            }
-        }
+    string GetMove(BVZ.BVZ.Domain.Models.Zoo.Animals.Animal animal) => animal switch
+    {
+        // try first
+        Ozelot ozelot => ozelot.Move(),
+        Okapi okapi => okapi.Move(),
+        Cheetah cheetah => cheetah.Move(),
+        BaldEagle baldEagle => baldEagle.Move(),
+        NorwegianBlueParrot norwegianBlueParrot => norwegianBlueParrot.Move(),
+        MorayEel morayEel => morayEel.Move(),
+        ElectricEel electricEel => electricEel.Move(),
 
-        function showSound() {
-            var soundDisplay = document.getElementById("soundDisplay");
-            if (soundDisplay.style.display === "none") {
-                soundDisplay.style.display = "block";
-            } else {
-                soundDisplay.style.display = "none";
-            }
-        }
+        // then try habitat-types for their overrides
+        var landAnimal when landAnimal.Specie == Specie.Mammal => landAnimal.Move(),
+        var airAnimal when airAnimal.Specie == Specie.Bird => airAnimal.Move(),
+        var waterAnimal when waterAnimal.Specie == Specie.Fish => waterAnimal.Move(),
 
-        function showAbilities() {
-            var abilitiesDisplay = document.getElementById("abilitiesDisplay");
-            if (abilitiesDisplay.style.display === "none") {
-                abilitiesDisplay.style.display = "block";
-            } else {
-                abilitiesDisplay.style.display = "none";
-            }
-        }
-    </script>
+        // finally hand out the most basic method for move
+        _ => animal.Move()
+    };
+
+    string GetAbilities(BVZ.BVZ.Domain.Models.Zoo.Animals.Animal animal) => animal switch
+    {
+        Ozelot ozelot => ozelot.DisplayAnimalProperties(ozelot),
+        Okapi okapi => okapi.DisplayAnimalProperties(okapi),
+        Cheetah cheetah => cheetah.DisplayAnimalProperties(cheetah),
+        BaldEagle baldEagle => baldEagle.DisplayAnimalProperties(baldEagle),
+        NorwegianBlueParrot norwegianBlueParrot => norwegianBlueParrot.DisplayAnimalProperties(norwegianBlueParrot),
+        MorayEel morayEel => morayEel.DisplayAnimalProperties(morayEel),
+        ElectricEel electricEel => electricEel.DisplayAnimalProperties(electricEel),
+
+        _ => "Det finns inga specifika djur-egenskaper listade."
+    };
+
+    string GetSound(BVZ.BVZ.Domain.Models.Zoo.Animals.Animal animal) => animal switch
+    {
+        Ozelot ozelot => ozelot.MakeSound(),
+        Okapi okapi => okapi.MakeSound(),
+        Cheetah cheetah => cheetah.MakeSound(),
+        BaldEagle baldEagle => baldEagle.MakeSound(),
+        NorwegianBlueParrot norwegianBlueParrot => norwegianBlueParrot.MakeSound(),
+
+        var landAnimal when landAnimal.Specie == Specie.Mammal => landAnimal.MakeSound(),
+        var airAnimal when airAnimal.Specie == Specie.Bird => airAnimal.MakeSound(),
+        var fish when fish.Specie == Specie.Fish => "I vattnet hör ingen dig gråta (fiskar kan inte göra ljud under vatten)",
+
+        _ => animal.MakeSound(),
+    };
 }
+
+<script>
+    function toggleDisplay(displayId) {
+        var display = document.getElementById(displayId);
+        if (display.style.display === "none") {
+            display.style.display = "block";
+        } else {
+            display.style.display = "none";
+        }
+    }
+</script>
+
+
