@@ -19,8 +19,6 @@
 
     <Folder Include="BVZ.Domain\Visitors\" />
 
-    <Folder Include="Models\Admin\" />
-
     <Folder Include="Models\Zoo\" />
 
   </ItemGroup>

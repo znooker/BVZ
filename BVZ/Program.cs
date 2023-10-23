@@ -24,12 +24,15 @@ builder.Services.AddTransient<IAnimalRepository, AnimalRepository>();
 builder.Services.AddTransient<IGuideRepository, GuideRepository>();
 builder.Services.AddTransient<ITourRepository, TourRepository>();
 builder.Services.AddTransient<IZooRepository, ZooRepository>();
+builder.Services.AddTransient<IVisitorRepository, VisitorRepository>();
 builder.Services.AddTransient<ITransaction, BaseRepository>();
+
 
 // Add application-services
 builder.Services.AddTransient<TourService>();
 builder.Services.AddTransient<AnimalServices>();
 builder.Services.AddTransient<GuideServices>();
+builder.Services.AddTransient<VisitorServices>();
 
 var app = builder.Build();
 
