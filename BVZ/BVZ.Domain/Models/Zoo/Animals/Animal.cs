@@ -12,6 +12,8 @@ namespace BVZ.BVZ.Domain.Models.Zoo.Animals
         public Specie Specie { get; set; }
         public int DailyVisits { get; set; }
 
+        public bool IsArchived { get; set; } = false;
+
         public ICollection<AnimalVisit> AnimalVisits { get; set; }
         public ICollection<AnimalCompetence> AnimalCompentencies { get; set; }
 
