@@ -38,14 +38,14 @@ namespace BVZ.Controllers
             }
         }
 
-        public async Task<IActionResult> Details(Guid id)
+        public async Task<IActionResult> Details(Guid animalId)
         {
-            var animal1 = await _animalServices.GetAnimalByIdTest(id);
-            var testmodel = new TestViewModel
+            var animal = await _animalServices.GetAnimalByIdTest(animalId);
+            var hVM = new HomeViewModel
             {
-                Animal = animal1.Data
+                Animal = animal.Data
             };
-            return View("/views/Test/index.cshtml", testmodel);
+            return View("/views/Home/index.cshtml", hVM);
         }
     }
 }

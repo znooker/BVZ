@@ -91,7 +91,7 @@ namespace BVZ.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(AdminCreateTourViewModel inputData)
+        public async Task<IActionResult> Create(DisplayAdminAnimalsViewModel inputData)
         {
             
             var newTour = await _tourService.CreateNewTour(inputData);

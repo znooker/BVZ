@@ -12,6 +12,10 @@
 
 @if (Model is HomeViewModel hVM)
 {
+    if (hVM.ZooAnimals != null)
+    {
+        
+    
     <h3>Our Lovely Animals</h3>
     <div class="text-center">
         <h1 class="display-4">Welcome</h1>
@@ -30,8 +34,12 @@
                             <h6 class="card-subtitle mb-2 text-muted">@animal.Specie</h6>
                             <h6 class="card-subtitle mb-2 text-muted">Tag: @animal.Id</h6>
                             <div class="btn-group">
-                                <a asp-controller="Home" asp-action="Details" asp-route-id="@animal.Id" type="button" class="btn btn-sm btn-outline-secondary">Details</a>
 
+                                <form asp-controller="Home" asp-action="Details" method="post">
+                                    <input type="hidden" value="@animal.Id" name="animalId">
+                                    <button type="submit"  class="btn btn-dark">Detaljer</button>
+                                </form>
+                               
                             </div>
                             @* <button asp-controller="Home" asp-action="Details" asp-route="@animal.Id" type="button" class="btn btn-primary">Details</button> *@
                         </div>
@@ -40,10 +48,11 @@
             }
         </div>
     </div>
-}
-@if (Model is TestViewModel tVM)
+    }
+
+if(@hVM.Animal != null)
 {
-    <h1>@tVM.Animal.AnimalName</h1>
+    <h1>@hVM.Animal.AnimalName</h1>
     <p>
         Särskilda förmågor:
     </p>
@@ -60,16 +69,17 @@
     </button>
 
     <div id="moveDisplay" style="display:none;">
-        <h3>@GetMove(tVM.Animal)</h3>
+        <h3>@GetMove(hVM.Animal)</h3>
     </div>
 
     <div id="abilitiesDisplay" style="display:none;">
-        <h3>@GetAbilities(tVM.Animal)</h3>
+        <h3>@GetAbilities(hVM.Animal)</h3>
     </div>
 
     <div id="soundDisplay" style="display:none;">
-        <h3>@GetSound(tVM.Animal)</h3>
+        <h3>@GetSound(hVM.Animal)</h3>
     </div>
+    }
 }
 
 @{
