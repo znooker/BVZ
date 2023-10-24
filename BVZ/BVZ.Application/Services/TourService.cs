@@ -85,7 +85,7 @@ namespace BVZ.BVZ.Application.Services
                                 zootour.Tour.GuideId,
                                 zootour.ZooDay,
                                 zootour.DateOfTour))
-                {
+                { 
                     await transaction.RollbackAsync();
                     response.IsSuccess = false;
                     response.UserInfo = "Denna turen går tyvärr inte att boka, det är för många besök under samma dag till ett eller flera djur som ingår i turen.";
@@ -95,7 +95,10 @@ namespace BVZ.BVZ.Application.Services
                 // Make sure there is no overbooking
                 if ((zootour.NrOfParticipants + NrOfPersonsToBook) > 5)
                 {
-                    await transaction.RollbackAsync();
+                    if (transaction != null)
+                    {
+                        await transaction.RollbackAsync();
+                    }
                     response.IsSuccess = false;
                     response.UserInfo = "För många personer, max 5 personer per bokad tur. Det är redan " + zootour.NrOfParticipants + " personer bokade.";
                     return response;
@@ -105,7 +108,10 @@ namespace BVZ.BVZ.Application.Services
                 zootour.NrOfParticipants += NrOfPersonsToBook;
                 if (!await _tourRepository.UpdateZooTour(zootour))
                 {
-                    await transaction.RollbackAsync();
+                    if (transaction != null)
+                    {
+                        await transaction.RollbackAsync();
+                    }
                     response.IsSuccess = false;
                     response.UserInfo = "Fel i databas, försök igen senare.";
                     return response;
@@ -123,6 +129,10 @@ namespace BVZ.BVZ.Application.Services
                                         hasTickets);
                     if (visitors == null)
                     {
+                        if (transaction != null)
+                        {
+                            await transaction.RollbackAsync();
+                        }
                         response.IsSuccess = false;
                         response.UserInfo = "Fel vid biljettadministration, försök igen senare eller kontakta receptionen.";
                         return response;
@@ -132,7 +142,7 @@ namespace BVZ.BVZ.Application.Services
                 catch (Exception ex)
                 {
                     if (ex is DbUpdateException || ex is InvalidDataException || ex is FormatException)
-                    {
+                    { 
                         await transaction.RollbackAsync();
                         response.IsSuccess = false;
                         response.UserInfo = "Fel vid biljettadministration, försök igen senare eller kontakta receptionen.";
@@ -148,7 +158,10 @@ namespace BVZ.BVZ.Application.Services
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
+                if (transaction != null)
+                {
+                    await transaction.RollbackAsync();
+                }
                 response.IsSuccess = false;
                 response.ErrorMessage = "An error occurred. Please try again later.";
                 _logger.LogInformation(ex.Message);
@@ -156,7 +169,7 @@ namespace BVZ.BVZ.Application.Services
             }
         }
 
-        private async Task<bool> CheckAnimalFatigue(Guid guideId, 
+        public async Task<bool> CheckAnimalFatigue(Guid guideId, 
                                                     ZooDay zooday, 
                                                     DateTime tourDate)
         {
@@ -184,7 +197,7 @@ namespace BVZ.BVZ.Application.Services
             return true;
         }
 
-        private async Task<List<Visitor>> HandleTickets(
+        public async Task<List<Visitor>> HandleTickets(
                                             int NrOfPersons,
                                             List<string> bookers,
                                             Tour tour, 
@@ -214,19 +227,22 @@ namespace BVZ.BVZ.Application.Services
             // Handles the case where visitor claim to have a ticket and validate if the claim is legit
             else
             {
-                var dailyVisitors = await _zooRepository.GetDailyZooVisitors(DateTime.Today);
+                var dailyVisitors = await _zooRepository.GetDailyZooVisitors(DateTime.Now);
+                if(dailyVisitors == null) throw new InvalidDataException("No visitors for this date.");
 
                 if (NrOfPersons != bookers.Count) throw new InvalidDataException("Nr of persons does not match nr of tickets provided.");
 
                 foreach (var booker in bookers)
                 {
                     Guid ticketId = Guid.Parse(booker);
+
                     var visitor = dailyVisitors.Where(visitor => visitor.Id == ticketId).SingleOrDefault();
-                    if(visitor != null)
+                        
+                    if (visitor != null)
                     {
                         visitors.Add(visitor);
                     }
-                    else throw new InvalidDataException("Ticket can not be found in database."); 
+                    else throw new InvalidDataException("Ticket can not be found in database.");
                 }
             }
 
@@ -234,9 +250,9 @@ namespace BVZ.BVZ.Application.Services
             foreach (var visitor in visitors)
             {
                 TourParticipant tp = new TourParticipant(tour, visitor, visitDate, isMorningTour);
-                if (!await _zooRepository.AddTourParticipant(tp))
+                if(!await _zooRepository.AddTourParticipant(tp))
                 {
-                    throw new DbUpdateException();
+                    throw new DbUpdateException("Can't create tourparticipants."); 
                 }  
             }
             return visitors;
