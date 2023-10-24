@@ -1,0 +1,27 @@
+﻿@using BVZ.Models.Admin.Animals;
+
+@{
+    ViewData["Title"] = "Admin Animals";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+
+@if (Model is DisplayAdminAnimalsViewModel daaVM)
+{
+    
+    <form asp-controller="AdminAnimal" asp-action="AddAnimal" method="post">
+       
+        <select class="form-select" name="animalType" aria-label="select-animal">
+            @foreach (var animal in daaVM.Animals)
+            {
+                <option value=@animal.AnimalType>@animal.AnimalType</option>
+            }
+            
+        </select>
+        <input type="text" name="animalName" placeholder="Namn" />
+        
+        <button type="submit" class="btn btn-primary">Registrera nytt djur</button>
+    </form>
+       
+}

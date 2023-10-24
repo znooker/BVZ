@@ -82,7 +82,7 @@ namespace BVZ.Controllers
                 return View(errorViewModel);
             }
 
-            var createTourVm = new AdminCreateTourViewModel()
+            var createTourVm = new DisplayAdminAnimalsViewModel()
             {
                 Guide = getSelectGuide.Data
             };

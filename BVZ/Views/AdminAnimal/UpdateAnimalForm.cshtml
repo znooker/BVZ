@@ -1,0 +1,20 @@
+﻿@using BVZ.Models.Admin.Animals;
+
+@{
+    ViewData["Title"] = "Admin Animals";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+
+@if (Model is SingleAnimalViewModel saVM)
+{
+    
+    <form asp-controller="AdminAnimal" asp-action="UpdateAnimal" method="post">
+        <h3>Modifiera @saVM.Animal.AnimalType: @saVM.Animal.AnimalName </h3>
+        <input type="text" name="animalName" placeholder="Nytt namn" />
+        <input type="hidden" name="animalId" value="@saVM.Animal.Id" />
+        <button type="submit" class="btn btn-primary">Uppdatera individ</button>
+    </form>
+       
+}

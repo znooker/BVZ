@@ -7,20 +7,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="BVZ.Application\Common\**" />
+    <Compile Remove="BVZ.Application\Interface\**" />
     <Compile Remove="BVZ.Domain\Visitors\**" />
+    <Compile Remove="Models\Zoo\**" />
+    <Content Remove="BVZ.Application\Common\**" />
+    <Content Remove="BVZ.Application\Interface\**" />
     <Content Remove="BVZ.Domain\Visitors\**" />
+    <Content Remove="Models\Zoo\**" />
+    <EmbeddedResource Remove="BVZ.Application\Common\**" />
+    <EmbeddedResource Remove="BVZ.Application\Interface\**" />
     <EmbeddedResource Remove="BVZ.Domain\Visitors\**" />
+    <EmbeddedResource Remove="Models\Zoo\**" />
+    <None Remove="BVZ.Application\Common\**" />
+    <None Remove="BVZ.Application\Interface\**" />
     <None Remove="BVZ.Domain\Visitors\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="BVZ.Application\Interface\" />
-    <Folder Include="BVZ.Application\Common\" />
-
-    <Folder Include="BVZ.Domain\Visitors\" />
-
-    <Folder Include="Models\Zoo\" />
-
+    <None Remove="Models\Zoo\**" />
   </ItemGroup>
 
   <ItemGroup>
