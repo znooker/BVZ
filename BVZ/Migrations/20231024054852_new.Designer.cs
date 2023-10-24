@@ -4,6 +4,7 @@ using BVZ.BVZ.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BVZ.Migrations
 {
     [DbContext(typeof(ZooDbContext))]
-    partial class ZooDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231024054852_new")]
+    partial class @new
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,9 +38,6 @@ namespace BVZ.Migrations
                     b.Property<Guid>("GuideId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("IsArchived")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("TourCompleted")
                         .HasColumnType("bit");
 
@@ -57,7 +57,6 @@ namespace BVZ.Migrations
                             Id = new Guid("00000000-0000-0000-0000-444000000000"),
                             Description = "Se djungelns mäktigaste djur..",
                             GuideId = new Guid("00000000-0000-0000-0000-000000000009"),
-                            IsArchived = false,
                             TourCompleted = false,
                             TourName = "Djungel-Expeditionen"
                         },
@@ -66,7 +65,6 @@ namespace BVZ.Migrations
                             Id = new Guid("00000000-0000-0000-0000-444400000000"),
                             Description = "Se havets vidunder.. Obs, det sker på egen risk då redan åtskilliga besökare skadats av dom livsfarliga elektriska undervattensbestarna.",
                             GuideId = new Guid("00000000-0000-0000-0000-000000000099"),
-                            IsArchived = false,
                             TourCompleted = false,
                             TourName = "Aqua-expedition"
                         },
@@ -75,7 +73,6 @@ namespace BVZ.Migrations
                             Id = new Guid("00000000-0000-0000-0060-444405030000"),
                             Description = "En rasslande upplevelse bland trädens toppar. Följ med in i vindlande raviner och höga alptoppar, på jakt efter den gäckande örnen. Har vi tur får vi se, eller höra, den fåniga norska blåa papegojan. Sedan, en liten överraskning..",
                             GuideId = new Guid("00000000-0000-0000-0000-000700100099"),
-                            IsArchived = false,
                             TourCompleted = false,
                             TourName = "Flygande vidunder och en liten överraskning"
                         });
@@ -113,7 +110,6 @@ namespace BVZ.Migrations
                             Id = new Guid("00000000-0000-0000-0000-999000000000"),
                             TourID = new Guid("00000000-0000-0000-0060-444405030000"),
                             TourSession = 1,
-
                             VisitDate = new DateTime(2023, 10, 23, 7, 48, 52, 41, DateTimeKind.Local).AddTicks(3038),
                             VisitorId = new Guid("00000000-0000-0000-0000-999000000000")
                         },
@@ -122,9 +118,7 @@ namespace BVZ.Migrations
                             Id = new Guid("00002040-8888-0000-0000-999000000000"),
                             TourID = new Guid("00000000-0000-0000-0060-444405030000"),
                             TourSession = 1,
-
                             VisitDate = new DateTime(2023, 10, 23, 7, 48, 52, 41, DateTimeKind.Local).AddTicks(3068),
-
                             VisitorId = new Guid("00700500-2340-0000-0000-999002000000")
                         });
                 });
@@ -139,9 +133,6 @@ namespace BVZ.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsArchived")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime>("TicketDate")
                         .HasColumnType("datetime2");
 
@@ -155,21 +146,18 @@ namespace BVZ.Migrations
                             Id = new Guid("00000000-0000-0000-0000-999000000000"),
                             Alias = "Mikael",
                             TicketDate = new DateTime(2023, 10, 23, 7, 48, 52, 41, DateTimeKind.Local).AddTicks(3019)
-
                         },
                         new
                         {
                             Id = new Guid("00700500-2340-0000-0000-999002000000"),
                             Alias = "Hans",
                             TicketDate = new DateTime(2023, 10, 23, 7, 48, 52, 41, DateTimeKind.Local).AddTicks(3056)
-
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-999030000900"),
                             Alias = "Raul",
                             TicketDate = new DateTime(2023, 10, 23, 7, 48, 52, 41, DateTimeKind.Local).AddTicks(3082)
-
                         },
                         new
                         {
@@ -266,7 +254,6 @@ namespace BVZ.Migrations
                         new
                         {
                             Id = new Guid("00240600-0800-0200-0000-999000000000"),
-
                             DateOfTour = new DateTime(2023, 10, 23, 7, 48, 52, 41, DateTimeKind.Local).AddTicks(2934),
                             IsMorningTour = true,
                             NrOfParticipants = 0,
@@ -336,9 +323,6 @@ namespace BVZ.Migrations
 
                     b.Property<int>("DailyVisits")
                         .HasColumnType("int");
-
-                    b.Property<bool>("IsArchived")
-                        .HasColumnType("bit");
 
                     b.Property<int>("Specie")
                         .HasColumnType("int");
@@ -448,9 +432,6 @@ namespace BVZ.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("IsArchived")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsUnavailable")
                         .HasColumnType("bit");
 
@@ -466,21 +447,18 @@ namespace BVZ.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000009"),
-                            IsArchived = false,
                             IsUnavailable = false,
                             Name = "Hjalmar"
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000099"),
-                            IsArchived = false,
                             IsUnavailable = false,
                             Name = "Nisse"
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000700100099"),
-                            IsArchived = false,
                             IsUnavailable = false,
                             Name = "Ronny"
                         });
@@ -570,7 +548,6 @@ namespace BVZ.Migrations
                             Id = new Guid("00000000-0000-0000-0000-300000000000"),
                             AnimalName = "Bald Eagle",
                             DailyVisits = 0,
-                            IsArchived = false,
                             Specie = 2,
                             MaxAltitude = 0.0,
                             Wingspan = 1.3999999999999999
@@ -598,7 +575,6 @@ namespace BVZ.Migrations
                             Id = new Guid("00000000-0000-0000-0000-030000000000"),
                             AnimalName = "Norwegian Blue Parrot",
                             DailyVisits = 0,
-                            IsArchived = false,
                             Specie = 2,
                             MaxAltitude = 0.0,
                             CanSpeak = true,
@@ -620,7 +596,6 @@ namespace BVZ.Migrations
                             Id = new Guid("00000000-0000-0000-0000-100000000000"),
                             AnimalName = "Cheetah",
                             DailyVisits = 0,
-                            IsArchived = false,
                             Specie = 0,
                             Speed = 70.0
                         });
@@ -640,7 +615,6 @@ namespace BVZ.Migrations
                             Id = new Guid("00000000-0000-0000-0000-010000000000"),
                             AnimalName = "Okapi",
                             DailyVisits = 0,
-                            IsArchived = false,
                             Specie = 0,
                             Speed = 10.0
                         });
@@ -660,7 +634,6 @@ namespace BVZ.Migrations
                             Id = new Guid("00000000-0000-0000-0000-001000000000"),
                             AnimalName = "Ozelot",
                             DailyVisits = 0,
-                            IsArchived = false,
                             Specie = 0,
                             Speed = 30.0
                         });
@@ -680,7 +653,6 @@ namespace BVZ.Migrations
                             Id = new Guid("00000000-0000-0000-0000-200000000000"),
                             AnimalName = "Electric Eel",
                             DailyVisits = 0,
-                            IsArchived = false,
                             Specie = 1,
                             DivingDepth = 120.0
                         });
@@ -700,7 +672,6 @@ namespace BVZ.Migrations
                             Id = new Guid("00000000-0000-0000-0000-020000000000"),
                             AnimalName = "Moray Eel",
                             DailyVisits = 0,
-                            IsArchived = false,
                             Specie = 1,
                             DivingDepth = 79.0
                         });
