@@ -1,0 +1,45 @@
+﻿@using BVZ.Models.Guide;
+@model DisplayAllGuidesViewModel
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<h2>Vilka kompetenskrav måste guiden ha?</h2>
+<h2>Välj en lämplig guide till din Tour</h2>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th>Namn</th>
+                    <th>Kompetenser</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var guide in Model.Guides)
+                {
+                    <tr>
+                        <td>@guide.Name
+                            <div class="btn-group" role="group" aria-label="">
+                                <form asp-action="CreateStepOne" method="post">
+                                    <input asp-for="@Model.SelectedGuideID" type="hidden" value="@guide.Id" />
+                                    <button type="submit" class="btn btn-dark">Select</button>
+                                </form>
+                            </div>
+                        </td>
+                        <td>
+                            @foreach (var comp in guide.AnimalCompetences)
+                            {
+                                <ul class="list-group">
+                                    <li class="list-group-item">@comp.Animal.AnimalType</li>
+                                </ul>
+                            }
+                        </td>
+                     
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>

@@ -36,7 +36,7 @@ namespace BVZ.BVZ.Application.Services
         {
             ServiceResponse<List<Tour>> response = new ServiceResponse<List<Tour>>();
             var list = await _tourRepository.GetAllTours();
-            if(list == null || list.Count==0) 
+            if (list == null || list.Count==0)
             {
                 response.IsSuccess = false;
                 response.UserInfo = "Finns ännu inga tours att visa, var god skapa en ny tour.";
@@ -74,104 +74,110 @@ namespace BVZ.BVZ.Application.Services
         {
             ServiceResponse<Tour> response = new ServiceResponse<Tour>();
 
-            //I would prefer not to create a new Tour like this... is it even possible?
+            var tour = new Tour()
             {
-                var tour = new Tour();
-                tour.TourName = TourVm.TourName;
-                tour.Description = TourVm.Description;
-                tour.GuideId = TourVm.GuideId;
+                TourName = TourVm.TourName,
+                Description = TourVm.TourDescription,
+                GuideId = TourVm.SelectdGuideId
+            };
 
-                //var newTour = await _tourRepository.CreateTour(tour);
-                if (!await _tourRepository.CreateTour(tour))
-                {
-                    response.IsSuccess = false;
-                    response.UserInfo = "Fel vid skapadet av ny Tour, försök igen senare eller kontakta supporten.";
-                    return response;
-                }
-                response.IsSuccess = true;
-                response.UserInfo = $"Ny Tour med id {tour.Id} skapades";
+
+            if (!await _tourRepository.CreateTour(tour))
+            {
+                response.IsSuccess = false;
+                response.UserInfo = "Fel vid skapadet av ny Tour, försök igen senare eller kontakta supporten.";
                 return response;
             }
+            response.IsSuccess = true;
+            response.Data = tour;
+            response.UserInfo = $"Ny Tour med id {tour.Id} skapades";
+            return response;
+
         }
 
-                //public async Task<ServiceResponse<Tour>> CreateNewTour(AdminCreateTourViewModel TourVm)
-                //{
-                //    ServiceResponse<Tour> response = new ServiceResponse<Tour>();
-                //    var transaction = _baseRepository.BeginTransaction();
 
-                //    //I would prefer not to create a new Tour like this... is it even possible?
-                //    try
-                //    {
-                //        var tour = new Tour();
-                //        tour.TourName = TourVm.TourName;
-                //        tour.Description = TourVm.Description;
-                //        tour.GuideId = TourVm.GuideId;
-
-                //        //var newTour = await _tourRepository.CreateTour(tour);
-                //        if(!await _tourRepository.CreateTour(tour))
-                //        {
-                //            await transaction.RollbackAsync();
-                //            response.IsSuccess = false;
-                //            response.UserInfo = "Fel vid skapadet av ny Tour, försök igen senare eller kontakta supporten.";
-                //            return response;
-                //        }
+        //ScheduleZooTour - Skapar en tour med dagens datum kopplat,
+        //kolla så Tour inte redan är kopplad till en Tour
 
 
-                //        //We need to have a ZooDay to associate it, should we just link it to TodayDate
-                //        //var todayZooDayId = _zooRepository.GetZooDayIdByTodaysDate(DateTime.Now);
+        //public async Task<ServiceResponse<Tour>> CreateNewTour(AdminCreateTourViewModel TourVm)
+        //{
+        //    ServiceResponse<Tour> response = new ServiceResponse<Tour>();
+        //    var transaction = _baseRepository.BeginTransaction();
 
-                //        //Lyft ur detta
+        //    //I would prefer not to create a new Tour like this... is it even possible?
+        //    try
+        //    {
+        //        var tour = new Tour();
+        //        tour.TourName = TourVm.TourName;
+        //        tour.Description = TourVm.Description;
+        //        tour.GuideId = TourVm.GuideId;
 
-                //        //Link them together
-                //        var zooTour = new ZooTour();
-                //        zooTour.TourID = tour.Id;
-                //        zooTour.ZooDayId = await _zooRepository.GetZooDayIdByTodaysDate(DateTime.Now.Date);
+        //        //var newTour = await _tourRepository.CreateTour(tour);
+        //        if(!await _tourRepository.CreateTour(tour))
+        //        {
+        //            await transaction.RollbackAsync();
+        //            response.IsSuccess = false;
+        //            response.UserInfo = "Fel vid skapadet av ny Tour, försök igen senare eller kontakta supporten.";
+        //            return response;
+        //        }
 
-                //        //if(zooTour.ZooDayId == null)
-                //        //{
-                //        //    await transaction.RollbackAsync();
-                //        //    response.IsSuccess = false;
-                //        //    response.UserInfo = "Ingen dag med matchande ID funnet, ";
-                //        //    return response;
-                //        //}
 
-                //        zooTour.DateOfTour = TourVm.DateOfTour;
-                //        zooTour.IsMorningTour = TourVm.IsMorningTour;
+        //        //We need to have a ZooDay to associate it, should we just link it to TodayDate
+        //        //var todayZooDayId = _zooRepository.GetZooDayIdByTodaysDate(DateTime.Now);
 
-                //        //Add a new ZooTour
-                //        if(!await _tourRepository.AddZooTour(zooTour))
-                //        {
-                //            await transaction.RollbackAsync();
-                //            response.IsSuccess = false;
-                //            response.UserInfo = "Fel vid skapande av ZooTour, försök igen senare eller kontakta supporten.";
-                //            return response;
-                //        };
+        //        //Lyft ur detta
 
-                //        //Return... Is it possible to make a better model for the VM to display, like a more complete DTO?
-                //        await transaction.CommitAsync();
-                //        response.Data = tour;
-                //        response.IsSuccess = true;
-                //        return response;
-                //    }
-                //    catch (Exception ex)
-                //    {
-                //        await transaction.RollbackAsync();
-                //        response.IsSuccess = false;
-                //        response.ErrorMessage = "Yay! Något gick helt fel! Försök igen senare eller kontakta supporten.";
-                //        _logger.LogInformation(ex.Message);
-                //        return response;
-                //    }
-                //}
+        //        //Link them together
+        //        var zooTour = new ZooTour();
+        //        zooTour.TourID = tour.Id;
+        //        zooTour.ZooDayId = await _zooRepository.GetZooDayIdByTodaysDate(DateTime.Now.Date);
 
-                public async Task<ServiceResponse<List<Visitor>>> BookZooTour
-                                                        (Guid zooTourId, 
-                                                        int NrOfPersonsToBook,
-                                                        List<string> bookers,
-                                                        bool hasTickets)
+        //        //if(zooTour.ZooDayId == null)
+        //        //{
+        //        //    await transaction.RollbackAsync();
+        //        //    response.IsSuccess = false;
+        //        //    response.UserInfo = "Ingen dag med matchande ID funnet, ";
+        //        //    return response;
+        //        //}
+
+        //        zooTour.DateOfTour = TourVm.DateOfTour;
+        //        zooTour.IsMorningTour = TourVm.IsMorningTour;
+
+        //        //Add a new ZooTour
+        //        if(!await _tourRepository.AddZooTour(zooTour))
+        //        {
+        //            await transaction.RollbackAsync();
+        //            response.IsSuccess = false;
+        //            response.UserInfo = "Fel vid skapande av ZooTour, försök igen senare eller kontakta supporten.";
+        //            return response;
+        //        };
+
+        //        //Return... Is it possible to make a better model for the VM to display, like a more complete DTO?
+        //        await transaction.CommitAsync();
+        //        response.Data = tour;
+        //        response.IsSuccess = true;
+        //        return response;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        await transaction.RollbackAsync();
+        //        response.IsSuccess = false;
+        //        response.ErrorMessage = "Yay! Något gick helt fel! Försök igen senare eller kontakta supporten.";
+        //        _logger.LogInformation(ex.Message);
+        //        return response;
+        //    }
+        //}
+
+        public async Task<ServiceResponse<List<Visitor>>> BookZooTour
+                                                (Guid zooTourId,
+                                                int NrOfPersonsToBook,
+                                                List<string> bookers,
+                                                bool hasTickets)
         {
             ServiceResponse<List<Visitor>> response = new ServiceResponse<List<Visitor>>();
             // Allow us to make rollbakcs if something fails somewhere along the chain of the entire method
-            var transaction = _baseRepository.BeginTransaction(); 
+            var transaction = _baseRepository.BeginTransaction();
 
             try // Wraps entire method, allowing for proper commits or rollbacks
             {
@@ -187,7 +193,7 @@ namespace BVZ.BVZ.Application.Services
                                 zootour.Tour.GuideId,
                                 zootour.ZooDay,
                                 zootour.DateOfTour))
-                { 
+                {
                     await transaction.RollbackAsync();
                     response.IsSuccess = false;
                     response.UserInfo = "Denna turen går tyvärr inte att boka, det är för många besök under samma dag till ett eller flera djur som ingår i turen.";
@@ -224,7 +230,7 @@ namespace BVZ.BVZ.Application.Services
                 {
                     var visitors = await HandleTickets(
                                         NrOfPersonsToBook,
-                                        bookers, 
+                                        bookers,
                                         zootour.Tour,
                                         zootour.DateOfTour,
                                         zootour.IsMorningTour,
@@ -244,7 +250,7 @@ namespace BVZ.BVZ.Application.Services
                 catch (Exception ex)
                 {
                     if (ex is DbUpdateException || ex is InvalidDataException || ex is FormatException)
-                    { 
+                    {
                         await transaction.RollbackAsync();
                         response.IsSuccess = false;
                         response.UserInfo = "Fel vid biljettadministration, försök igen senare eller kontakta receptionen.";
@@ -271,8 +277,8 @@ namespace BVZ.BVZ.Application.Services
             }
         }
 
-        public async Task<bool> CheckAnimalFatigue(Guid guideId, 
-                                                    ZooDay zooday, 
+        public async Task<bool> CheckAnimalFatigue(Guid guideId,
+                                                    ZooDay zooday,
                                                     DateTime tourDate)
         {
             var animalsIds = await _animalRepository.GetAnimalsByGuideId(guideId);
@@ -302,7 +308,7 @@ namespace BVZ.BVZ.Application.Services
         public async Task<List<Visitor>> HandleTickets(
                                             int NrOfPersons,
                                             List<string> bookers,
-                                            Tour tour, 
+                                            Tour tour,
                                             DateTime visitDate,
                                             bool isMorningTour,
                                             bool hasTickets)
@@ -312,7 +318,7 @@ namespace BVZ.BVZ.Application.Services
 
             // Handles the case if bookers of tour dont have a zoo-ticket
             if (!hasTickets)
-            {   
+            {
                 for (int i = 0; i < NrOfPersons; i++)
                 {
                     Visitor visitor = new Visitor();
@@ -330,7 +336,7 @@ namespace BVZ.BVZ.Application.Services
             else
             {
                 var dailyVisitors = await _zooRepository.GetDailyZooVisitors(DateTime.Now);
-                if(dailyVisitors == null) throw new InvalidDataException("No visitors for this date.");
+                if (dailyVisitors == null) throw new InvalidDataException("No visitors for this date.");
 
                 if (NrOfPersons != bookers.Count) throw new InvalidDataException("Nr of persons does not match nr of tickets provided.");
 
@@ -339,7 +345,7 @@ namespace BVZ.BVZ.Application.Services
                     Guid ticketId = Guid.Parse(booker);
 
                     var visitor = dailyVisitors.Where(visitor => visitor.Id == ticketId).SingleOrDefault();
-                        
+
                     if (visitor != null)
                     {
                         visitors.Add(visitor);
@@ -352,10 +358,10 @@ namespace BVZ.BVZ.Application.Services
             foreach (var visitor in visitors)
             {
                 TourParticipant tp = new TourParticipant(tour, visitor, visitDate, isMorningTour);
-                if(!await _zooRepository.AddTourParticipant(tp))
+                if (!await _zooRepository.AddTourParticipant(tp))
                 {
-                    throw new DbUpdateException("Can't create tourparticipants."); 
-                }  
+                    throw new DbUpdateException("Can't create tourparticipants.");
+                }
             }
             return visitors;
         }

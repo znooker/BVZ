@@ -29,9 +29,8 @@ namespace BVZ.BVZ.Application.Services
         public async Task<ServiceResponse<List<string>>> GetAllAnimalTypes()
         {
             ServiceResponse<List<string>> response = new ServiceResponse<List<string>>();
-
             var animalTypes = await _animalRepository.GetAllAnimalTypes();
-            if(animalTypes != null || !animalTypes.Any())
+            if(animalTypes == null || !animalTypes.Any())
             {
                 response.IsSuccess = false;
                 response.ErrorMessage = "List of animaltypes is null or empty";
