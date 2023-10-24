@@ -31,7 +31,10 @@ namespace BVZ.BVZ.Domain.Models.Visitors
             Guide = guide;
             TourCompleted = false;
         }
-        public Tour() { }
+        public Tour() 
+        {
+            Id = Guid.NewGuid();
+        }
 
         //private bool CheckIfSpotIsAvailable(Tour tour, int nrOfPersonsToBookTour)
         //{
