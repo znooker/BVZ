@@ -55,7 +55,10 @@ namespace BVZ.BVZ.Infrastructure.Repositories
 
         public Task<Guide> GetGuideById(Guid id)
         {
-            throw new NotImplementedException();
+            return _context.Guides
+                .Include(ac => ac.AnimalCompetences)
+                .ThenInclude(a => a.Animal)
+                .SingleOrDefaultAsync(a => a.Id == id);
         }
 
 
