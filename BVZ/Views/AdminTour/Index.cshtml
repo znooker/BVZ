@@ -11,7 +11,9 @@
 <h1>Tours</h1>
 
 <h2 class="text-secondary">Tour History</h2>
-<button type="button" class="btn btn-success">New Tour</button>
+<a asp-controller="AdminTour" asp-action="Create" class="btn btn-success">
+    New Tour</a>
+
 
 @if(Model is ErrorViewModel errorModel)
 {

@@ -1,0 +1,62 @@
+﻿@using BVZ.Models.Admin;
+
+
+@{
+}
+@model AdminCreateTourViewModel
+
+@* @if (Model is ErrorViewModel errorModel)
+{
+    <div style="color:darkred;">
+        <p>@errorModel.ValidationErrorMessage</p>
+    </div>
+} *@
+
+@* @if (Model is AdminCreateTourViewModel actVM)
+{ *@
+    <form asp-action="Create" method="post">
+        <div class="form-group">
+            <label asp-for="TourName">Tour Name:</label>
+            <input asp-for="TourName" class="form-control" />
+            <span asp-validation-for="TourName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Description">Description:</label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="DateOfTour">Date of Tour:</label>
+            <input asp-for="DateOfTour" type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+            <span asp-validation-for="DateOfTour" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label>Morning or Afternoon Tour:</label>
+            <div>
+                <div class="form-check form-check-inline">
+                    <input asp-for="IsMorningTour" class="form-check-input" type="radio" value="true" />
+                    <label class="form-check-label">Morning Tour</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input asp-for="IsMorningTour" class="form-check-input" type="radio" value="false" />
+                    <label class="form-check-label">Afternoon Tour</label>
+                </div>
+            </div>
+            <span asp-validation-for="IsMorningTour" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="GuideId">Guide:</label>
+            <select asp-for="GuideId" asp-items="@(new SelectList(Model.Guides, "Id", "Name"))" class="form-control">
+                <option value="">Select a Guide</option>
+            </select>
+            <span asp-validation-for="GuideId" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Create Tour</button>
+    </form>
+@* } *@
+

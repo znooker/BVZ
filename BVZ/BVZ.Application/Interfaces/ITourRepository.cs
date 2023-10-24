@@ -8,6 +8,8 @@ namespace BVZ.BVZ.Application.Interfaces
        Task<ZooTour> GetZooTourById(Guid id);
        Task<List<Tour>> GetAllTours();
        Task<List<ZooTour>> GetZooToursByDate(DateTime day);
+
+       Task<bool>CreateTour(Tour tour);
         
        Task<bool> AddZooTour(ZooTour zootour);
        Task<bool> UpdateZooTour(ZooTour zootour);
