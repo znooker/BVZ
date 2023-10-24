@@ -16,6 +16,8 @@ namespace BVZ.BVZ.Domain.Models.Visitors
         public int DailyBookingCount { get; set; } = 0;
         public bool TourCompleted { get; private set; } = false;
 
+        public bool IsArchived { get; set; } = false;
+
         public ICollection<ZooTour> ZooTours { get; set; }
         public Guide Guide { get; set; }
         public Guid GuideId { get; set; }
@@ -29,7 +31,10 @@ namespace BVZ.BVZ.Domain.Models.Visitors
             Guide = guide;
             TourCompleted = false;
         }
-        public Tour() { }
+        public Tour() 
+        {
+            Id = Guid.NewGuid();
+        }
 
         //private bool CheckIfSpotIsAvailable(Tour tour, int nrOfPersonsToBookTour)
         //{

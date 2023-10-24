@@ -51,5 +51,11 @@ namespace BVZ.BVZ.Infrastructure.Repositories
             _context.ZooTours.Update(zootour);
             return await Save();
         }
+
+        public Task<bool> CreateTour(Tour zootour)
+        {
+            _context.Tours.Add(zootour);
+            return Save();
+        }
     }
 }

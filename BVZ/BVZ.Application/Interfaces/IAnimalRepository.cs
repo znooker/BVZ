@@ -1,6 +1,7 @@
 ﻿
 using BVZ.BVZ.Domain.Models.Zoo.Animals;
 using BVZ.BVZ.Domain.Models.Zoo.Guides;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace BVZ.BVZ.Application.Interfaces
 {
@@ -16,6 +17,9 @@ namespace BVZ.BVZ.Application.Interfaces
         Task<List<Guid>> GetAnimalsByGuideId(Guid id);
         Task<int> GetAnimalVisitsByDateAndAnimal(Guid id, DateTime dateOfVisit);
         Task<bool> AddAnimalVisit(AnimalVisit animalVisit);
+
+        Task<List<string>> GetAllAnimalTypes();
+
 
     }
 }

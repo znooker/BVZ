@@ -25,6 +25,12 @@ namespace BVZ.BVZ.Infrastructure.Repositories
             return Task.FromResult(_context.SaveChanges() > 0);
         }
 
+        public async Task<bool> AddNewZooTour(ZooTour zooTour)
+        {
+            _context.Add(zooTour);
+            return await Save();
+        }
+
         Task<bool> IZooRepository.DeleteAnimal(Animal animal)
         {
             throw new NotImplementedException();
@@ -57,5 +63,15 @@ namespace BVZ.BVZ.Infrastructure.Repositories
                 .Where(v => v.TicketDate.Date == today.Date)
                 .ToListAsync();
         }
+
+        public async Task<Guid> GetZooDayIdByTodaysDate(DateTime date)
+        {
+            return await _context.ZooDays
+                .Where(zd => zd.TodaysDate.Date == date.Date)
+                .Select(zd => zd.Id)
+                .FirstOrDefaultAsync();
+        }
+
+       
     }
 }

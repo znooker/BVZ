@@ -4,6 +4,7 @@
     {
         public Guid Id { get; set; }
         public string Alias { get; set; } = "undefined";
+        public bool IsArchived { get; set; } = false;
         public DateTime TicketDate { get; set; }
         public ICollection<TourParticipant> TourParticipants { get; set;}
 

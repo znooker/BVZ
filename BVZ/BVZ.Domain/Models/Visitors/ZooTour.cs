@@ -16,7 +16,10 @@ namespace BVZ.BVZ.Domain.Models.Visitors
         public bool IsMorningTour { get; set; }
         public int NrOfParticipants { get; set; } = 0;
 
-        public ZooTour() { }
+        public ZooTour() 
+        {
+            Id = Guid.NewGuid();
+        }
 
         public ZooTour(Tour tour, ZooDay zooDay, bool isMorningTour, DateTime dateOfTour)
         {

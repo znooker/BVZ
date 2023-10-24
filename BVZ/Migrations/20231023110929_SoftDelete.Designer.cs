@@ -4,6 +4,7 @@ using BVZ.BVZ.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BVZ.Migrations
 {
     [DbContext(typeof(ZooDbContext))]
-    partial class ZooDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231023110929_SoftDelete")]
+    partial class SoftDelete
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -113,8 +116,7 @@ namespace BVZ.Migrations
                             Id = new Guid("00000000-0000-0000-0000-999000000000"),
                             TourID = new Guid("00000000-0000-0000-0060-444405030000"),
                             TourSession = 1,
-
-                            VisitDate = new DateTime(2023, 10, 23, 7, 48, 52, 41, DateTimeKind.Local).AddTicks(3038),
+                            VisitDate = new DateTime(2023, 10, 22, 13, 9, 29, 65, DateTimeKind.Local).AddTicks(9498),
                             VisitorId = new Guid("00000000-0000-0000-0000-999000000000")
                         },
                         new
@@ -122,9 +124,7 @@ namespace BVZ.Migrations
                             Id = new Guid("00002040-8888-0000-0000-999000000000"),
                             TourID = new Guid("00000000-0000-0000-0060-444405030000"),
                             TourSession = 1,
-
-                            VisitDate = new DateTime(2023, 10, 23, 7, 48, 52, 41, DateTimeKind.Local).AddTicks(3068),
-
+                            VisitDate = new DateTime(2023, 10, 22, 13, 9, 29, 65, DateTimeKind.Local).AddTicks(9528),
                             VisitorId = new Guid("00700500-2340-0000-0000-999002000000")
                         });
                 });
@@ -154,28 +154,29 @@ namespace BVZ.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-999000000000"),
                             Alias = "Mikael",
-                            TicketDate = new DateTime(2023, 10, 23, 7, 48, 52, 41, DateTimeKind.Local).AddTicks(3019)
-
+                            IsArchived = false,
+                            TicketDate = new DateTime(2023, 10, 22, 13, 9, 29, 65, DateTimeKind.Local).AddTicks(9478)
                         },
                         new
                         {
                             Id = new Guid("00700500-2340-0000-0000-999002000000"),
                             Alias = "Hans",
-                            TicketDate = new DateTime(2023, 10, 23, 7, 48, 52, 41, DateTimeKind.Local).AddTicks(3056)
-
+                            IsArchived = false,
+                            TicketDate = new DateTime(2023, 10, 22, 13, 9, 29, 65, DateTimeKind.Local).AddTicks(9514)
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-999030000900"),
                             Alias = "Raul",
-                            TicketDate = new DateTime(2023, 10, 23, 7, 48, 52, 41, DateTimeKind.Local).AddTicks(3082)
-
+                            IsArchived = false,
+                            TicketDate = new DateTime(2023, 10, 22, 13, 9, 29, 65, DateTimeKind.Local).AddTicks(9543)
                         },
                         new
                         {
                             Id = new Guid("00005000-0000-0300-0000-999000076000"),
                             Alias = "Lena",
-                            TicketDate = new DateTime(2023, 10, 23, 7, 48, 52, 41, DateTimeKind.Local).AddTicks(3096)
+                            IsArchived = false,
+                            TicketDate = new DateTime(2023, 10, 22, 13, 9, 29, 65, DateTimeKind.Local).AddTicks(9557)
                         });
                 });
 
@@ -212,7 +213,7 @@ namespace BVZ.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-999000000000"),
-                            DateOfTour = new DateTime(2023, 10, 24, 7, 48, 52, 41, DateTimeKind.Local).AddTicks(2784),
+                            DateOfTour = new DateTime(2023, 10, 23, 13, 9, 29, 65, DateTimeKind.Local).AddTicks(9092),
                             IsMorningTour = true,
                             NrOfParticipants = 0,
                             TourID = new Guid("00000000-0000-0000-0000-444000000000"),
@@ -221,7 +222,7 @@ namespace BVZ.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-1000-0000-899000000000"),
-                            DateOfTour = new DateTime(2023, 10, 24, 7, 48, 52, 41, DateTimeKind.Local).AddTicks(2799),
+                            DateOfTour = new DateTime(2023, 10, 23, 13, 9, 29, 65, DateTimeKind.Local).AddTicks(9108),
                             IsMorningTour = false,
                             NrOfParticipants = 0,
                             TourID = new Guid("00000000-0000-0000-0000-444000000000"),
@@ -230,7 +231,7 @@ namespace BVZ.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-999070000000"),
-                            DateOfTour = new DateTime(2023, 10, 24, 7, 48, 52, 41, DateTimeKind.Local).AddTicks(2824),
+                            DateOfTour = new DateTime(2023, 10, 23, 13, 9, 29, 65, DateTimeKind.Local).AddTicks(9133),
                             IsMorningTour = true,
                             NrOfParticipants = 0,
                             TourID = new Guid("00000000-0000-0000-0000-444400000000"),
@@ -239,7 +240,7 @@ namespace BVZ.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-999070000600"),
-                            DateOfTour = new DateTime(2023, 10, 24, 7, 48, 52, 41, DateTimeKind.Local).AddTicks(2865),
+                            DateOfTour = new DateTime(2023, 10, 23, 13, 9, 29, 65, DateTimeKind.Local).AddTicks(9146),
                             IsMorningTour = false,
                             NrOfParticipants = 0,
                             TourID = new Guid("00000000-0000-0000-0000-444400000000"),
@@ -248,7 +249,7 @@ namespace BVZ.Migrations
                         new
                         {
                             Id = new Guid("00000080-9090-0909-0000-999070000000"),
-                            DateOfTour = new DateTime(2023, 10, 24, 7, 48, 52, 41, DateTimeKind.Local).AddTicks(2890),
+                            DateOfTour = new DateTime(2023, 10, 23, 13, 9, 29, 65, DateTimeKind.Local).AddTicks(9169),
                             IsMorningTour = true,
                             NrOfParticipants = 0,
                             TourID = new Guid("00000000-0000-0000-0060-444405030000"),
@@ -257,7 +258,7 @@ namespace BVZ.Migrations
                         new
                         {
                             Id = new Guid("00000000-0023-5070-0000-999070000600"),
-                            DateOfTour = new DateTime(2023, 10, 24, 7, 48, 52, 41, DateTimeKind.Local).AddTicks(2905),
+                            DateOfTour = new DateTime(2023, 10, 23, 13, 9, 29, 65, DateTimeKind.Local).AddTicks(9315),
                             IsMorningTour = false,
                             NrOfParticipants = 0,
                             TourID = new Guid("00000000-0000-0000-0060-444405030000"),
@@ -266,8 +267,7 @@ namespace BVZ.Migrations
                         new
                         {
                             Id = new Guid("00240600-0800-0200-0000-999000000000"),
-
-                            DateOfTour = new DateTime(2023, 10, 23, 7, 48, 52, 41, DateTimeKind.Local).AddTicks(2934),
+                            DateOfTour = new DateTime(2023, 10, 22, 13, 9, 29, 65, DateTimeKind.Local).AddTicks(9386),
                             IsMorningTour = true,
                             NrOfParticipants = 0,
                             TourID = new Guid("00000000-0000-0000-0000-444000000000"),
@@ -276,7 +276,7 @@ namespace BVZ.Migrations
                         new
                         {
                             Id = new Guid("11241100-0000-1000-0000-899000000000"),
-                            DateOfTour = new DateTime(2023, 10, 23, 7, 48, 52, 41, DateTimeKind.Local).AddTicks(2947),
+                            DateOfTour = new DateTime(2023, 10, 22, 13, 9, 29, 65, DateTimeKind.Local).AddTicks(9402),
                             IsMorningTour = false,
                             NrOfParticipants = 0,
                             TourID = new Guid("00000000-0000-0000-0000-444000000000"),
@@ -285,7 +285,7 @@ namespace BVZ.Migrations
                         new
                         {
                             Id = new Guid("11303450-0000-0000-0000-999070000000"),
-                            DateOfTour = new DateTime(2023, 10, 23, 7, 48, 52, 41, DateTimeKind.Local).AddTicks(2960),
+                            DateOfTour = new DateTime(2023, 10, 22, 13, 9, 29, 65, DateTimeKind.Local).AddTicks(9415),
                             IsMorningTour = true,
                             NrOfParticipants = 0,
                             TourID = new Guid("00000000-0000-0000-0000-444400000000"),
@@ -294,7 +294,7 @@ namespace BVZ.Migrations
                         new
                         {
                             Id = new Guid("11303451-0000-0000-0000-999070000600"),
-                            DateOfTour = new DateTime(2023, 10, 23, 7, 48, 52, 41, DateTimeKind.Local).AddTicks(2973),
+                            DateOfTour = new DateTime(2023, 10, 22, 13, 9, 29, 65, DateTimeKind.Local).AddTicks(9429),
                             IsMorningTour = false,
                             NrOfParticipants = 0,
                             TourID = new Guid("00000000-0000-0000-0000-444400000000"),
@@ -303,7 +303,7 @@ namespace BVZ.Migrations
                         new
                         {
                             Id = new Guid("00000080-9090-0909-0090-192070300400"),
-                            DateOfTour = new DateTime(2023, 10, 23, 7, 48, 52, 41, DateTimeKind.Local).AddTicks(2985),
+                            DateOfTour = new DateTime(2023, 10, 22, 13, 9, 29, 65, DateTimeKind.Local).AddTicks(9442),
                             IsMorningTour = true,
                             NrOfParticipants = 0,
                             TourID = new Guid("00000000-0000-0000-0060-444405030000"),
@@ -312,7 +312,7 @@ namespace BVZ.Migrations
                         new
                         {
                             Id = new Guid("00000000-0023-5070-0000-994073020600"),
-                            DateOfTour = new DateTime(2023, 10, 23, 7, 48, 52, 41, DateTimeKind.Local).AddTicks(2998),
+                            DateOfTour = new DateTime(2023, 10, 22, 13, 9, 29, 65, DateTimeKind.Local).AddTicks(9454),
                             IsMorningTour = false,
                             NrOfParticipants = 2,
                             TourID = new Guid("00000000-0000-0000-0060-444405030000"),
@@ -507,13 +507,13 @@ namespace BVZ.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-123000000000"),
                             Archived = false,
-                            TodaysDate = new DateTime(2023, 10, 24, 7, 48, 52, 41, DateTimeKind.Local).AddTicks(2744)
+                            TodaysDate = new DateTime(2023, 10, 23, 13, 9, 29, 65, DateTimeKind.Local).AddTicks(8918)
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0350-123000964000"),
                             Archived = false,
-                            TodaysDate = new DateTime(2023, 10, 23, 7, 48, 52, 41, DateTimeKind.Local).AddTicks(2921)
+                            TodaysDate = new DateTime(2023, 10, 22, 13, 9, 29, 65, DateTimeKind.Local).AddTicks(9331)
                         });
                 });
 

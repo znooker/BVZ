@@ -1,4 +1,6 @@
-﻿@*
+﻿@using BVZ.Models.Admin;
+@model object
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
@@ -10,33 +12,52 @@
 
 <h2 class="text-secondary">Visit History</h2>
 
-<div class="table-responsive">
-    <table class="table table-striped table-sm">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Header</th>
-                <th>Header</th>
-                <th>Header</th>
-                <th>Header</th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1,001</td>
-                <td>Lorem</td>
-                <td>ipsum</td>
-                <td>dolor</td>
-                <td>sit</td>
-                <td>
-                    
-                </td>
-                <td>
-                    <button type="button" class="btn btn-dark">Details</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+@if (Model is ErrorViewModel errorModel)
+{
+    <div style="color:darkred;">
+        <p>@errorModel.ValidationErrorMessage</p>
+    </div>
+}
+
+@if (Model is AllVisitorsAndLinkedToursViewModel avVM)
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th>Biljett#</th>
+                    <th>Namn</th>
+                    <th>Turer</th>
+                    <th>Datum</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach(var row in avVM.VisitorAndTours)
+            {
+                <tr>
+                    <td>@row.VisitorId</td>
+                    <td>@row.Alias</td>
+                        <td>
+                            @foreach (var tour in row.Tours)
+                            {
+                                <ul class="list-group">
+                                    <li class="list-group-item">@tour.TourName</li>
+                                </ul>
+                            }
+                        </td>
+                    <td>@row.TicketDate</td>
+                    <td>
+                    </td>
+
+                </tr>
+            }
+            
+              
+            </tbody>
+        </table>
+    </div>
+}
+
