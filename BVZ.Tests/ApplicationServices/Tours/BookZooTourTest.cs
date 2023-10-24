@@ -3,6 +3,8 @@ using BVZ.BVZ.Application.Services;
 using BVZ.BVZ.Domain.Models.Visitors;
 using BVZ.BVZ.Domain.Models.Zoo;
 using BVZ.BVZ.Domain.Models.Zoo.Animals;
+using BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Land;
+using BVZ.BVZ.Domain.Models.Zoo.Animals.ValueTypes;
 using Microsoft.Extensions.Logging;
 using Moq;
 

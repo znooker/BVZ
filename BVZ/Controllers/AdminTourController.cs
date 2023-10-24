@@ -8,6 +8,7 @@ using BVZ.Models.Admin;
 //using AspNetCore;
 using BVZ.BVZ.Application;
 using Microsoft.Extensions.Options;
+using BVZ.Models.Guide;
 
 namespace BVZ.Controllers
 {
@@ -49,50 +50,59 @@ namespace BVZ.Controllers
         }
 
         
-        public async Task<IActionResult> SelectGuideCompetence()
+        public async Task<IActionResult> SelectGuide()
         {
-            var getOptions = await _animalServices.GetAllAnimalTypes();
-            if (!getOptions.IsSuccess)
-            {
-                ErrorViewModel errorViewModel = new ErrorViewModel();
-                errorViewModel.ValidationErrorMessage = "Fel vid laddnig av kompetensval";
-                return View(errorViewModel);
-            }
-
-            var optionsVM = new GuideCompetenceSelectVM()
-            {
-                AvailableOptions = getOptions.Data
-            };
-
-            return View("/Views/AdminTour/SelectGuideCompetence.cshtml",optionsVM);
-            
-        }
-
-        public async Task<IActionResult> Create()
-        {
-            
             var getAllGuides = await _guideServices.GetAllGuides();
             if (!getAllGuides.IsSuccess)
             {
                 ErrorViewModel errorViewModel = new ErrorViewModel();
-                errorViewModel.ValidationErrorMessage = "Fel vid laddning av guider";
+                errorViewModel.ValidationErrorMessage = "Det gick inte att hämta ut några guider";
+                return View(errorViewModel);
+            }
+
+            DisplayAllGuidesViewModel displayVm = new DisplayAllGuidesViewModel
+            {
+                Guides = getAllGuides.Data
+            };
+
+
+            return View("/Views/AdminTour/SelectGuide.cshtml",displayVm);
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateStepOne(DisplayAllGuidesViewModel data)
+        {
+            var t = data.SelectedGuideID;
+            var getSelectGuide = await _guideServices.GetGuideById(data.SelectedGuideID);
+            if (!getSelectGuide.IsSuccess)
+            {
+                ErrorViewModel errorViewModel = new ErrorViewModel();
+                errorViewModel.ValidationErrorMessage = "Fel vid hämtning av guide.";
                 return View(errorViewModel);
             }
 
             var createTourVm = new AdminCreateTourViewModel()
             {
-                Guides = getAllGuides.Data
+                Guide = getSelectGuide.Data
             };
 
-            return View("/Views/AdminTour/CreateTour.cshtml",createTourVm);
+            return View("/Views/AdminTour/CreateTour.cshtml", createTourVm);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(AdminCreateTourViewModel newTour)
+        public async Task<IActionResult> Create(AdminCreateTourViewModel inputData)
         {
-            var response = await _tourService.CreateNewTour(newTour);
+            
+            var newTour = await _tourService.CreateNewTour(inputData);
+            if(!newTour.IsSuccess)
+            {
+                ErrorViewModel errorViewModel = new ErrorViewModel();
+                errorViewModel.ValidationErrorMessage = newTour.ErrorMessage;
+                return View("/Views/AdminTour/CreateTourConfirmation.cshtml",errorViewModel);
+            }
 
-            return View("/Views/AdminTour/CreateTourConfirmation.cshtml", response.Data);
+            return View("/Views/AdminTour/CreateTourConfirmation.cshtml", newTour.Data);
 
         }
     }

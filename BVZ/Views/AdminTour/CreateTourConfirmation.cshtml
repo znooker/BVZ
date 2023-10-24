@@ -1,10 +1,34 @@
 ﻿@using BVZ.BVZ.Domain.Models.Visitors;
-@model Tour
+@model object
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
 }
-<h1>Confirm Tour created</h1>
-<p>En ny tour skapades med id:@Model.Id</p>
-@* <p>Kopplat till Guiden:@Model.Guide.Name</p> *@
+
+@if (Model is ErrorViewModel errorModel)
+{
+    <div style="color:darkred;">
+        <p>@errorModel.ValidationErrorMessage</p>
+    </div>
+}
+
+@if(Model is Tour tVM)
+{
+    @* <h2>Ny tur - @tVM.TourName</h2>
+    <p>En ny tour skapades med id:@tVM.Id</p>
+
+    <a class="btn btn-primary" asp-controller="AdminTour" asp-action="Index" role="button">Tillbaka</a> *@
+
+    <div class="card">
+        <h5 class="card-header">Ny tur har skapats.</h5>
+        <div class="card-body">
+            <h5 class="card-title">@tVM.TourName</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Id: @tVM.Id</h6>
+            <p class="card-text">@tVM.Description</p>
+            <a class="btn btn-primary" asp-controller="AdminTour" asp-action="Index" role="button">Tillbaka</a>
+        </div>
+    </div>
+
+}
+

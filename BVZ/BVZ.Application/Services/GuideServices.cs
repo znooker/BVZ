@@ -37,5 +37,21 @@ namespace BVZ.BVZ.Application.Services
             return response;
 
         }
+
+        public async Task<ServiceResponse<Guide>> GetGuideById(Guid id)
+        {
+            ServiceResponse<Guide> response = new ServiceResponse<Guide>();
+            var guide = await _guideRepository.GetGuideById(id);
+            if (guide == null)
+            {
+                response.IsSuccess = false;
+                response.ErrorMessage = "Kan inte hitta guide med det angivna id't";
+                return response;
+            }
+
+            response.IsSuccess = true;
+            response.Data = guide;
+            return response;
+        }
     }
 }
