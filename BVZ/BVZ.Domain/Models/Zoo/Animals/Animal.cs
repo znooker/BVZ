@@ -7,7 +7,6 @@ using System.Runtime.CompilerServices;
 
 namespace BVZ.BVZ.Domain.Models.Zoo.Animals
 {
-
     public abstract class Animal
     {
         public Guid Id { get; set; }
