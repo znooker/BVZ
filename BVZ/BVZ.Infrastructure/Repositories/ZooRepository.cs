@@ -72,6 +72,11 @@ namespace BVZ.BVZ.Infrastructure.Repositories
                 .FirstOrDefaultAsync();
         }
 
-       
+        public async Task<ZooDay> GetZooDayByDate(DateTime date)
+        {
+            return await _context.ZooDays
+                .Where(zd => zd.TodaysDate.Date == date.Date)
+                .SingleOrDefaultAsync();
+        }
     }
 }

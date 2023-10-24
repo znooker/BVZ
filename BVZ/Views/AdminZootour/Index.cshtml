@@ -1,0 +1,87 @@
+﻿@using BVZ.Models.Admin.Animals;
+@using BVZ.Models.Admin;
+@model object
+
+@{
+    ViewData["Title"] = "Schedeule daily tours";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+   
+<h1>Schemalägg nya turen för dagen</h1>
+
+<p>Det visas bara turer som har guider lediga för dagen eller inte är fullbokade.</p>
+
+@if (Model is AdminZootourViewModel azVM)
+{
+
+    @if (azVM.Message != null)
+    {
+        <h5>
+            @azVM.Message
+        </h5>
+    }
+    <form asp-controller="AdminZootour" asp-action="NrOfTours" method="post">
+
+        <select class="form-select" name="tourId" aria-label="select-tour">
+            @foreach (var dailyTour in azVM.AvailableTours)
+            {
+                <option value=@dailyTour.Id>@dailyTour.TourName</option>
+            }
+        </select>
+          <button type="submit" class="btn btn-primary">Fortsätt</button>
+    </form>
+}
+
+@if (Model is TimeOfTourViewModel ttVM)
+{
+    <form asp-controller="AdminZootour" asp-action="SchedeuleTour" method="post">
+
+        @if(@ttVM.morning  == true && @ttVM.afternoon == false) 
+        {
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="morning" value="morning">
+                <label class="form-check-label" for="flexCheckDefault">
+                    Morgontur
+                </label>
+             </div>
+        }
+
+        @if (@ttVM.afternoon == true && @ttVM.morning == false)
+        {
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="afternoon" value="afternoon">
+                <label class="form-check-label" for="flexCheckDefault">
+                    Eftermiddagstur
+                </label>
+            </div>
+        }
+
+        @if (@ttVM.afternoon == true && @ttVM.morning == true)
+        {
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="morning" value="1">
+                <label class="form-check-label" for="flexCheckDefault">
+                    Morgontur
+                </label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="afternoon" value="1">
+                <label class="form-check-label" for="flexCheckDefault">
+                    Eftermiddagstur
+                </label>
+            </div>
+        }
+        <input type="hidden" value="@ttVM.Id" name="id"/>
+        <button type="submit" class="btn btn-primary">Schemalägg</button>
+    </form>
+}
+
+@if (Model is ErrorViewModel eVM)
+{
+    <div style="color:darkred;">
+        <p>@eVM.ValidationErrorMessage</p>
+    </div>
+}

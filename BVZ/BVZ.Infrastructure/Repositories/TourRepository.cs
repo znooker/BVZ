@@ -57,5 +57,37 @@ namespace BVZ.BVZ.Infrastructure.Repositories
             _context.Tours.Add(zootour);
             return Save();
         }
+
+        public async Task<List<Tour>> GetToursAvailableToday(DateTime date)
+        {
+            return await _context.Tours
+                             .Include(t => t.Guide)
+                             .Include(t => t.ZooTours)
+                             .Where(t => t.ZooTours.Count(zt => zt.DateOfTour.Date == date.Date) <= 1)
+                             .ToListAsync();
+        }
+
+        public async Task<ZooTour> GetBookingOptionsForTour(Guid id, DateTime date)
+        {
+            try
+            {
+                return await _context.ZooTours
+                           .Where(zt => zt.DateOfTour.Date == date.Date
+                            &&
+                           zt.TourID == id)
+                           .SingleOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Db-operation failed for fetching zootour-info for schedeuling.");
+            }
+        }
+
+        public async Task<Tour> GetTourById(Guid id)
+        {
+            return await _context.Tours
+                .Where(t => t.Id == id)
+                .SingleOrDefaultAsync();
+        }
     }
 }
