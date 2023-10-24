@@ -96,8 +96,15 @@ namespace BVZ.BVZ.Application.Services
         }
 
 
-        //ScheduleZooTour - Skapar en tour med dagens datum kopplat,
-        //kolla så Tour inte redan är kopplad till en Tour
+        //ScheduleZooTour - Skapar en ZooTour med dagens ZooDay
+        //kolla så Tour som kopplas inte redan krockar med en ZooTour för den aktuella dagen
+        //en på förmiddag en på eftermiddag.
+        //Kolla så varje guiden är ledig?
+        public async Task<ServiceResponse<ZooTour>> SheduleZooTour()
+        {
+            ServiceResponse<ZooTour> response = new ServiceResponse<ZooTour>();
+            return response;
+        }
 
 
         //public async Task<ServiceResponse<Tour>> CreateNewTour(AdminCreateTourViewModel TourVm)
