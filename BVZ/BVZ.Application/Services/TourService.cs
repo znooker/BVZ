@@ -63,6 +63,120 @@ namespace BVZ.BVZ.Application.Services
             return response;
         }
 
+        public async Task<ServiceResponse<List<Tour>>> GetAvailableTours()
+        {
+            ServiceResponse<List<Tour>> response = new ServiceResponse<List<Tour>>();
+
+            var today = DateTime.Now;
+            var availableTours = await _tourRepository.GetToursAvailableToday(today);
+            if (availableTours == null || availableTours.Count == 0)
+            {
+                response.IsSuccess = false;
+                response.UserInfo = "Det finns inga fler turer den här dagen att schemalägga.";
+                return response;
+            }
+            response.IsSuccess = true;
+            response.Data = availableTours;
+            return response;
+        }
+
+        public async Task<ServiceResponse<int>> GetSchedeuleTourOptions(Guid Id)
+        {
+            ServiceResponse<int> response = new ServiceResponse<int>();
+
+            try
+            {
+                // Will check the object returned for morning or afternoon-tour. Null signalize both is available.
+                // Controller will need to handle 1,2 and 3.
+                int codeForBooking = 0;
+                var today = DateTime.Now;
+                var optionsToSchedeule = await _tourRepository.GetBookingOptionsForTour(Id, today);
+
+               
+                if (optionsToSchedeule == null) 
+                { 
+                    codeForBooking = 3;
+                    response.IsSuccess = true;
+                    response.Data = codeForBooking;
+                    return response;
+                }
+
+                if (optionsToSchedeule.IsMorningTour) 
+                { 
+                    codeForBooking = 1; 
+                }
+
+                if (!optionsToSchedeule.IsMorningTour) 
+                { 
+                    codeForBooking = 2; 
+                }
+
+                response.IsSuccess = true;
+                response.Data = codeForBooking;
+                return response;
+            }
+           
+             catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.UserInfo = "Det finns inga fler turer den här dagen att schemalägga.";
+                return response;
+            }
+        }
+
+        public async Task<ServiceResponse<string>> SchedeuleDailyTours(Guid tourId, string? morning, string? afternoon)
+        {
+            ServiceResponse<string> response = new ServiceResponse<string>();
+
+            var today = DateTime.Now;
+
+            var zooDay = await _zooRepository.GetZooDayByDate(today);
+            if (zooDay == null)
+            {
+                response.IsSuccess = false;
+                response.UserInfo = "Det är något fel med parkens öppningstider. Kontakta reception.";
+                return response;
+            }
+            var tour = await _tourRepository.GetTourById(tourId);
+            if (tour == null)
+            {
+                response.IsSuccess = false;
+                response.UserInfo = "Rätt tur går inte att knyta till dagens datum. Kontakta administratör.";
+                return response;
+            }
+            
+
+            if(morning != null)
+            {
+                ZooTour morningTour = new ZooTour(tour, zooDay, true, today);
+
+                if (!await _tourRepository.AddZooTour(morningTour))
+                {
+                    response.IsSuccess = false;
+                    response.UserInfo = "Kunde inte schemalägga dagens tur. Något är fel med databas. Kontakta administratör.";
+                    return response;
+                }
+            }
+
+            if (afternoon != null)
+            {
+                ZooTour afternoonTour = new ZooTour(tour, zooDay, false, today);
+
+                if (!await _tourRepository.AddZooTour(afternoonTour))
+                {
+                    response.IsSuccess = false;
+                    response.UserInfo = "Kunde inte schemalägga dagens tur. Något är fel med databas. Kontakta administratör.";
+                    return response;
+                }
+            }
+
+            response.IsSuccess = true;
+            response.Data = "Turen eller turerna är framgångsrikt schemalagda";
+            return response;
+        }
+
+
+
         //ANDREAS TANKAR OCH KNASIGA FUNDERINGAR!!
         //Vill skapa en tour så den kopplas ihop med vald dag (ZooDay) och ZooTours i formuläret.
         //Är ju mer än en Tour som skapas... är det rätt att bara returnera en Tour i responset?

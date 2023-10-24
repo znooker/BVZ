@@ -7,6 +7,8 @@ namespace BVZ.BVZ.Application.Interfaces
 {
     public interface IZooRepository
     {
+        
+        Task<ZooDay> GetZooDayByDate(DateTime date);
         Task<bool> AddNewZooDay(ZooDay zooday);
         Task<bool> AddNewZooTour(ZooTour zooTour);
         Task<bool> AddAnimal(Animal animal);
