@@ -70,5 +70,10 @@ namespace BVZ.BVZ.Infrastructure.Repositories
             _context.AnimalVisits.Add(animalVisit);
             return await Task.FromResult(_context.SaveChanges() > 0);
         }
+
+        public async Task<List<string>> GetAllAnimalTypes()
+        {
+            return await _context.Animals.Select(a => a.AnimalType).Distinct().ToListAsync();
+        }
     }
 }

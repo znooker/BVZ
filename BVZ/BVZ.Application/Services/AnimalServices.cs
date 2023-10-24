@@ -6,6 +6,7 @@ using BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Land;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.EntityFrameworkCore.Query;
+using System.ComponentModel;
 using System.Reflection;
 using System.Security.Permissions;
 
@@ -18,6 +19,22 @@ namespace BVZ.BVZ.Application.Services
         public AnimalServices(IAnimalRepository animalRepository)
         {
             _animalRepository=animalRepository;
+        }
+
+        public async Task<ServiceResponse<List<string>>> GetAllAnimalTypes()
+        {
+            ServiceResponse<List<string>> response = new ServiceResponse<List<string>>();
+
+            var animalTypes = await _animalRepository.GetAllAnimalTypes();
+            if(animalTypes != null || !animalTypes.Any())
+            {
+                response.IsSuccess = false;
+                response.ErrorMessage = "List of animaltypes is null or empty";
+                return response;
+            }
+            response.IsSuccess = true;
+            response.Data = animalTypes;
+            return response;
         }
 
 

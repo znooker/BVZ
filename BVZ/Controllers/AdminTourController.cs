@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using BVZ.BVZ.Domain.Models.Visitors;
 using System.Runtime.InteropServices;
 using BVZ.Models.Admin;
+using AspNetCore;
+using BVZ.BVZ.Application;
+using Microsoft.Extensions.Options;
 
 namespace BVZ.Controllers
 {
@@ -14,14 +17,18 @@ namespace BVZ.Controllers
         private readonly ILogger<AdminTourController> _logger;
         private readonly TourService _tourService;
         private readonly GuideServices _guideServices;
+        private readonly AnimalServices _animalServices;
 
         public AdminTourController(
             ILogger<AdminTourController> logger,
-            TourService tourService, GuideServices guideServices)
+            TourService tourService,
+            GuideServices guideServices,
+            AnimalServices animalServices)
         {
             _logger = logger;
             _tourService = tourService;
             _guideServices = guideServices;
+            _animalServices = animalServices;
         }
         public async Task<IActionResult> Index()
         {
@@ -38,6 +45,26 @@ namespace BVZ.Controllers
                 AllTours = getAllTours.Data
             };
             return View(displayVM);
+            
+        }
+
+        
+        public async Task<IActionResult> SelectGuideCompetence()
+        {
+            var getOptions = await _animalServices.GetAllAnimalTypes();
+            if (!getOptions.IsSuccess)
+            {
+                ErrorViewModel errorViewModel = new ErrorViewModel();
+                errorViewModel.ValidationErrorMessage = "Fel vid laddnig av kompetensval";
+                return View(errorViewModel);
+            }
+
+            var optionsVM = new GuideCompetenceSelectVM()
+            {
+                AvailableOptions = getOptions.Data
+            };
+
+            return View("/Views/AdminTour/SelectGuideCompetence.cshtml",optionsVM);
             
         }
 

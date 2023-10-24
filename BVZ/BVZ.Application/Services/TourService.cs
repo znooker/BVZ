@@ -69,75 +69,101 @@ namespace BVZ.BVZ.Application.Services
         //Kollar inte om Guiden är dubbelbokad... t.ex dubbla eftermiddag/förmiddagspass på samma dag
         //Kollar inte Guidens kompetens... hur nu det skulle gå till då man inte väljer vilka djur som ska vara på turen.
         //Hur fan kollar man djuret... behövs ens det i detta läget?
-              
+
         public async Task<ServiceResponse<Tour>> CreateNewTour(AdminCreateTourViewModel TourVm)
         {
             ServiceResponse<Tour> response = new ServiceResponse<Tour>();
-            var transaction = _baseRepository.BeginTransaction();
 
             //I would prefer not to create a new Tour like this... is it even possible?
-            try
             {
                 var tour = new Tour();
                 tour.TourName = TourVm.TourName;
                 tour.Description = TourVm.Description;
                 tour.GuideId = TourVm.GuideId;
-                
+
                 //var newTour = await _tourRepository.CreateTour(tour);
-                if(!await _tourRepository.CreateTour(tour))
+                if (!await _tourRepository.CreateTour(tour))
                 {
-                    await transaction.RollbackAsync();
                     response.IsSuccess = false;
                     response.UserInfo = "Fel vid skapadet av ny Tour, försök igen senare eller kontakta supporten.";
                     return response;
                 }
-
-
-                //We need to have a ZooDay to associate it, should we just link it to TodayDate
-                //var todayZooDayId = _zooRepository.GetZooDayIdByTodaysDate(DateTime.Now);
-
-                //Link them together
-                var zooTour = new ZooTour();
-                zooTour.TourID = tour.Id;
-                zooTour.ZooDayId = await _zooRepository.GetZooDayIdByTodaysDate(DateTime.Now.Date);
-
-                //if(zooTour.ZooDayId == null)
-                //{
-                //    await transaction.RollbackAsync();
-                //    response.IsSuccess = false;
-                //    response.UserInfo = "Ingen dag med matchande ID funnet, ";
-                //    return response;
-                //}
-
-                zooTour.DateOfTour = TourVm.DateOfTour;
-                zooTour.IsMorningTour = TourVm.IsMorningTour;
-
-                //Add a new ZooTour
-                if(!await _tourRepository.AddZooTour(zooTour))
-                {
-                    await transaction.RollbackAsync();
-                    response.IsSuccess = false;
-                    response.UserInfo = "Fel vid skapande av ZooTour, försök igen senare eller kontakta supporten.";
-                    return response;
-                };
-                
-                //Return... Is it possible to make a better model for the VM to display, like a more complete DTO?
-                await transaction.CommitAsync();
-                response.Data = tour;
                 response.IsSuccess = true;
-                return response;
-            }
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync();
-                response.IsSuccess = false;
-                response.ErrorMessage = "Yay! Något gick helt fel! Försök igen senare eller kontakta supporten.";
-                _logger.LogInformation(ex.Message);
+                response.UserInfo = $"Ny Tour med id {tour.Id} skapades";
                 return response;
             }
         }
 
-        public async Task<ServiceResponse<List<Visitor>>> BookZooTour
+                //public async Task<ServiceResponse<Tour>> CreateNewTour(AdminCreateTourViewModel TourVm)
+                //{
+                //    ServiceResponse<Tour> response = new ServiceResponse<Tour>();
+                //    var transaction = _baseRepository.BeginTransaction();
+
+                //    //I would prefer not to create a new Tour like this... is it even possible?
+                //    try
+                //    {
+                //        var tour = new Tour();
+                //        tour.TourName = TourVm.TourName;
+                //        tour.Description = TourVm.Description;
+                //        tour.GuideId = TourVm.GuideId;
+
+                //        //var newTour = await _tourRepository.CreateTour(tour);
+                //        if(!await _tourRepository.CreateTour(tour))
+                //        {
+                //            await transaction.RollbackAsync();
+                //            response.IsSuccess = false;
+                //            response.UserInfo = "Fel vid skapadet av ny Tour, försök igen senare eller kontakta supporten.";
+                //            return response;
+                //        }
+
+
+                //        //We need to have a ZooDay to associate it, should we just link it to TodayDate
+                //        //var todayZooDayId = _zooRepository.GetZooDayIdByTodaysDate(DateTime.Now);
+
+                //        //Lyft ur detta
+
+                //        //Link them together
+                //        var zooTour = new ZooTour();
+                //        zooTour.TourID = tour.Id;
+                //        zooTour.ZooDayId = await _zooRepository.GetZooDayIdByTodaysDate(DateTime.Now.Date);
+
+                //        //if(zooTour.ZooDayId == null)
+                //        //{
+                //        //    await transaction.RollbackAsync();
+                //        //    response.IsSuccess = false;
+                //        //    response.UserInfo = "Ingen dag med matchande ID funnet, ";
+                //        //    return response;
+                //        //}
+
+                //        zooTour.DateOfTour = TourVm.DateOfTour;
+                //        zooTour.IsMorningTour = TourVm.IsMorningTour;
+
+                //        //Add a new ZooTour
+                //        if(!await _tourRepository.AddZooTour(zooTour))
+                //        {
+                //            await transaction.RollbackAsync();
+                //            response.IsSuccess = false;
+                //            response.UserInfo = "Fel vid skapande av ZooTour, försök igen senare eller kontakta supporten.";
+                //            return response;
+                //        };
+
+                //        //Return... Is it possible to make a better model for the VM to display, like a more complete DTO?
+                //        await transaction.CommitAsync();
+                //        response.Data = tour;
+                //        response.IsSuccess = true;
+                //        return response;
+                //    }
+                //    catch (Exception ex)
+                //    {
+                //        await transaction.RollbackAsync();
+                //        response.IsSuccess = false;
+                //        response.ErrorMessage = "Yay! Något gick helt fel! Försök igen senare eller kontakta supporten.";
+                //        _logger.LogInformation(ex.Message);
+                //        return response;
+                //    }
+                //}
+
+                public async Task<ServiceResponse<List<Visitor>>> BookZooTour
                                                         (Guid zooTourId, 
                                                         int NrOfPersonsToBook,
                                                         List<string> bookers,
