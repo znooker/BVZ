@@ -79,7 +79,7 @@ namespace BVZ.Controllers
                 return View(errorViewModel);
             }
 
-            var createTourVm = new AdminCreateTourViewModel()
+            var createTourVm = new DisplayAdminAnimalsViewModel()
             {
                 Guides = getAllGuides.Data
             };
@@ -88,7 +88,7 @@ namespace BVZ.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(AdminCreateTourViewModel newTour)
+        public async Task<IActionResult> Create(DisplayAdminAnimalsViewModel newTour)
         {
             var response = await _tourService.CreateNewTour(newTour);
 

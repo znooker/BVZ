@@ -19,9 +19,10 @@ namespace BVZ.Controllers
             _animalServices=animalServices;
         }
 
+
         public async Task<IActionResult> Index()
         {
-            var animal= await _animalServices.GetAllAnimals();
+            var animal = await _animalServices.GetAllAnimals();
             if (!animal.IsSuccess)
             {
                 //Något gick fel ErrorViewModel...
@@ -35,42 +36,16 @@ namespace BVZ.Controllers
                 };
                 return View(viewModel);
             }
-            
         }
-        
-        
-        //Gör till task, Async mm få in id från djuret
-        
+
         public async Task<IActionResult> Details(Guid id)
         {
             var animal1 = await _animalServices.GetAnimalByIdTest(id);
-            var animal = await _animalServices.GetAnimalById(id);
-            if (!animal.IsSuccess)
+            var testmodel = new TestViewModel
             {
-                //Något gick fel ErrorViewModel...
-                return View();
-            }
-            else
-            {
-
-                //var viewModel = new BaldEagle
-                //{
-                //    Id = animal.Data.Id,
-                //    AnimalName  = animal.Data.AnimalName,
-                //    Specie = animal.Data.Specie
-
-                //};
-                var result = await _animalServices.DisplayAnimalPropertiesAndMethods(animal1.Data);
-                return View();
-            }
-            //return View(animal);
-        }
-
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+                Animal = animal1.Data
+            };
+            return View("/views/Test/index.cshtml", testmodel);
         }
     }
 }

@@ -5,6 +5,7 @@ using BVZ.BVZ.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Configuration;
+using static BVZ.BVZ.Domain.Models.Zoo.Animals.Animal;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +34,7 @@ builder.Services.AddTransient<TourService>();
 builder.Services.AddTransient<AnimalServices>();
 builder.Services.AddTransient<GuideServices>();
 builder.Services.AddTransient<VisitorServices>();
+builder.Services.AddTransient<AnimalFactory>();
 
 var app = builder.Build();
 

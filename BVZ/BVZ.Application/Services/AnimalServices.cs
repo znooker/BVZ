@@ -3,22 +3,27 @@ using BVZ.BVZ.Domain.Models.Visitors;
 using BVZ.BVZ.Domain.Models.Zoo;
 using BVZ.BVZ.Domain.Models.Zoo.Animals;
 using BVZ.BVZ.Domain.Models.Zoo.Animals.Species.Land;
+using BVZ.BVZ.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.EntityFrameworkCore.Query;
 using System.ComponentModel;
 using System.Reflection;
 using System.Security.Permissions;
+using static BVZ.BVZ.Domain.Models.Zoo.Animals.Animal;
 
 namespace BVZ.BVZ.Application.Services
 {
     public class AnimalServices
     {
         private readonly IAnimalRepository _animalRepository;
+        private readonly AnimalFactory _animalFactory;
 
-        public AnimalServices(IAnimalRepository animalRepository)
+        public AnimalServices(IAnimalRepository animalRepository,
+            AnimalFactory animalFactory)
         {
             _animalRepository=animalRepository;
+            _animalFactory = animalFactory;
         }
 
         public async Task<ServiceResponse<List<string>>> GetAllAnimalTypes()
@@ -89,27 +94,6 @@ namespace BVZ.BVZ.Application.Services
         {
             ServiceResponse<Animal> response = new ServiceResponse<Animal>();
             var animal = await _animalRepository.GetAnimalById(id);
-
-            //if (animal != null)
-            //{
-            //    var animalType = animal.GetType();
-            //    var idProperty = animalType.GetProperty("Id");
-            //    var landProperty = animalType.GetProperty("Speed");
-            //    var airProperty = animalType.GetProperty("MaxAltitude");
-                
-            //    var airLandMethod = animalType.GetProperty("Move");
-            //    var habitatMethod = animalType.GetProperty("MakeSound");
-
-
-            //    var ozelotMethod = animalType.GetMethod("Ozelotmetod");
-            //}
-            //else
-            //{
-            //    response.IsSuccess = false;
-            //    response.ErrorMessage = $"Animal with id:{id} was not found.";
-            //    return response;
-            //}
-
             response.IsSuccess = true;
             response.Data = animal;
             return response;
@@ -137,6 +121,77 @@ namespace BVZ.BVZ.Application.Services
             return Animalproperties;
         }
 
+        public async Task<ServiceResponse<string>> AddAnimal(string animalType, string animalName)
+        {
+            ServiceResponse<string> sr = new ServiceResponse<string>();
 
+            var animal = _animalFactory.CreateAnimal(animalType);
+            if(animalName == null || animal == null)
+            {
+                sr.IsSuccess = false;
+                sr.UserInfo = "Något gick fel, troligen är ett eller flera inmatade värden felaktiga.";
+                return sr;
+            }
+            animal.AnimalName = animalName;
+
+            if (!await _animalRepository.AddAnimal(animal))
+            {
+                sr.IsSuccess = false;
+                sr.UserInfo = "Djuret kunde inte läggas till i databasen.";
+                return sr;
+            }
+            sr.IsSuccess = true;
+            sr.Data = animal.AnimalType + ": " + animal.AnimalName + " är tillagt i zoo.";
+            return sr;
+        }
+
+        public async Task<ServiceResponse<string>> DeleteAnimal(Guid animalId)
+        {
+            ServiceResponse<string> result = new ServiceResponse<string>();
+
+            var animal = await _animalRepository.GetAnimalById(animalId);
+            if (animal == null)
+            {
+                result.IsSuccess = false;
+                result.UserInfo = "Hittade inget djur att ta bort.";
+                return result;
+            }
+            animal.IsArchived= true;
+
+            if (!await _animalRepository.DeleteAnimal(animal))
+            {
+                result.IsSuccess = false;
+                result.UserInfo = "Djuret kunde inte tas bort. Kontakta admin.";
+                return result;
+            }
+            result.IsSuccess = true;
+            result.Data = animal.AnimalType + ": " + animal.AnimalName + " är borttaget från zoo.";
+            return result;
+        }
+
+        public async Task<ServiceResponse<string>> UpdateAnimal(Guid animalId, string newName)
+        {
+            ServiceResponse<string> result = new ServiceResponse<string>();
+
+            var animal = await _animalRepository.GetAnimalById(animalId);
+            if (animal == null || newName == null)
+            {
+                result.IsSuccess = false;
+                result.UserInfo = "Hittade inget djur att uppdatera.";
+                return result;
+            }
+
+            animal.AnimalName = newName;
+
+            if (!await _animalRepository.UpdateAnimal(animal))
+            {
+                result.IsSuccess = false;
+                result.UserInfo = "Djuret kunde inte uppdateras. Kontakta admin.";
+                return result;
+            }
+            result.IsSuccess = true;
+            result.Data = animal.AnimalType + ": " + animal.AnimalName + " är uppdaterat!";
+            return result;
+        }
     }
 }

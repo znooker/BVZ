@@ -2,7 +2,7 @@
 
 namespace BVZ.Models.Admin
 {
-    public class AdminCreateTourViewModel
+    public class DisplayAdminAnimalsViewModel
     {
         public Guid TourId { get; set; }
         public string TourName { get; set; }

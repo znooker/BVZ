@@ -1,46 +1,93 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using BVZ.Models.Admin.Animals;
+@model object
+
 @{
     ViewData["Title"] = "Admin Animals";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
+
+@if (Model is DisplayAdminAnimalsViewModel daaVM)
+{
+    if (daaVM.Message != null)
+    {
+        if (daaVM.Status == "add")
+        {
+            <h5 style="color:darkgreen" ;>
+                @daaVM.Message
+            </h5>
+        }
+        if (daaVM.Status == "update")
+        {
+            <h5 style="color:darkgoldenrod";>
+                @daaVM.Message
+            </h5>
+        }
+        if (daaVM.Status == "delete")
+        {
+            <h5 style="color:red" ;>
+                @daaVM.Message
+            </h5>
+        }
+        
+    }
+   
 <h1>Animals</h1>
 
 <h2 class="text-secondary">All Animals</h2>
-<button type="button" class="btn btn-success">New Animal</button>
+
+    <a asp-controller="AdminAnimal" asp-action="AddAnimalRegistration" class="btn btn-success">Lägg till djur</a>
 
 <div class="table-responsive">
     <table class="table table-striped table-sm">
         <thead>
             <tr>
-                <th>#</th>
-                <th>Header</th>
-                <th>Header</th>
-                <th>Header</th>
-                <th>Header</th>
-                <th></th>
-                <th></th>
+                <th>ID</th>
+                <th>Namn</th>
+                <th>Djurnamn</th>
+                <th>Art</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>1,001</td>
-                <td>Lorem</td>
-                <td>ipsum</td>
-                <td>dolor</td>
-                <td>sit</td>
-                <td>
-                </td>
-                <td>
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-dark">Details</button>
-                        <button type="button" class="btn btn-secondary">Update</button>
-                        <button type="button" class="btn btn-danger">Kill</button>
-                    </div>
-                </td>
-            </tr>
+           
+                    @foreach (var animal in daaVM.Animals)
+                {
+                 <tr>
+                        <td>@animal.Id</td>
+                        <td>@animal.AnimalName</td>
+                        <td>@animal.AnimalType</td>
+                        <td>@animal.Specie</td>
+                     <td> 
+                        <div class="btn-group" role="group" aria-label="crud-buttons">
+                            <form asp-controller="AdminAnimal" asp-action="ViewAnimal" method="post">
+                                <input type="hidden" value="@animal.Id" name="animalId">
+                                <button type="submit"  class="btn btn-dark">Detaljer</button>
+                             </form>
+
+                            <form asp-controller="AdminAnimal" asp-action="UpdateAnimalRedirect" method="post">
+                                <input type="hidden" value="@animal.Id" name="animalId">
+                                <button type="submit"  class="btn btn-dark">Redigera</button>
+                             </form>
+
+                            <form asp-controller="AdminAnimal" asp-action="DeleteAnimal" method="post">
+                                <input type="hidden" value="@animal.Id" name="animalId">
+                                <button type="submit" class="btn btn-dark">Ta bort</button>
+                            </form>
+                            
+                        </div>
+                    </td>
+                </tr>
+                }
+               
         </tbody>
     </table>
 </div>
+}
+
+
+@if (Model is ErrorViewModel eVM)
+{
+    <div style="color:darkred;">
+        <p>@eVM.ValidationErrorMessage</p>
+    </div>
+}

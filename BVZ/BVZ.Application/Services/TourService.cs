@@ -70,7 +70,7 @@ namespace BVZ.BVZ.Application.Services
         //Kollar inte Guidens kompetens... hur nu det skulle gå till då man inte väljer vilka djur som ska vara på turen.
         //Hur fan kollar man djuret... behövs ens det i detta läget?
 
-        public async Task<ServiceResponse<Tour>> CreateNewTour(AdminCreateTourViewModel TourVm)
+        public async Task<ServiceResponse<Tour>> CreateNewTour(DisplayAdminAnimalsViewModel TourVm)
         {
             ServiceResponse<Tour> response = new ServiceResponse<Tour>();
 

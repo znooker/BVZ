@@ -15,14 +15,16 @@ namespace BVZ.BVZ.Infrastructure.Repositories
             _context = context;
         }
 
-        public Task<bool> AddAnimal(Animal animal)
+        public async Task<bool> AddAnimal(Animal animal)
         {
-            throw new NotImplementedException();
+            _context.Animals.Add(animal);
+            return await Save();
         }
 
-        public Task<bool> DeleteAnimal(Animal animal)
+        public async Task<bool> DeleteAnimal(Animal animal)
         {
-            throw new NotImplementedException();
+            _context.Animals.Update(animal);
+            return await Save();
         }
 
         public Task<bool> DeleteAnimalById(Guid id)
@@ -32,7 +34,7 @@ namespace BVZ.BVZ.Infrastructure.Repositories
 
         public async Task<IEnumerable<Animal>> GetAllAnimals()
         {
-            var result = await _context.Animals.ToListAsync();
+            var result = await _context.Animals.Where(a => a.IsArchived == false || a.IsArchived == null).ToListAsync();
            
             return result;
         }
