@@ -33,23 +33,33 @@ namespace BVZ.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            
+
             var getAllTours = await _tourService.GetAllTours();
             if (!getAllTours.IsSuccess)
             {
                 ErrorViewModel errorViewModel = new ErrorViewModel();
-                errorViewModel.ValidationErrorMessage = "Det gick inte att hämta några tours";
+                errorViewModel.ValidationErrorMessage = getAllTours.UserInfo;
                 return View(errorViewModel);
             }
+
             DisplayAllToursViewModel displayVM = new DisplayAllToursViewModel
             {
                 AllTours = getAllTours.Data
             };
+
+            if (TempData["Message"] != null && TempData["Status"] != null)
+            {
+                string messageToStr = TempData["Message"].ToString();
+                string statusToStr = TempData["Status"].ToString();
+                displayVM.Message = messageToStr;
+                displayVM.Status = statusToStr;
+            }
+
             return View(displayVM);
-            
+
         }
 
-        
+
         public async Task<IActionResult> SelectGuide()
         {
             var getAllGuides = await _guideServices.GetAllGuides();
@@ -66,7 +76,7 @@ namespace BVZ.Controllers
             };
 
 
-            return View("/Views/AdminTour/SelectGuide.cshtml",displayVm);
+            return View("/Views/AdminTour/SelectGuide.cshtml", displayVm);
 
         }
 
@@ -93,16 +103,37 @@ namespace BVZ.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(DisplayAdminAnimalsViewModel inputData)
         {
-            
+
             var newTour = await _tourService.CreateNewTour(inputData);
-            if(!newTour.IsSuccess)
+            if (!newTour.IsSuccess)
             {
                 ErrorViewModel errorViewModel = new ErrorViewModel();
                 errorViewModel.ValidationErrorMessage = newTour.ErrorMessage;
-                return View("/Views/AdminTour/CreateTourConfirmation.cshtml",errorViewModel);
+                return View("/Views/AdminTour/CreateTourConfirmation.cshtml", errorViewModel);
             }
 
             return View("/Views/AdminTour/CreateTourConfirmation.cshtml", newTour.Data);
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SoftDeleteTour(Guid tourId)
+        {
+            var selectedTour = await _tourService.SoftDeleteTour(tourId);
+
+            if (!selectedTour.IsSuccess)
+            {
+                ErrorViewModel eVm = new ErrorViewModel
+                {
+                    ValidationErrorMessage = selectedTour.ErrorMessage
+                };
+                return View(eVm);
+            }
+
+            string deleteMessage = selectedTour.Data;
+            TempData["Message"] = deleteMessage;
+            TempData["Status"] = "delete";
+            return RedirectToAction("Index");
 
         }
     }
