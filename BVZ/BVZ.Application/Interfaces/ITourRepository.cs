@@ -14,6 +14,8 @@ namespace BVZ.BVZ.Application.Interfaces
        Task<List<Tour>> GetToursAvailableToday(DateTime date);
         
        Task<bool>CreateTour(Tour tour);
+
+       Task<bool> UpdateTour(Tour tour);
         
        Task<bool> AddZooTour(ZooTour zootour);
        Task<bool> UpdateZooTour(ZooTour zootour);

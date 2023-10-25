@@ -47,6 +47,32 @@ namespace BVZ.BVZ.Application.Services
             return response;
         }
 
+        public async Task<ServiceResponse<string>> SoftDeleteTour(Guid tourId)
+        {
+            ServiceResponse<string> result = new ServiceResponse<string>();
+
+            var tour = await _tourRepository.GetTourById(tourId);
+            if (tour == null)
+            {
+                result.IsSuccess = false;
+                result.ErrorMessage= "Ingen tour med valt id hittades";
+                return result;
+            }
+
+            tour.IsArchived = true;
+
+            if(!await _tourRepository.UpdateTour(tour))
+            {
+                result.IsSuccess = false;
+                result.ErrorMessage = "Gick inte att ta bort den valda touren";
+                return result;
+            }
+
+            result.IsSuccess = true;
+            result.Data = $"{tour.TourName} är borttagen";
+            return result;
+        }
+
         public async Task<ServiceResponse<List<ZooTour>>> GetCurrentDayZooTours(DateTime currentDate)
         {
             ServiceResponse<List<ZooTour>> response = new ServiceResponse<List<ZooTour>>();

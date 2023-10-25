@@ -62,7 +62,7 @@ namespace BVZ.BVZ.Application.Services
             if (guide == null)
             {
                 result.IsSuccess = false;
-                result.UserInfo = "Hittade ingen guide att ta bort.";
+                result.ErrorMessage = "Hittade ingen guide att ta bort.";
                 return result;
             }
             guide.IsArchived = true;
@@ -70,7 +70,7 @@ namespace BVZ.BVZ.Application.Services
             if (!await _guideRepository.SoftDeleteGuide(guide))
             {
                 result.IsSuccess = false;
-                result.UserInfo = "Gick inte att ta bort den valda guiden. Kontakta admin.";
+                result.ErrorMessage = "Gick inte att ta bort den valda guiden. Kontakta admin.";
                 return result;
             }
             result.IsSuccess = true;
