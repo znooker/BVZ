@@ -79,13 +79,20 @@
                         <td>
                         </td>
                         <td>
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                <button type="button" class="btn btn-dark">Schemalägg</button>
-                                <button type="button" class="btn btn-secondary">Updatera</button>
+                            <div class="btn-group" role="group" aria-label="">
+
+                        <td>
+                            <div class="btn-group btn-group-vertical" role="group" aria-label="">
+                                <form asp-controller="AdminTour" asp-action="UpdateTourFormRedirect" method="post">
+                                    <input type="hidden" name="tourId" value="@tour.Id">
+                                    <button type="submit" class="btn btn-secondary btn-block m-1">Uppdatera</button>
+                                </form>
                                 <form asp-controller="AdminTour" asp-action="SoftDeleteTour" method="post">
                                     <input type="hidden" name="tourId" value="@tour.Id">
-                                    <button type="submit" class="btn btn-danger">Ta bort</button>
+                                    <button type="submit" class="btn btn-danger btn-block m-1">Ta bort</button>
                                 </form>
+                            </div>
+                        </td>
 
                             </div>
                         </td>

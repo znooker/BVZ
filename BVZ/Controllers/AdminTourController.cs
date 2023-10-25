@@ -5,10 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using BVZ.BVZ.Domain.Models.Visitors;
 using System.Runtime.InteropServices;
 using BVZ.Models.Admin;
-//using AspNetCore;
 using BVZ.BVZ.Application;
 using Microsoft.Extensions.Options;
 using BVZ.Models.Admin.Guide;
+using BVZ.Models.Admin.Tour;
+
 
 namespace BVZ.Controllers
 {
@@ -133,6 +134,43 @@ namespace BVZ.Controllers
             string deleteMessage = selectedTour.Data;
             TempData["Message"] = deleteMessage;
             TempData["Status"] = "delete";
+            return RedirectToAction("Index");
+
+        }
+
+        public async Task<IActionResult> UpdateTourFormRedirect(Guid tourId)
+        {
+            var tour = await _tourService.GetSingleTourById(tourId);
+
+            if (!tour.IsSuccess)
+            {
+                ErrorViewModel eVm = new ErrorViewModel
+                {
+                    ValidationErrorMessage = tour.ErrorMessage
+                };
+
+            }
+
+            SingleTourViewModel stVM = new SingleTourViewModel { Tour = tour.Data };
+            return View("UpdateTourForm", stVM);
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateTour(Guid tourId, string tourName, string tourDescription)
+        {
+            var selectedTour = await _tourService.UpdateTour(tourId, tourName, tourDescription);
+            if (!selectedTour.IsSuccess)
+            {
+                ErrorViewModel eVm = new ErrorViewModel
+                {
+                    ValidationErrorMessage = selectedTour.ErrorMessage
+                };
+            }
+
+            string updateMessage = selectedTour.Data;
+            TempData["Message"] = updateMessage;
+            TempData["Status"] = "update";
             return RedirectToAction("Index");
 
         }
