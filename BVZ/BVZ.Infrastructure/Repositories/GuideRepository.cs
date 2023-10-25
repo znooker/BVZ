@@ -53,6 +53,7 @@ namespace BVZ.BVZ.Infrastructure.Repositories
         public async Task<List<Guide>> GetAllGuides()
         {
             return await _context.Guides
+                .Where(g => g.IsArchived == false || g.IsArchived == null)
                 .Include(ac => ac.AnimalCompetences)
                 .ThenInclude(a => a.Animal)
                 .ToListAsync();
