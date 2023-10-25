@@ -1,8 +1,10 @@
-﻿using BVZ.BVZ.Application.Interfaces;
+﻿
+using BVZ.BVZ.Application.Interfaces;
 using BVZ.BVZ.Domain.Models.Visitors;
 using BVZ.BVZ.Domain.Models.Zoo;
 using BVZ.BVZ.Domain.Models.Zoo.Animals;
 using BVZ.Models.Admin;
+using BVZ.Models.Admin.Tour;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,6 +34,25 @@ namespace BVZ.BVZ.Application.Services
             _baseRepository = baseRepository;
         }
 
+        public async Task<ServiceResponse<Tour>> GetSingleTourById(Guid tourId)
+        {
+            ServiceResponse<Tour> response = new ServiceResponse<Tour>();
+
+            var tour = await _tourRepository.GetTourById(tourId);
+            
+            if (tour == null)
+            {
+                response.IsSuccess = false;
+                response.ErrorMessage = "Ingen tur funnen för aktuellt id";
+                return response;
+            }
+
+            response.IsSuccess = true;
+            response.Data = tour;
+            return response;
+
+        }
+
         public async Task<ServiceResponse<List<Tour>>> GetAllTours()
         {
             ServiceResponse<List<Tour>> response = new ServiceResponse<List<Tour>>();
@@ -44,6 +65,33 @@ namespace BVZ.BVZ.Application.Services
             }
             response.IsSuccess = true;
             response.Data = list;
+            return response;
+        }
+
+        public async Task<ServiceResponse<string>> UpdateTour(Guid tourId, string tourName, string tourDescription)
+        {
+            ServiceResponse<string> response = new ServiceResponse<string>();
+
+            var tour = await _tourRepository.GetTourById(tourId);
+            if(tour == null || tourName == null)
+            {
+                response.IsSuccess =false;
+                response.UserInfo = "Hittade ingen tour att uppdatera.";
+                return response;
+            }
+
+            tour.TourName = tourName;
+            tour.Description = tourDescription;
+
+            if (!await _tourRepository.UpdateTour(tour))
+            {
+                response.IsSuccess = false;
+                response.UserInfo = "Turen kunde inte uppdateras. Kontakta Admin";
+                return response;
+            }
+
+            response.IsSuccess = true;
+            response.Data = $"{tour.Id} : är uppdaterad.";
             return response;
         }
 
@@ -512,6 +560,8 @@ namespace BVZ.BVZ.Application.Services
             }
             return visitors;
         }
+
+       
     }
 }
 

@@ -1,0 +1,24 @@
+﻿@using BVZ.Models.Admin.Tour;
+@model SingleTourViewModel
+
+@{
+    ViewData["Title"] = "Update Tour";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<form asp-controller="AdminTour" asp-action="UpdateTour" method="post">
+    
+
+    <div class="form-group">
+        <label asp-for="Tour.TourName">Tour Name:</label>
+        <input asp-for="Tour.TourName" name="tourName" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Tour.Description">Description:</label>
+        <textarea asp-for="Tour.Description" name="tourDescription" class="form-control"></textarea>
+    </div>
+    <input type="hidden" name="tourId" asp-for="Tour.Id" />
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
