@@ -221,5 +221,23 @@ namespace BVZ.BVZ.Application.Services
             return result;
         
         }
+
+        public async Task<ServiceResponse<List<Animal>>> GetUniqueAnimalListByAnimalType(List<string> animaltypes)
+        {
+            ServiceResponse<List<Animal>> result = new ServiceResponse<List<Animal>>();
+
+            var animalList = await _animalRepository.GetUniqeAnimalListByAnimalType(animaltypes);
+
+            if (animalList == null || !animalList.Any())
+            {
+                result.IsSuccess = false;
+                result.ErrorMessage = "Inga djur kunde hittas!";
+                return result;
+            }
+
+            result.IsSuccess = true;
+            result.Data = animalList;
+            return result;
+        }
     }
 }
