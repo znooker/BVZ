@@ -15,23 +15,33 @@
 
 @if (Model is AdminZootourViewModel azVM)
 {
-
+       
     @if (azVM.Message != null)
+    
     {
         <h5>
             @azVM.Message
         </h5>
     }
-    <form asp-controller="AdminZootour" asp-action="NrOfTours" method="post">
 
-        <select class="form-select" name="tourId" aria-label="select-tour">
-            @foreach (var dailyTour in azVM.AvailableTours)
-            {
-                <option value=@dailyTour.Id>@dailyTour.TourName</option>
-            }
-        </select>
-          <button type="submit" class="btn btn-primary">Fortsätt</button>
-    </form>
+    @if (azVM.AvailableTours == null)
+    {
+        <h3> Det fanns inga tillgängliga turer för idag..</h3>
+    }
+
+    @if (azVM.AvailableTours != null)
+    {
+        <form asp-controller="AdminZootour" asp-action="NrOfTours" method="post">
+
+            <select class="form-select" name="tourId" aria-label="select-tour">
+                @foreach (var dailyTour in azVM.AvailableTours)
+                {
+                    <option value=@dailyTour.Id>@dailyTour.TourName</option>
+                }
+            </select>
+            <button type="submit" class="btn btn-primary">Fortsätt</button>
+        </form>
+    }
 }
 
 @if (Model is TimeOfTourViewModel ttVM)
@@ -61,14 +71,14 @@
         @if (@ttVM.afternoon == true && @ttVM.morning == true)
         {
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="morning" value="1">
+                <input class="form-check-input" type="checkbox" name="morning" value="morning">
                 <label class="form-check-label" for="flexCheckDefault">
                     Morgontur
                 </label>
             </div>
 
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="afternoon" value="1">
+                <input class="form-check-input" type="checkbox" name="afternoon" value="afternoon">
                 <label class="form-check-label" for="flexCheckDefault">
                     Eftermiddagstur
                 </label>
