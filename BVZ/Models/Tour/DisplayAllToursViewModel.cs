@@ -13,6 +13,7 @@ namespace BVZ.Models.Tour
         
         public List<BVZ.Domain.Models.Visitors.Tour>? AllTours { get; set; }
 
-
+        public string? Message { get; set; }
+        public string? Status { get; set; }
     }
 }

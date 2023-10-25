@@ -21,10 +21,10 @@ namespace BVZ.BVZ.Infrastructure.Repositories
         public async Task<List<Tour>> GetAllTours()
         {
             return await _context.Tours
-                            .Include(t => t.Guide)
-                            .Include(tp => tp.TourParticipants)
-                            .ToListAsync();
-
+                .Where(t => t.IsArchived == false || t.IsArchived == null)
+                .Include(t => t.Guide)
+                .Include(tp => tp.TourParticipants)
+                .ToListAsync();
         }
 
         public async Task<List<ZooTour>> GetZooToursByDate(DateTime day)
@@ -88,6 +88,12 @@ namespace BVZ.BVZ.Infrastructure.Repositories
             return await _context.Tours
                 .Where(t => t.Id == id)
                 .SingleOrDefaultAsync();
+        }
+
+        public async Task<bool> UpdateTour(Tour tour)
+        {
+            _context.Tours.Update(tour);
+            return await Save();
         }
     }
 }
