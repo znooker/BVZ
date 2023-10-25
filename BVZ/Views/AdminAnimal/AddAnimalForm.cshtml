@@ -13,9 +13,9 @@
     <form asp-controller="AdminAnimal" asp-action="AddAnimal" method="post">
        
         <select class="form-select" name="animalType" aria-label="select-animal">
-            @foreach (var animal in daaVM.Animals)
+            @foreach (var type in daaVM.AnimalTypes)
             {
-                <option value=@animal.AnimalType>@animal.AnimalType</option>
+                <option value=@type>@type</option>
             }
             
         </select>

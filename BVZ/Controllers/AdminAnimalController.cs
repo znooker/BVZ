@@ -45,7 +45,7 @@ namespace BVZ.Controllers
 
         public async Task<IActionResult> AddAnimalRegistration()
         {
-            var result = await _animalServices.GetAllAnimals();
+            var result = await _animalServices.GetAllAnimalTypes();
 
             if (!result.IsSuccess)
             {
@@ -56,7 +56,7 @@ namespace BVZ.Controllers
             }
             DisplayAdminAnimalsViewModel daaVM = new DisplayAdminAnimalsViewModel
             {
-                Animals = result.Data
+                AnimalTypes = result.Data
             };
 
             return View("AddAnimalForm", daaVM);
