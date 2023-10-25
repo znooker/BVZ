@@ -9,16 +9,20 @@ namespace BVZ.Controllers
     {
         private readonly ILogger<AdminGuideController> _logger;
         private readonly GuideServices _guideServices;
+        private readonly AnimalServices _animalServices;
 
         public AdminGuideController(
             ILogger<AdminGuideController> logger,
-            GuideServices guideServices)
+            GuideServices guideServices,
+            AnimalServices animalServices)
         {
             _logger = logger;
             _guideServices = guideServices;
+            _animalServices=animalServices;
         }
         public async Task<IActionResult> Index()
         {
+            var test = await _animalServices.GetUniqueAnimalListByAnimalType();
             var getAllGuides = await _guideServices.GetAllGuides();
             if (!getAllGuides.IsSuccess)
             {
@@ -61,5 +65,10 @@ namespace BVZ.Controllers
             TempData["Status"] = "delete";
             return RedirectToAction("Index");
         }
+
+        //public async Task<IActionResult> SelectGuideCompetence()
+        //{
+
+        //}
     }
 }

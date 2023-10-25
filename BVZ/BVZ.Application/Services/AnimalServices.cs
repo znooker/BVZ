@@ -30,7 +30,7 @@ namespace BVZ.BVZ.Application.Services
         {
             ServiceResponse<List<string>> response = new ServiceResponse<List<string>>();
             var animalTypes = await _animalRepository.GetAllAnimalTypes();
-            if(animalTypes == null || !animalTypes.Any())
+            if (animalTypes == null || !animalTypes.Any())
             {
                 response.IsSuccess = false;
                 response.ErrorMessage = "List of animaltypes is null or empty";
@@ -47,14 +47,14 @@ namespace BVZ.BVZ.Application.Services
             ServiceResponse<List<Animal>> response = new ServiceResponse<List<Animal>>();
 
             var animals = await _animalRepository.GetAllAnimals();
-            if(animals == null || !animals.Any())
+            if (animals == null || !animals.Any())
             {
                 response.IsSuccess = false;
                 response.ErrorMessage = "List of animals is null or empty.";
                 return response;
 
                 //In med ILogger
-            } 
+            }
 
             response.IsSuccess = true;
             response.Data = animals.ToList();
@@ -67,16 +67,16 @@ namespace BVZ.BVZ.Application.Services
             ServiceResponse<Animal> response = new ServiceResponse<Animal>();
             var animal = await _animalRepository.GetAnimalById(id);
 
-            if(animal.GetType() == typeof(Ozelot)) 
+            if (animal.GetType() == typeof(Ozelot))
             {
                 var test = (Ozelot)animal;
                 var ozId = test.Id;
                 var speed = test.Speed;
                 string ozTest = test.Ozelotmetod();
-               
+
             }
-            
-            if(animal == null)
+
+            if (animal == null)
             {
                 response.IsSuccess = false;
                 response.ErrorMessage = $"Animal with id:{id} was not found.";
@@ -125,7 +125,7 @@ namespace BVZ.BVZ.Application.Services
             ServiceResponse<string> sr = new ServiceResponse<string>();
 
             var animal = _animalFactory.CreateAnimal(animalType);
-            if(animalName == null || animal == null)
+            if (animalName == null || animal == null)
             {
                 sr.IsSuccess = false;
                 sr.UserInfo = "Något gick fel, troligen är ett eller flera inmatade värden felaktiga.";
@@ -191,6 +191,35 @@ namespace BVZ.BVZ.Application.Services
             result.IsSuccess = true;
             result.Data = animal.AnimalType + ": " + animal.AnimalName + " är uppdaterat!";
             return result;
+        }
+
+        public async Task<ServiceResponse<List<Animal>>> GetUniqueAnimalListByAnimalType()
+        {
+            ServiceResponse<List<Animal>> result = new ServiceResponse<List<Animal>>();
+            
+            var animaltypes = await _animalRepository.GetAllAnimalTypes();
+            if(animaltypes == null || !animaltypes.Any())
+            {
+                result.IsSuccess = false;
+                result.ErrorMessage = "Inga typer av djur kunde hittas!";
+                return result;
+            }
+
+
+            var animalList = await _animalRepository.GetUniqeAnimalListByAnimalType(animaltypes);
+
+            if (animalList == null || !animalList.Any())
+            {
+                result.IsSuccess = false;
+                result.ErrorMessage = "Inga djur kunde hittas!";
+                return result;
+            }
+
+
+            result.IsSuccess = true;
+            result.Data = animalList;
+            return result;
+        
         }
     }
 }

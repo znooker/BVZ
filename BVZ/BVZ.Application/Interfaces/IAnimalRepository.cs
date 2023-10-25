@@ -19,6 +19,7 @@ namespace BVZ.BVZ.Application.Interfaces
         Task<bool> AddAnimalVisit(AnimalVisit animalVisit);
 
         Task<List<string>> GetAllAnimalTypes();
+        Task<List<Animal>> GetUniqeAnimalListByAnimalType(List<string> types);
 
 
     }
