@@ -1,4 +1,4 @@
-﻿@using BVZ.Models.Guide;
+﻿@using BVZ.Models.Admin.Guide;
 @model object
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -7,11 +7,6 @@
     ViewData["Title"] = "Admin Guides";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-
-<h1>Guides</h1>
-
-<h2 class="text-secondary">All Guides</h2>
-<button type="button" class="btn btn-success">Hire Guide</button>
 
 @if (Model is ErrorViewModel errorModel)
 {
@@ -22,6 +17,35 @@
 
  @if (Model is DisplayAllGuidesViewModel dgVM)
 {
+
+    if (dgVM.Message != null)
+    {
+        if (dgVM.Status == "add")
+        {
+            <h5 style="color:darkgreen" ;>
+                @dgVM.Message
+            </h5>
+        }
+        if (dgVM.Status == "update")
+        {
+            <h5 style="color:darkgoldenrod" ;>
+                @dgVM.Message
+            </h5>
+        }
+        if (dgVM.Status == "delete")
+        {
+            <h5 style="color:red" ;>
+                @dgVM.Message
+            </h5>
+        }
+
+    }
+
+    <h1>Guides</h1>
+
+    <h2 class="text-secondary">All Guides</h2>
+    <button type="button" class="btn btn-success">Hire Guide</button>
+
     <div class="table-responsive">
         <table class="table table-striped table-sm">
             <thead>
@@ -34,12 +58,13 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var row in dgVM.Guides)
+                @foreach (var guide in dgVM.Guides)
                 {
                     <tr>
-                        <td>@row.Id</td>
-                        <td>@row.Name</td>
-                        <td>@foreach(var comp in row.AnimalCompetences)
+                        <td>@guide.Id</td>
+                        <td>@guide.Name</td>
+                        <td>
+                            @foreach (var comp in guide.AnimalCompetences)
                             {
                                 <ul class="list-group">
                                     <li class="list-group-item">@comp.Animal.AnimalType</li>
@@ -47,10 +72,15 @@
                             }
                         </td>
                         <td>
-                            <div class="btn-group" role="group" aria-label="Basic example">
+                            <div class="btn-group" role="group" aria-label="guideButtons">
                                 <button type="button" class="btn btn-dark">Details</button>
                                 <button type="button" class="btn btn-secondary">Update</button>
-                                <button type="button" class="btn btn-danger">Fire</button>
+                                <form asp-controller="AdminGuide" asp-action="SoftDeleteGuide" method="post">
+                                    <input type="hidden" name="guideId" value="@guide.Id">
+                                    <button type="submit" class="btn btn-danger">Ta bort</button>
+                                </form>
+
+
                             </div>
                         </td>
                     </tr>

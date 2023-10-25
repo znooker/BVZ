@@ -8,7 +8,7 @@ using BVZ.Models.Admin;
 //using AspNetCore;
 using BVZ.BVZ.Application;
 using Microsoft.Extensions.Options;
-using BVZ.Models.Guide;
+using BVZ.Models.Admin.Guide;
 
 namespace BVZ.Controllers
 {
