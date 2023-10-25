@@ -20,8 +20,7 @@ namespace BVZ.BVZ.Infrastructure.Repositories
         public async Task<bool> AddGuide(Guide guide)
         {
             _context.Guides.Add(guide);
-            await _context.SaveChangesAsync();
-            return true;
+            return await Save();
          }
 
         public async Task<bool> DeleteGuide(Guide guide)
@@ -44,6 +43,13 @@ namespace BVZ.BVZ.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
+        public async Task<bool> SoftDeleteGuide(Guide guide)
+        {
+            _context.Guides.Update(guide);
+            return await Save();
+        }
+
+
         public async Task<List<Guide>> GetAllGuides()
         {
             return await _context.Guides
@@ -60,7 +66,7 @@ namespace BVZ.BVZ.Infrastructure.Repositories
                 .ThenInclude(a => a.Animal)
                 .SingleOrDefaultAsync(a => a.Id == id);
         }
-
+       
 
         public Task<bool> UpdateGuide(Guide guide)
         {

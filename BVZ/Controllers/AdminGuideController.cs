@@ -1,6 +1,6 @@
 ﻿using BVZ.BVZ.Application.Services;
 using BVZ.Models;
-using BVZ.Models.Guide;
+using BVZ.Models.Admin.Guide;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BVZ.Controllers
@@ -32,9 +32,34 @@ namespace BVZ.Controllers
                 Guides = getAllGuides.Data
             };
 
+            if (TempData["Message"] != null && TempData["Status"] != null)
+            {
+                string messageToStr = TempData["Message"].ToString();
+                string statusToStr = TempData["Status"].ToString();
+                displayVm.Message = messageToStr;
+                displayVm.Status = statusToStr;
+            }
 
             return View(displayVm);
 
+        }
+
+        public async Task<IActionResult> SoftDeleteGuide(Guid guideId)
+        {
+            var selectedGuide = await _guideServices.SoftDeleteGuide(guideId);
+            if (!selectedGuide.IsSuccess) 
+            {
+                ErrorViewModel eVM = new ErrorViewModel
+                {
+                    ValidationErrorMessage = selectedGuide.ErrorMessage
+                };
+                return View(eVM);
+            }
+
+            string deleteMessage = selectedGuide.Data;
+            TempData["Message"] = deleteMessage;
+            TempData["Status"] = "delete";
+            return RedirectToAction("Index");
         }
     }
 }

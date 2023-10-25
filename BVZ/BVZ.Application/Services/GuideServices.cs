@@ -53,5 +53,29 @@ namespace BVZ.BVZ.Application.Services
             response.Data = guide;
             return response;
         }
+
+        public async Task<ServiceResponse<string>> SoftDeleteGuide(Guid guideId)
+        {
+            ServiceResponse<string> result = new ServiceResponse<string>();
+
+            var guide = await _guideRepository.GetGuideById(guideId);
+            if (guide == null)
+            {
+                result.IsSuccess = false;
+                result.UserInfo = "Hittade ingen guide att ta bort.";
+                return result;
+            }
+            guide.IsArchived = true;
+
+            if (!await _guideRepository.SoftDeleteGuide(guide))
+            {
+                result.IsSuccess = false;
+                result.UserInfo = "Gick inte att ta bort den valda guiden. Kontakta admin.";
+                return result;
+            }
+            result.IsSuccess = true;
+            result.Data = $"{guide.Name} är avskedad.";
+            return result;
+        }
     }
 }
