@@ -95,7 +95,7 @@ namespace BVZ.Controllers
         }
 
 
-        //Lär finnas fel här... gjorde detta kl 01.00
+        //Lär finnas fel här... gjorde detta kl 00:00.
         [HttpPost]
         public async Task<IActionResult> CreateGuideStepTwo(GuideCompetenceSelectViewModel data)
         {
