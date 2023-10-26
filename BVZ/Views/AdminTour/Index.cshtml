@@ -9,11 +9,11 @@
 }
 
 
-<h1>Tours</h1>
+<h1>Guidade turer</h1>
 
-<h2 class="text-secondary">Tour History</h2>
+<h2 class="text-secondary">Tur-historik</h2>
 <a asp-controller="AdminTour" asp-action="SelectGuide" class="btn btn-success">
-    New Tour
+    Ny guidad tur
 </a>
 
 @if(Model is ErrorViewModel errorModel)
@@ -60,8 +60,6 @@
                     <th>Beskrivning</th>
                     <th>Guide</th>
                     <th>Deltagare</th>
-                    <th>Utförd</th>
-                    <th>Header</th>
                     <th></th>
                     <th></th>
                 </tr>
@@ -75,7 +73,6 @@
                         <td>@tour.Description</td>
                         <td>@tour.Guide.Name</td>
                         <td>@tour.TourParticipants.Count()</td>
-                        <td>@tour.TourCompleted</td>
                         <td>
                         </td>
                         <td>

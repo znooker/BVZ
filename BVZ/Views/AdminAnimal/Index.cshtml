@@ -32,9 +32,9 @@
         
     }
    
-<h1>Animals</h1>
+<h1>Djur</h1>
 
-<h2 class="text-secondary">All Animals</h2>
+<h2 class="text-secondary">Alla djur</h2>
 
     <a asp-controller="AdminAnimal" asp-action="AddAnimalRegistration" class="btn btn-success">Lägg till djur</a>
 
@@ -66,12 +66,12 @@
 
                             <form asp-controller="AdminAnimal" asp-action="UpdateAnimalRedirect" method="post">
                                 <input type="hidden" value="@animal.Id" name="animalId">
-                                <button type="submit"  class="btn btn-dark">Redigera</button>
+                                <button type="submit"  class="btn btn-warning">Redigera</button>
                              </form>
 
                             <form asp-controller="AdminAnimal" asp-action="DeleteAnimal" method="post">
                                 <input type="hidden" value="@animal.Id" name="animalId">
-                                <button type="submit" class="btn btn-dark">Ta bort</button>
+                                <button type="submit" class="btn btn-danger">Ta bort</button>
                             </form>
                             
                         </div>

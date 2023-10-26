@@ -7,7 +7,7 @@
 @using System.Reflection;
 @model object
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Startsida - Admin";
 }
 
 @if (Model is HomeViewModel hVM)
@@ -16,12 +16,12 @@
     {
         
     
-    <h3>Our Lovely Animals</h3>
+    <h3>Vårat vackra bestiarium</h3>
     <div class="text-center">
-        <h1 class="display-4">Welcome</h1>
+        <h1 class="display-4">Välkommen</h1>
     </div>
     <div class="container">
-        <h3>Our Lovely Animals</h3>
+        <h3>Djurparkens djur</h3>
 
         <div class="row">
             @foreach (var animal in hVM.ZooAnimals)

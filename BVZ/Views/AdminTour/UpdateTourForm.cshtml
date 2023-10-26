@@ -11,14 +11,14 @@
     
 
     <div class="form-group">
-        <label asp-for="Tour.TourName">Tour Name:</label>
+        <label asp-for="Tour.TourName">Tur-Name:</label>
         <input asp-for="Tour.TourName" name="tourName" class="form-control" />
     </div>
 
     <div class="form-group">
-        <label asp-for="Tour.Description">Description:</label>
+        <label asp-for="Tour.Description">Beskrivning:</label>
         <textarea asp-for="Tour.Description" name="tourDescription" class="form-control"></textarea>
     </div>
     <input type="hidden" name="tourId" asp-for="Tour.Id" />
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary">Uppdatera</button>
 </form>
