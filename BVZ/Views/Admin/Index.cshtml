@@ -4,13 +4,13 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-    ViewData["Title"] = "Admin-sida";
+    ViewData["Title"] = "Admin Page";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Admin Index</h1>
+<h1>Historik</h1>
 
-<h2 class="text-secondary">Besökshistorik</h2>
+<h2 class="text-secondary">Biljett/Besök Historik</h2>
 
 @if (Model is ErrorViewModel errorModel)
 {
@@ -48,7 +48,7 @@
                                 </ul>
                             }
                         </td>
-                    <td>@row.TicketDate.Value.ToShortDateString()</td>
+                    <td>@row.TicketDate</td>
                     <td>
                     </td>
 

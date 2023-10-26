@@ -20,9 +20,7 @@ namespace BVZ.BVZ.Application.Interfaces
 
         Task<List<string>> GetAllAnimalTypes();
         Task<List<Animal>> GetUniqeAnimalListByAnimalType(List<string> types);
-
         
-
-
+        Task<List<Animal>> GetListOfAnimalByAnimalIDs(List<Guid> animalIDs);
     }
 }

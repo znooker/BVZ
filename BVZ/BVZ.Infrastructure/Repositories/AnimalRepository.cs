@@ -88,5 +88,11 @@ namespace BVZ.BVZ.Infrastructure.Repositories
 
             return uniqueAnimals;
         }
+
+        public async Task<List<Animal>> GetListOfAnimalByAnimalIDs(List<Guid> animalIDs)
+        {
+            var listOfAnimals = await _context.Animals.Where(animal => animalIDs.Contains(animal.Id)).ToListAsync();
+            return listOfAnimals;
+        }
     }
 }

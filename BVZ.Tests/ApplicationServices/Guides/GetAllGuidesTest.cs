@@ -15,6 +15,9 @@ namespace BVZ.Tests.ApplicationServices.Guides
             var loggerMock = new Mock<ILogger<GuideServices>>();
             var guideRepositoryMock = new Mock<IGuideRepository>();
             var transactionMock = new Mock<ITransaction>();
+            var animalCompetencesRepositoryMock = new Mock<IAnimalCompetencesRepository>();
+            var animalRepositoryMock = new Mock<IAnimalRepository>();
+            
 
             var guideList = new List<Guide>
             {
@@ -27,7 +30,10 @@ namespace BVZ.Tests.ApplicationServices.Guides
             var guideService = new GuideServices(
                 loggerMock.Object,
                 guideRepositoryMock.Object,
-                transactionMock.Object
+                transactionMock.Object,
+                animalCompetencesRepositoryMock.Object,
+                animalRepositoryMock.Object
+                
             );
 
             // Act
@@ -46,6 +52,8 @@ namespace BVZ.Tests.ApplicationServices.Guides
             var loggerMock = new Mock<ILogger<GuideServices>>();
             var guideRepositoryMock = new Mock<IGuideRepository>();
             var transactionMock = new Mock<ITransaction>();
+            var animalCompetencesRepositoryMock = new Mock<IAnimalCompetencesRepository>();
+            var animalRepositoryMock = new Mock<IAnimalRepository>();
 
             List<Guide> emptyList = new List<Guide>();
 
@@ -54,7 +62,9 @@ namespace BVZ.Tests.ApplicationServices.Guides
             var guideService = new GuideServices(
                 loggerMock.Object,
                 guideRepositoryMock.Object,
-                transactionMock.Object
+                transactionMock.Object,
+                animalCompetencesRepositoryMock.Object,
+                animalRepositoryMock.Object
             );
 
             // Act
