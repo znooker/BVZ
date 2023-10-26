@@ -123,12 +123,23 @@ namespace BVZ.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateGuide(GuideViewModel data)
         {
-            //Kvar att göra, skapa Guiden och koppla ihop
-            //Animal ID's med listan av animal IDs från
-            //listan data.AnimalIDs
+            var response = await _guideServices.CreateGuide(data);
+            if (!response.IsSuccess)
+            {
+                ErrorViewModel eVM = new ErrorViewModel 
+                {
+                    ValidationErrorMessage = response.ErrorMessage
 
-            var test = data;
+                };
+                return RedirectToAction("Index", eVM);
+            }
+
+            //Skapa en ViewModelResponse att skicka tillbaka
+            string message = response.UserInfo;
+            TempData["Message"] = message;
+            TempData["Status"] = "add";
             return RedirectToAction("Index");
+            
         }
     }
 }

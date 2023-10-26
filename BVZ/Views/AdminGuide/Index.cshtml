@@ -13,6 +13,7 @@
     <div style="color:darkred;">
         <p>@errorModel.ValidationErrorMessage</p>
     </div>
+    <a asp-controller="AdminGuide" asp-action="SelectGuideCompetence" class="btn btn-success">Anställ Guide</a>
 }
 
  @if (Model is DisplayAllGuidesViewModel dgVM)
@@ -74,7 +75,8 @@
                         </td>
                         <td>
                             <div class="btn-group" role="group" aria-label="guideButtons">
-                                <button type="button" class="btn btn-secondary">Uppdatera</button>
+                                <button type="button" class="btn btn-dark">Details</button>
+                                <button type="button" class="btn btn-secondary">Update</button>
                                 <form asp-controller="AdminGuide" asp-action="SoftDeleteGuide" method="post">
                                     <input type="hidden" name="guideId" value="@guide.Id">
                                     <button type="submit" class="btn btn-danger">Ta bort</button>
