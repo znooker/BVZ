@@ -71,7 +71,7 @@ namespace BVZ.Controllers
             return RedirectToAction("Index");
         }
 
-        //Döpa om till CreateGuideStepOne
+        
         public async Task<IActionResult> SelectGuideCompetence()
         {
             var options = await _animalServices.GetUniqueAnimalListByAnimalType();
@@ -95,7 +95,7 @@ namespace BVZ.Controllers
         }
 
 
-        //Lär finnas fel här... gjorde detta kl 00:00.
+        
         [HttpPost]
         public async Task<IActionResult> CreateGuideStepTwo(GuideCompetenceSelectViewModel data)
         {
@@ -120,6 +120,7 @@ namespace BVZ.Controllers
             return View("/Views/AdminGuide/HireGuideStepTwoForm.cshtml", gVM);
         }
 
+
         [HttpPost]
         public async Task<IActionResult> CreateGuide(GuideViewModel data)
         {
@@ -133,13 +134,44 @@ namespace BVZ.Controllers
                 };
                 return RedirectToAction("Index", eVM);
             }
-
-            //Skapa en ViewModelResponse att skicka tillbaka
+            
             string message = response.UserInfo;
             TempData["Message"] = message;
             TempData["Status"] = "add";
             return RedirectToAction("Index");
-            
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RedirectToUpdateGuideForm(Guid guideId)
+        {
+            var guide = await _guideServices.GetGuideById(guideId);
+            if (!guide.IsSuccess)
+            {
+                ErrorViewModel eVM = new ErrorViewModel
+                {
+                    ValidationErrorMessage = guide.ErrorMessage
+                };
+                return RedirectToAction("Index", eVM);
+            }
+
+            GuideViewModel gVm = new GuideViewModel
+            {
+                GuideName = guide.Data.Name,
+                Guide = guide.Data,
+                CurrentAnimalCompetences = guide.Data.AnimalCompetences.Select(x => x.Animal).ToList()
+            };
+            //var result = await _guideServices.UpdateGuide(guide.Data);
+
+            //if (!result.IsSuccess)
+            //{
+            //    ErrorViewModel eVM = new ErrorViewModel 
+            //    { 
+            //        ValidationErrorMessage = result.ErrorMessage 
+            //    };
+            //}
+
+            return View("/Views/AdminGuide/UpdateGuideForm.cshtml", gVm);
         }
     }
 }

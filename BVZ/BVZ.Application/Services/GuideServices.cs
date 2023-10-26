@@ -87,7 +87,7 @@ namespace BVZ.BVZ.Application.Services
         }
 
 
-        //Transaction - Several Dboperations
+        
         public async Task<ServiceResponse<string>> CreateGuide(GuideViewModel data)
         {
             ServiceResponse<string> result = new ServiceResponse<string>();
@@ -97,7 +97,7 @@ namespace BVZ.BVZ.Application.Services
             {
                 //Create new Guide, add to DB
                 Guide newGuide = new Guide(data.GuideName);
-                //await _guideRepository.AddGuide(newGuide);
+               
                 if (!await _guideRepository.AddGuide(newGuide))
                 {
                     await transaction.RollbackAsync();
@@ -155,5 +155,12 @@ namespace BVZ.BVZ.Application.Services
             
 
         }
+
+        //public async Task<ServiceResponse<string>> UpdateGuide(Guide guide)
+        //{
+        //    ServiceResponse<string> result = new ServiceResponse<string>();
+        //    var 
+           
+        //}
     }
 }
