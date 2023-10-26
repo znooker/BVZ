@@ -66,12 +66,12 @@
 
                             <form asp-controller="AdminAnimal" asp-action="UpdateAnimalRedirect" method="post">
                                 <input type="hidden" value="@animal.Id" name="animalId">
-                                <button type="submit"  class="btn btn-dark">Redigera</button>
+                                <button type="submit"  class="btn btn-secondary">Redigera</button>
                              </form>
 
                             <form asp-controller="AdminAnimal" asp-action="DeleteAnimal" method="post">
                                 <input type="hidden" value="@animal.Id" name="animalId">
-                                <button type="submit" class="btn btn-dark">Ta bort</button>
+                                <button type="submit" class="btn btn-danger">Ta bort</button>
                             </form>
                             
                         </div>

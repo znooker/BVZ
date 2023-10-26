@@ -8,8 +8,5 @@ namespace BVZ.BVZ.Application.Interfaces
     {
         Task<List<AllVisitorsAndLinkedToursDTO>> GetAllVisitorsAndLinkedTours();
         Task<List<Visitor>> GetVisitsByDate(DateTime date);
-
-
-
     }
 }

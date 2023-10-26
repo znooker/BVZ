@@ -13,7 +13,14 @@
 
 <p>Det visas bara turer som har guider lediga för dagen eller inte är fullbokade.</p>
 
-@if (Model is AdminZootourViewModel azVM)
+@if (Model is AdminZootourViewModel azVM1 && azVM1.AvailableTours == null)
+{
+    <div style="color:darkred;">
+        <p>Det finns inga tillgängliga turer att boka in för dagen.</p>
+    </div>
+}
+
+@if (Model is AdminZootourViewModel azVM && azVM.AvailableTours != null)
 {
 
     @if (azVM.Message != null)
@@ -22,6 +29,7 @@
             @azVM.Message
         </h5>
     }
+
     <form asp-controller="AdminZootour" asp-action="NrOfTours" method="post">
 
         <select class="form-select" name="tourId" aria-label="select-tour">
@@ -33,6 +41,8 @@
           <button type="submit" class="btn btn-primary">Fortsätt</button>
     </form>
 }
+
+
 
 @if (Model is TimeOfTourViewModel ttVM)
 {
@@ -61,14 +71,14 @@
         @if (@ttVM.afternoon == true && @ttVM.morning == true)
         {
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="morning" value="1">
+                <input class="form-check-input" type="checkbox" name="morning" value="morning">
                 <label class="form-check-label" for="flexCheckDefault">
                     Morgontur
                 </label>
             </div>
 
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="afternoon" value="1">
+                <input class="form-check-input" type="checkbox" name="afternoon" value="afternoon">
                 <label class="form-check-label" for="flexCheckDefault">
                     Eftermiddagstur
                 </label>
@@ -78,6 +88,7 @@
         <button type="submit" class="btn btn-primary">Schemalägg</button>
     </form>
 }
+
 
 @if (Model is ErrorViewModel eVM)
 {

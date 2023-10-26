@@ -18,7 +18,6 @@ namespace BVZ.BVZ.Domain.Models.Zoo.Animals
         public bool IsArchived { get; set; } = false;
 
         public ICollection<AnimalVisit> AnimalVisits { get; set; }
-        public ICollection<AnimalCompetence> AnimalCompentencies { get; set; }
 
         public virtual string Move()
         {
@@ -39,21 +38,47 @@ namespace BVZ.BVZ.Domain.Models.Zoo.Animals
                     // Land
                     case "Ozelot":
                         return new Ozelot();
+                        var ozelot = new Ozelot();
+                        ozelot.Specie = Specie.Mammal;
+                        return ozelot;
+
                     case "Okapi":
                         return new Okapi();
+                        var okapi = new Okapi();
+                        okapi.Specie = Specie.Mammal;
+                        return okapi;
+
                     case "Cheetah":
                         return new Cheetah();
+                        var cheetah = new Cheetah();
+                        cheetah.Specie = Specie.Mammal;
+                        return cheetah;
+
                     // Air
                     case "BaldEagle":
                         return new BaldEagle();
+                        var eagle = new BaldEagle();
+                        eagle.Specie = Specie.Bird;
+                        return eagle;
+
                     case "NorwegianBlueParrot":
                         return new NorwegianBlueParrot();
+                        var nbp = new NorwegianBlueParrot();
+                        nbp.Specie = Specie.Bird;
+                        return nbp;
 
                     // Water
                     case "MorayEel":
                         return new MorayEel();
+                        var moray = new MorayEel();
+                        moray.Specie = Specie.Fish;
+                        return moray;
+
                     case "ElectricEel":
                         return new ElectricEel();
+                        var electric = new ElectricEel();
+                        electric.Specie = Specie.Fish;
+                        return electric;
 
 
                     default:

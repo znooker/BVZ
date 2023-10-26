@@ -1,6 +1,7 @@
 ﻿using BVZ.BVZ.Application.Interfaces;
 
 using BVZ.BVZ.Domain.Models.Zoo.Animals;
+using BVZ.BVZ.Domain.Models.Zoo.Animals.ValueTypes;
 using BVZ.BVZ.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -44,26 +45,31 @@ namespace BVZ.BVZ.Infrastructure.Repositories
             return await _context.Animals.Where(x => x.Id == id).SingleOrDefaultAsync();
         }
 
+        public async Task<Animal> GetAnimalByArchetype(AnimalArchetype archetype)
+        {
+            return await _context.Animals.Where(x => x.AnimalType == archetype.ToString()).SingleOrDefaultAsync();
+        }
+
         public async Task<bool> UpdateAnimal(Animal animal)
         {
             _context.Animals.Update(animal);
             return await Save();
         }
 
-        public async Task<List<Guid>> GetAnimalsByGuideId(Guid id)
+        public async Task<List<AnimalArchetype>> GetAnimalsByGuideId(Guid id)
         {
-            var animalIds = await _context.AnimalCompetences
+            var animalArchetypes = await _context.AnimalCompetences
                             .Where(ac => ac.GuideId == id)
-                            .Select(ac => ac.AnimalId)
+                            .Select(ac => ac.AnimalArchetype)
                             .ToListAsync();
-            return animalIds;
+            return animalArchetypes;
         }
 
-        public async Task<int> GetAnimalVisitsByDateAndAnimal(Guid id, DateTime dateOfVisit)
+        public async Task<int> GetAnimalVisitsByDateAndAnimal(AnimalArchetype animalArchetype, DateTime dateOfVisit)
         {
             int NrOfVisit = await _context.AnimalVisits
                                     .Where(av => av.VisitDate == dateOfVisit.Date
-                                    && av.AnimalId == id)
+                                    && av.AnimalArchetype == animalArchetype)
                                     .CountAsync();
             return NrOfVisit;
         }

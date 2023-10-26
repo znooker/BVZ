@@ -1,4 +1,5 @@
 ﻿using BVZ.BVZ.Domain.Models.Zoo.Animals;
+using BVZ.BVZ.Domain.Models.Zoo.Animals.ValueTypes;
 
 namespace BVZ.BVZ.Domain.Models.Zoo.Guides
 {
@@ -9,19 +10,18 @@ namespace BVZ.BVZ.Domain.Models.Zoo.Guides
         public Guide Guide { get; set; }
         public Guid GuideId { get; set; }
 
-        public Animal Animal { get; set; }
-        public Guid AnimalId { get; set; }
+        public AnimalArchetype AnimalArchetype { get; set; }
 
         public AnimalCompetence()
         {
 
         }
 
-        public AnimalCompetence(Animal animal, Guide guide)
+        public AnimalCompetence(Guide guide, AnimalArchetype animalArchetype)
         {
             Id = Guid.NewGuid();
-            Animal = animal;
             Guide = guide;
+            AnimalArchetype = animalArchetype;
         }
     }
 }

@@ -20,7 +20,7 @@ namespace BVZ.BVZ.Infrastructure.Data
              new Cheetah
              {
                  Id = new Guid("00000000-0000-0000-0000-100000000000"),
-                 AnimalName = "Cheetah",
+                 AnimalName = "Herr Kvick",
                  Specie = Specie.Mammal,
                  DailyVisits = 0,
                  Speed = 70
@@ -29,7 +29,7 @@ namespace BVZ.BVZ.Infrastructure.Data
            new Okapi
            {
                Id = new Guid("00000000-0000-0000-0000-010000000000"),
-               AnimalName = "Okapi",
+               AnimalName = "Snuttis",
                Specie = Specie.Mammal,
                DailyVisits = 0,
                Speed = 10
@@ -39,7 +39,7 @@ namespace BVZ.BVZ.Infrastructure.Data
           new Ozelot
           {
               Id = new Guid("00000000-0000-0000-0000-001000000000"),
-              AnimalName = "Ozelot",
+              AnimalName = "Snabbfot",
               Specie = Specie.Mammal,
               DailyVisits = 0,
               Speed = 30
@@ -51,7 +51,7 @@ namespace BVZ.BVZ.Infrastructure.Data
          new ElectricEel
          {
              Id = new Guid("00000000-0000-0000-0000-200000000000"),
-             AnimalName = "Electric Eel",
+             AnimalName = "Shock",
              Specie = Specie.Fish,
              DailyVisits = 0,
              DivingDepth = 120
@@ -61,7 +61,7 @@ namespace BVZ.BVZ.Infrastructure.Data
          new MorayEel
          {
              Id = new Guid("00000000-0000-0000-0000-020000000000"),
-             AnimalName = "Moray Eel",
+             AnimalName = "Taggis",
              Specie = Specie.Fish,
              DailyVisits = 0,
              DivingDepth = 79
@@ -72,7 +72,7 @@ namespace BVZ.BVZ.Infrastructure.Data
          new BaldEagle
          {
              Id = new Guid("00000000-0000-0000-0000-300000000000"),
-             AnimalName = "Bald Eagle",
+             AnimalName = "Örnie",
              Specie = Specie.Bird,
              DailyVisits = 0,
              Wingspan = 1.4
@@ -81,7 +81,7 @@ namespace BVZ.BVZ.Infrastructure.Data
        new NorwegianBlueParrot
        {
            Id = new Guid("00000000-0000-0000-0000-030000000000"),
-           AnimalName = "Norwegian Blue Parrot",
+           AnimalName = "Nisse",
            Specie = Specie.Bird,
            DailyVisits = 0,
            CanSpeak = true,
@@ -104,7 +104,7 @@ namespace BVZ.BVZ.Infrastructure.Data
             new AnimalCompetence
             {
                 Id = new Guid("00000000-0000-0000-1000-000000000044"),
-                AnimalId = new Guid("00000000-0000-0000-0000-100000000000"),
+                AnimalArchetype = AnimalArchetype.Cheetah,   
                 GuideId = new Guid("00000000-0000-0000-0000-000000000009")
             });
 
@@ -113,7 +113,7 @@ namespace BVZ.BVZ.Infrastructure.Data
             new AnimalCompetence
             {
                 Id = new Guid("00000000-0000-0000-1000-000000000045"),
-                AnimalId = new Guid("00000000-0000-0000-0000-010000000000"),
+                AnimalArchetype = AnimalArchetype.Ozelot,
                 GuideId = new Guid("00000000-0000-0000-0000-000000000009")
             });
 
@@ -122,7 +122,7 @@ namespace BVZ.BVZ.Infrastructure.Data
             new AnimalCompetence
             {
                 Id = new Guid("00000000-0000-0000-1000-000002050046"),
-                AnimalId = new Guid("00000000-0000-0000-0000-001000000000"),
+                AnimalArchetype = AnimalArchetype.Okapi,
                 GuideId = new Guid("00000000-0000-0000-0000-000000000009")
             });
 
@@ -140,7 +140,7 @@ namespace BVZ.BVZ.Infrastructure.Data
             new AnimalCompetence
             {
                 Id = new Guid("00000000-0000-0000-1000-000000000030"),
-                AnimalId = new Guid("00000000-0000-0000-0000-200000000000"),
+                AnimalArchetype = AnimalArchetype.BaldEagle,
                 GuideId = new Guid("00000000-0000-0000-0000-000000000099")
             });
 
@@ -149,7 +149,7 @@ namespace BVZ.BVZ.Infrastructure.Data
                 new AnimalCompetence
                 {
                     Id = new Guid("00000000-0000-0000-1000-000000000031"),
-                    AnimalId = new Guid("00000000-0000-0000-0000-020000000000"),
+                    AnimalArchetype = AnimalArchetype.NorwegianBlueParrot,
                     GuideId = new Guid("00000000-0000-0000-0000-000000000099")
                 });
         
@@ -166,7 +166,7 @@ namespace BVZ.BVZ.Infrastructure.Data
             new AnimalCompetence
             {
                 Id = new Guid("00000000-1002-0000-1040-000000000030"),
-                AnimalId = new Guid("00000000-0000-0000-0000-001000000000"),
+                AnimalArchetype = AnimalArchetype.ElectricEel,
                 GuideId = new Guid("00000000-0000-0000-0000-000700100099")
             });
 
@@ -175,7 +175,7 @@ namespace BVZ.BVZ.Infrastructure.Data
                 new AnimalCompetence
                 {
                     Id = new Guid("00000000-0000-0040-1030-000000000031"),
-                    AnimalId = new Guid("00000000-0000-0000-0000-030000000000"),
+                    AnimalArchetype = AnimalArchetype.MorayEel,
                     GuideId = new Guid("00000000-0000-0000-0000-000700100099")
                 });
             //BaldEagle
@@ -183,7 +183,7 @@ namespace BVZ.BVZ.Infrastructure.Data
                  new AnimalCompetence
                  {
                      Id = new Guid("05043020-0000-0000-1000-000000000032"),
-                     AnimalId = new Guid("00000000-0000-0000-0000-300000000000"),
+                     AnimalArchetype = AnimalArchetype.Cheetah,
                      GuideId = new Guid("00000000-0000-0000-0000-000700100099")
                  });
 

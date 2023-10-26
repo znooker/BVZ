@@ -1,4 +1,5 @@
-﻿@using BVZ.Models.Admin.Guide;
+﻿@using BVZ.BVZ.Domain.Models.Zoo.Animals.ValueTypes;
+@using BVZ.Models.Admin.Guide;
 @model object
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -67,7 +68,7 @@
                             @foreach (var comp in guide.AnimalCompetences)
                             {
                                 <ul class="list-group">
-                                    <li class="list-group-item">@comp.Animal.AnimalType</li>
+                                    <li class="list-group-item">@comp.AnimalArchetype</li>
                                 </ul>
                             }
                         </td>

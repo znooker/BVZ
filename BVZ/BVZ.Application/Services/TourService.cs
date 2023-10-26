@@ -175,12 +175,12 @@ namespace BVZ.BVZ.Application.Services
                     return response;
                 }
 
-                if (optionsToSchedeule.IsMorningTour) 
+                if (!optionsToSchedeule.IsMorningTour) 
                 { 
                     codeForBooking = 1; 
                 }
 
-                if (!optionsToSchedeule.IsMorningTour) 
+                if (optionsToSchedeule.IsMorningTour) 
                 { 
                     codeForBooking = 2; 
                 }
@@ -295,75 +295,6 @@ namespace BVZ.BVZ.Application.Services
         }
 
 
-        //public async Task<ServiceResponse<Tour>> CreateNewTour(AdminCreateTourViewModel TourVm)
-        //{
-        //    ServiceResponse<Tour> response = new ServiceResponse<Tour>();
-        //    var transaction = _baseRepository.BeginTransaction();
-
-        //    //I would prefer not to create a new Tour like this... is it even possible?
-        //    try
-        //    {
-        //        var tour = new Tour();
-        //        tour.TourName = TourVm.TourName;
-        //        tour.Description = TourVm.Description;
-        //        tour.GuideId = TourVm.GuideId;
-
-        //        //var newTour = await _tourRepository.CreateTour(tour);
-        //        if(!await _tourRepository.CreateTour(tour))
-        //        {
-        //            await transaction.RollbackAsync();
-        //            response.IsSuccess = false;
-        //            response.UserInfo = "Fel vid skapadet av ny Tour, försök igen senare eller kontakta supporten.";
-        //            return response;
-        //        }
-
-
-        //        //We need to have a ZooDay to associate it, should we just link it to TodayDate
-        //        //var todayZooDayId = _zooRepository.GetZooDayIdByTodaysDate(DateTime.Now);
-
-        //        //Lyft ur detta
-
-        //        //Link them together
-        //        var zooTour = new ZooTour();
-        //        zooTour.TourID = tour.Id;
-        //        zooTour.ZooDayId = await _zooRepository.GetZooDayIdByTodaysDate(DateTime.Now.Date);
-
-        //        //if(zooTour.ZooDayId == null)
-        //        //{
-        //        //    await transaction.RollbackAsync();
-        //        //    response.IsSuccess = false;
-        //        //    response.UserInfo = "Ingen dag med matchande ID funnet, ";
-        //        //    return response;
-        //        //}
-
-        //        zooTour.DateOfTour = TourVm.DateOfTour;
-        //        zooTour.IsMorningTour = TourVm.IsMorningTour;
-
-        //        //Add a new ZooTour
-        //        if(!await _tourRepository.AddZooTour(zooTour))
-        //        {
-        //            await transaction.RollbackAsync();
-        //            response.IsSuccess = false;
-        //            response.UserInfo = "Fel vid skapande av ZooTour, försök igen senare eller kontakta supporten.";
-        //            return response;
-        //        };
-
-        //        //Return... Is it possible to make a better model for the VM to display, like a more complete DTO?
-        //        await transaction.CommitAsync();
-        //        response.Data = tour;
-        //        response.IsSuccess = true;
-        //        return response;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        await transaction.RollbackAsync();
-        //        response.IsSuccess = false;
-        //        response.ErrorMessage = "Yay! Något gick helt fel! Försök igen senare eller kontakta supporten.";
-        //        _logger.LogInformation(ex.Message);
-        //        return response;
-        //    }
-        //}
-
         public async Task<ServiceResponse<List<Visitor>>> BookZooTour
                                                 (Guid zooTourId,
                                                 int NrOfPersonsToBook,
@@ -476,22 +407,22 @@ namespace BVZ.BVZ.Application.Services
                                                     ZooDay zooday,
                                                     DateTime tourDate)
         {
-            var animalsIds = await _animalRepository.GetAnimalsByGuideId(guideId);
+            var animalsArchetypes = await _animalRepository.GetAnimalsByGuideId(guideId);
 
             // Make sure no specific specie has received more than two visit on the same day.
-            foreach (var animalId in animalsIds)
+            foreach (var archetype in animalsArchetypes)
             {
-                int nrOfVisits = await _animalRepository.GetAnimalVisitsByDateAndAnimal(animalId, tourDate);
+                int nrOfVisits = await _animalRepository.GetAnimalVisitsByDateAndAnimal(archetype, tourDate);
                 if (nrOfVisits >= 2)
                 {
                     return false;
                 }
             }
             // Register a visit for each or the tours species that is visited.
-            foreach (var animalId in animalsIds)
+            foreach (var archetype in animalsArchetypes)
             {
-                var animal = await _animalRepository.GetAnimalById(animalId);
-                AnimalVisit av = new AnimalVisit(animal);
+                //var animal = await _animalRepository.GetAnimalByArchetype(archetype);
+                AnimalVisit av = new AnimalVisit(archetype);
                 if (!await _animalRepository.AddAnimalVisit(av))
                 {
                     return false;
@@ -564,48 +495,3 @@ namespace BVZ.BVZ.Application.Services
        
     }
 }
-
-
-
-
-///*Create new opening day of the zoo and add all available tours that day, 
-//        morning and afternoon-tours*/
-//public async Task<ServiceResponse<List<ZooTour>>> NewDay(DateTime newDayDate)
-//{
-//    ServiceResponse<List<ZooTour>> response = new ServiceResponse<List<ZooTour>>();
-//    ZooDay zooDay = new ZooDay();
-//    zooDay.TodaysDate = newDayDate;
-//    _zooRepository.AddNewZooDay(zooDay);
-
-//    var tours = await _tourRepository.GetAllTours();
-//    if (tours == null)
-//    {
-//        response.IsSuccess = false;
-//        response.ErrorMessage = "List of tours is null or empty.";
-//        return response;
-//    }
-
-//    List<ZooTour> DailyBookableTours = new List<ZooTour>();
-//    foreach (var tour in tours)
-//    {
-//        if (tour.Guide.IsUnavailable == true)
-//        {
-//            response.UserInfo = "Guide is unavailable for " + tour.TourName;
-//            break;
-//        }
-
-//        var twoDailyTours = await tour.CreateDailyTours(tour, zooDay);
-//        if (twoDailyTours != null)
-//        {
-//            foreach (var singleTour in twoDailyTours)
-//            {
-//                _tourRepository.AddZooTour(singleTour);
-//                DailyBookableTours.Add(singleTour);
-//            }
-//        }
-//        else break;
-//    }
-//    response.IsSuccess = true;
-//    response.Data = DailyBookableTours;
-//    return response;
-//}

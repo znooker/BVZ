@@ -1,18 +1,19 @@
-﻿namespace BVZ.BVZ.Domain.Models.Zoo.Animals
+﻿using BVZ.BVZ.Domain.Models.Zoo.Animals.ValueTypes;
+
+namespace BVZ.BVZ.Domain.Models.Zoo.Animals
 {
     public class AnimalVisit
     {
         public Guid Id { get; set; }
 
-        public Animal Animal { get; set; }
-        public Guid AnimalId { get; set; }
+        public AnimalArchetype AnimalArchetype { get; set; }
 
         public DateTime VisitDate { get; set; }
 
-        public AnimalVisit(Animal animal)
+        public AnimalVisit(AnimalArchetype animalArchetype)
         {
-            Animal = animal;
-            VisitDate= DateTime.Today;
+            AnimalArchetype = animalArchetype;
+            VisitDate = DateTime.Today;
         }
         public AnimalVisit()
         {
