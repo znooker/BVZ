@@ -19,6 +19,14 @@ namespace BVZ.BVZ.Infrastructure.Repositories
             _context.AddRangeAsync(competences);
             return await Save();
         }
+
+        public async Task<bool> DeleteCompetences(List<AnimalCompetence> competences)
+        {
+            _context.RemoveRange(competences);
+            return await Save();
+        }
+
+      
     }
     
     

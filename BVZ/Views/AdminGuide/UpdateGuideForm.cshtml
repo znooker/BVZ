@@ -19,3 +19,23 @@
         </ul>
     </div>
 </div>
+
+<form asp-action="UpdateGuide" method="post">
+    <div class="form-group">
+        <label for="name">Guide Name</label>
+        <input asp-for="GuideName" class="form-control" id="name" required/>
+    </div>
+    
+    
+    <div class="form-group">
+        <label for="form">Välj en eller fler kompetenser.</label>
+        <select asp-for="SelectedCompetences" multiple class="form-control" id="form" required>
+            @foreach (var option in Model.CompetenceOptions)
+            {
+                <option value="@option">@option</option>
+            }
+        </select>
+    </div>
+    <input type="hidden" asp-for="GuideID" value="@Model.Guide.Id"/>
+    <button type="submit" class="btn btn-primary">Updatera</button>
+</form>

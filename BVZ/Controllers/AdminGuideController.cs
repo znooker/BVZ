@@ -15,6 +15,7 @@ namespace BVZ.Controllers
         private readonly ILogger<AdminGuideController> _logger;
         private readonly GuideServices _guideServices;
         private readonly AnimalServices _animalServices;
+        
 
         public AdminGuideController(
             ILogger<AdminGuideController> logger,
@@ -145,6 +146,15 @@ namespace BVZ.Controllers
         [HttpPost]
         public async Task<IActionResult> RedirectToUpdateGuideForm(Guid guideId)
         {
+            var animals = await _animalServices.GetUniqueAnimalListByAnimalType();
+            if (!animals.IsSuccess)
+            {
+                ErrorViewModel eVM = new ErrorViewModel
+                {
+                    ValidationErrorMessage = animals.ErrorMessage
+                };
+                return RedirectToAction("Index", eVM);
+            }
             var guide = await _guideServices.GetGuideById(guideId);
             if (!guide.IsSuccess)
             {
@@ -159,19 +169,60 @@ namespace BVZ.Controllers
             {
                 GuideName = guide.Data.Name,
                 Guide = guide.Data,
-                CurrentAnimalCompetences = guide.Data.AnimalCompetences.Select(x => x.Animal).ToList()
+                CurrentAnimalCompetences = guide.Data.AnimalCompetences.Select(x => x.Animal).ToList(),
+                CompetenceOptions = animals.Data.Select(x => x.AnimalType).ToList()
             };
-            //var result = await _guideServices.UpdateGuide(guide.Data);
-
-            //if (!result.IsSuccess)
-            //{
-            //    ErrorViewModel eVM = new ErrorViewModel 
-            //    { 
-            //        ValidationErrorMessage = result.ErrorMessage 
-            //    };
-            //}
 
             return View("/Views/AdminGuide/UpdateGuideForm.cshtml", gVm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateGuide(GuideViewModel guide)
+        {
+            var competences = guide.SelectedCompetences;
+            var animals = await _animalServices.GetUniqueAnimalListByAnimalType(competences);
+
+            if (!animals.IsSuccess)
+            {
+                ErrorViewModel eVM = new ErrorViewModel
+                {
+                    ValidationErrorMessage = animals.ErrorMessage
+                };
+
+                return RedirectToAction("Index", eVM);
+            }
+
+            var guideResult = await _guideServices.UpdateGuide(guide);
+            if (!guideResult.IsSuccess)
+            {
+                ErrorViewModel eVM = new ErrorViewModel
+                {
+                    ValidationErrorMessage = guideResult.ErrorMessage
+                };
+
+                return RedirectToAction("Index", eVM);
+            }
+
+
+
+            var competenceResult = await _guideServices.UpdateGuideCompetence(guideResult.Data, animals.Data);
+
+            if (!competenceResult.IsSuccess)
+            {
+                ErrorViewModel eVM = new ErrorViewModel
+                {
+                    ValidationErrorMessage = guideResult.ErrorMessage
+                };
+
+                return RedirectToAction("Index", eVM);
+            }
+
+
+
+            string updateMessage = competenceResult.UserInfo;
+            TempData["Message"] = updateMessage;
+            TempData["Status"] = "update";
+            return RedirectToAction("Index");
         }
     }
 }

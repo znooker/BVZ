@@ -1,4 +1,5 @@
 ﻿using BVZ.BVZ.Application.Interfaces;
+using BVZ.BVZ.Domain.Models.Zoo.Animals;
 using BVZ.BVZ.Domain.Models.Zoo.Guides;
 using BVZ.BVZ.Infrastructure.Data;
 using BVZ.BVZ.Infrastructure.Repositories;
@@ -156,11 +157,76 @@ namespace BVZ.BVZ.Application.Services
 
         }
 
-        //public async Task<ServiceResponse<string>> UpdateGuide(Guide guide)
-        //{
-        //    ServiceResponse<string> result = new ServiceResponse<string>();
-        //    var 
-           
-        //}
+        public async Task<ServiceResponse<Guide>> UpdateGuide(GuideViewModel guide)
+        {
+            ServiceResponse<Guide> result = new ServiceResponse<Guide>();
+            var foundGuide = await _guideRepository.GetGuideById(guide.GuideID);
+            if(foundGuide == null)
+            {
+                result.IsSuccess = false;
+                result.ErrorMessage = "Guide med valt id kunde inte hittas";
+                return result;
+            }
+
+            foundGuide.Name = guide.GuideName;
+            if(!await _guideRepository.UpdateGuide(foundGuide))
+            {
+                result.IsSuccess = false;
+                result.ErrorMessage = "Guide kunde inte uppdateras. Kontakta admin.";
+                return result;
+            }
+
+            result.IsSuccess = true;
+            result.UserInfo = $"{foundGuide} har uppdaterats med ny information.";
+            result.Data = foundGuide;
+            return result;
+        }
+        
+        //REFACTOR TO A TRANSACTION
+        public async Task<ServiceResponse<string>> UpdateGuideCompetence(Guide guide, List<Animal> animals)
+        {
+            ServiceResponse<string> result = new ServiceResponse<string>();
+
+            List<AnimalCompetence> competences = new List<AnimalCompetence>();
+            foreach (var animal in animals)
+            {
+                AnimalCompetence animalCompetence = new AnimalCompetence(animal, guide);
+                competences.Add(animalCompetence);
+            }
+
+            var oldAnimalCompetences = guide.AnimalCompetences.Select(x => x.Animal).ToList();
+            if (oldAnimalCompetences.Any())
+            {
+
+                List<AnimalCompetence> oldCompetences = new List<AnimalCompetence>();
+                foreach (var animal in oldAnimalCompetences)
+                {
+                    AnimalCompetence animalCompetence_1 = new AnimalCompetence(animal, guide);
+                    oldCompetences.Add(animalCompetence_1);
+                }
+               
+
+                //Fick inte detta att funka så som vi hade det uppsatt...
+                await _animalCompetencesRepository.DeleteCompetences(oldCompetences);
+                
+                //if (!) 
+                //{
+                //    result.IsSuccess = false;
+                //    result.ErrorMessage = "Kunde inte radera guidens kompetenser. Kontakta admin";
+                //    return result;
+                //}
+            }
+
+            if (!await _animalCompetencesRepository.AddCompetences(competences))
+            {
+                result.IsSuccess = false;
+                result.ErrorMessage = "Kunde inte uppdatera guidens kompetenser. Kontakta admin";
+                return result;
+            }
+
+            result.IsSuccess = true;
+            result.UserInfo = $"{guide.Name} har uppdaterat sina kompetenser.";
+            return result;
+        }
     }
 }
