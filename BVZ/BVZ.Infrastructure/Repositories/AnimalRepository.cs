@@ -77,5 +77,16 @@ namespace BVZ.BVZ.Infrastructure.Repositories
         {
             return await _context.Animals.Select(a => a.AnimalType).Distinct().ToListAsync();
         }
+
+        public async Task<List<Animal>> GetUniqeAnimalListByAnimalType(List<string> types)
+        {
+            var uniqueAnimals = await _context.Animals
+                .Where(animal => types.Contains(animal.AnimalType))
+                .GroupBy(animal => animal.AnimalType)
+                .Select(group => group.First())
+                .ToListAsync();
+
+            return uniqueAnimals;
+        }
     }
 }

@@ -1,0 +1,23 @@
+﻿@using BVZ.Models.Admin.Guide;
+@model GuideCompetenceSelectViewModel
+@{
+    ViewData["Title"] = "Hire Guide";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<form asp-action="CreateGuideStepTwo" method="post">
+    <div class="form-group">
+        <label for="form">Välj en eller fler kompetenser.</label>
+        <select asp-for="SelectedCompetences" multiple class="form-control" id="form">
+            @foreach (var option in Model.CompetenceOptions)
+            {
+                <option value="@option">@option</option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Nästa steg</button>
+</form>
+    
+
+   
