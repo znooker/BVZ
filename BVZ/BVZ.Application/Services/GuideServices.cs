@@ -193,10 +193,8 @@ namespace BVZ.BVZ.Application.Services
                 AnimalCompetence animalCompetence = new AnimalCompetence(animal, guide);
                 competences.Add(animalCompetence);
             }
-            //Databas anrop
 
             var oldAnimalCompetences = await _animalCompetencesRepository.GetCompetencesByGuideId(guide.Id);
-
 
             if (!await _animalCompetencesRepository.DeleteCompetences(oldAnimalCompetences))
             {

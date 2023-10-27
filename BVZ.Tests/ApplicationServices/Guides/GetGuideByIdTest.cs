@@ -53,11 +53,9 @@ namespace BVZ.Tests.ApplicationServices.Guides
 
         [Fact]
 
-        public async Task GetGuideById_Zero_ReturnsErrorResponse()
+        public async Task GetGuideById_GuideNotFound_ReturnsErrorResponse()
         {
             _guideRepositoryMock.Setup(repo => repo.GetGuideById(_guide.Id)).ReturnsAsync((Guide)null);
-
-            
 
             var result = await _guideService.GetGuideById(_guide.Id);
 
