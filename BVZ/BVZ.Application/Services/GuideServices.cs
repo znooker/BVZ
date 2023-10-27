@@ -1,4 +1,5 @@
 ﻿using BVZ.BVZ.Application.Interfaces;
+using BVZ.BVZ.Domain.Models.Zoo.Animals;
 using BVZ.BVZ.Domain.Models.Zoo.Guides;
 using BVZ.BVZ.Infrastructure.Data;
 using BVZ.BVZ.Infrastructure.Repositories;
@@ -87,7 +88,7 @@ namespace BVZ.BVZ.Application.Services
         }
 
 
-        //Transaction - Several Dboperations
+        
         public async Task<ServiceResponse<string>> CreateGuide(GuideViewModel data)
         {
             ServiceResponse<string> result = new ServiceResponse<string>();
@@ -97,7 +98,7 @@ namespace BVZ.BVZ.Application.Services
             {
                 //Create new Guide, add to DB
                 Guide newGuide = new Guide(data.GuideName);
-                //await _guideRepository.AddGuide(newGuide);
+               
                 if (!await _guideRepository.AddGuide(newGuide))
                 {
                     await transaction.RollbackAsync();
@@ -154,6 +155,67 @@ namespace BVZ.BVZ.Application.Services
             }
             
 
+        }
+
+        public async Task<ServiceResponse<Guide>> UpdateGuide(GuideViewModel guide)
+        {
+            ServiceResponse<Guide> result = new ServiceResponse<Guide>();
+            var foundGuide = await _guideRepository.GetGuideById(guide.GuideID);
+            if(foundGuide == null)
+            {
+                result.IsSuccess = false;
+                result.ErrorMessage = "Guide med valt id kunde inte hittas";
+                return result;
+            }
+
+            foundGuide.Name = guide.GuideName;
+            if(!await _guideRepository.UpdateGuide(foundGuide))
+            {
+                result.IsSuccess = false;
+                result.ErrorMessage = "Guide kunde inte uppdateras. Kontakta admin.";
+                return result;
+            }
+
+            result.IsSuccess = true;
+            result.UserInfo = $"{foundGuide} har uppdaterats med ny information.";
+            result.Data = foundGuide;
+            return result;
+        }
+        
+        //REFACTOR TO A TRANSACTION
+        public async Task<ServiceResponse<string>> UpdateGuideCompetence(Guide guide, List<Animal> animals)
+        {
+            ServiceResponse<string> result = new ServiceResponse<string>();
+
+            List<AnimalCompetence> competences = new List<AnimalCompetence>();
+            foreach (var animal in animals)
+            {
+                AnimalCompetence animalCompetence = new AnimalCompetence(animal, guide);
+                competences.Add(animalCompetence);
+            }
+            //Databas anrop
+
+            var oldAnimalCompetences = await _animalCompetencesRepository.GetCompetencesByGuideId(guide.Id);
+
+
+            if (!await _animalCompetencesRepository.DeleteCompetences(oldAnimalCompetences))
+            {
+                result.IsSuccess = false;
+                result.ErrorMessage = "Kunde inte radera guidens kompetenser. Kontakta admin";
+                return result;
+            }
+        
+
+            if (!await _animalCompetencesRepository.AddCompetences(competences))
+            {
+                result.IsSuccess = false;
+                result.ErrorMessage = "Kunde inte uppdatera guidens kompetenser. Kontakta admin";
+                return result;
+            }
+
+            result.IsSuccess = true;
+            result.UserInfo = $"{guide.Name} har uppdaterat sina kompetenser.";
+            return result;
         }
     }
 }

@@ -15,6 +15,7 @@ namespace BVZ.Controllers
         private readonly ILogger<AdminGuideController> _logger;
         private readonly GuideServices _guideServices;
         private readonly AnimalServices _animalServices;
+        
 
         public AdminGuideController(
             ILogger<AdminGuideController> logger,
@@ -71,7 +72,7 @@ namespace BVZ.Controllers
             return RedirectToAction("Index");
         }
 
-        //Döpa om till CreateGuideStepOne
+        
         public async Task<IActionResult> SelectGuideCompetence()
         {
             var options = await _animalServices.GetUniqueAnimalListByAnimalType();
@@ -95,7 +96,7 @@ namespace BVZ.Controllers
         }
 
 
-        //Lär finnas fel här... gjorde detta kl 00:00.
+        
         [HttpPost]
         public async Task<IActionResult> CreateGuideStepTwo(GuideCompetenceSelectViewModel data)
         {
@@ -120,6 +121,7 @@ namespace BVZ.Controllers
             return View("/Views/AdminGuide/HireGuideStepTwoForm.cshtml", gVM);
         }
 
+
         [HttpPost]
         public async Task<IActionResult> CreateGuide(GuideViewModel data)
         {
@@ -133,13 +135,94 @@ namespace BVZ.Controllers
                 };
                 return RedirectToAction("Index", eVM);
             }
-
-            //Skapa en ViewModelResponse att skicka tillbaka
+            
             string message = response.UserInfo;
             TempData["Message"] = message;
             TempData["Status"] = "add";
             return RedirectToAction("Index");
-            
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RedirectToUpdateGuideForm(Guid guideId)
+        {
+            var animals = await _animalServices.GetUniqueAnimalListByAnimalType();
+            if (!animals.IsSuccess)
+            {
+                ErrorViewModel eVM = new ErrorViewModel
+                {
+                    ValidationErrorMessage = animals.ErrorMessage
+                };
+                return RedirectToAction("Index", eVM);
+            }
+            var guide = await _guideServices.GetGuideById(guideId);
+            if (!guide.IsSuccess)
+            {
+                ErrorViewModel eVM = new ErrorViewModel
+                {
+                    ValidationErrorMessage = guide.ErrorMessage
+                };
+                return RedirectToAction("Index", eVM);
+            }
+
+            GuideViewModel gVm = new GuideViewModel
+            {
+                GuideName = guide.Data.Name,
+                Guide = guide.Data,
+                CurrentAnimalCompetences = guide.Data.AnimalCompetences.Select(x => x.Animal).ToList(),
+                CompetenceOptions = animals.Data.Select(x => x.AnimalType).ToList()
+            };
+
+            return View("/Views/AdminGuide/UpdateGuideForm.cshtml", gVm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateGuide(GuideViewModel guide)
+        {
+            var competences = guide.SelectedCompetences;
+            var animals = await _animalServices.GetUniqueAnimalListByAnimalType(competences);
+
+            if (!animals.IsSuccess)
+            {
+                ErrorViewModel eVM = new ErrorViewModel
+                {
+                    ValidationErrorMessage = animals.ErrorMessage
+                };
+
+                return RedirectToAction("Index", eVM);
+            }
+
+            var guideResult = await _guideServices.UpdateGuide(guide);
+            if (!guideResult.IsSuccess)
+            {
+                ErrorViewModel eVM = new ErrorViewModel
+                {
+                    ValidationErrorMessage = guideResult.ErrorMessage
+                };
+
+                return RedirectToAction("Index", eVM);
+            }
+
+
+
+            var competenceResult = await _guideServices.UpdateGuideCompetence(guideResult.Data, animals.Data);
+
+            if (!competenceResult.IsSuccess)
+            {
+                ErrorViewModel eVM = new ErrorViewModel
+                {
+                    ValidationErrorMessage = guideResult.ErrorMessage
+                };
+
+                return RedirectToAction("Index", eVM);
+            }
+
+
+
+            string updateMessage = competenceResult.UserInfo;
+            TempData["Message"] = updateMessage;
+            TempData["Status"] = "update";
+            return RedirectToAction("Index");
         }
     }
 }

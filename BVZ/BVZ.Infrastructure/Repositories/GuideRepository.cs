@@ -69,9 +69,10 @@ namespace BVZ.BVZ.Infrastructure.Repositories
         }
        
 
-        public Task<bool> UpdateGuide(Guide guide)
+        public async Task<bool> UpdateGuide(Guide guide)
         {
-            throw new NotImplementedException();
+            _context.Guides.Update(guide);
+            return await Save();
         }
 
     }

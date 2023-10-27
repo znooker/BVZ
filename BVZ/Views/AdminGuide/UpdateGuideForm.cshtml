@@ -1,0 +1,41 @@
+﻿@using BVZ.Models.Admin.Guide;
+@model GuideViewModel
+@{
+    ViewData["Title"] = "Update Guide";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title">Vald Guide</h5>
+        <h6 class="card-subtitle mb-2 text-muted">@Model.GuideName</h6>
+        <ul class="list-group">
+            <li class="list-group-item disabled font-weight-bold">Kompetenser</li>
+            @foreach(var animal in Model.CurrentAnimalCompetences)
+            {
+                <li class="list-group-item font-weight-light">@animal.AnimalType</li>
+            }
+            
+        </ul>
+    </div>
+</div>
+
+<form asp-action="UpdateGuide" method="post">
+    <div class="form-group">
+        <label for="name">Guide Name</label>
+        <input asp-for="GuideName" class="form-control" id="name" required/>
+    </div>
+    
+    
+    <div class="form-group">
+        <label for="form">Välj en eller fler kompetenser.</label>
+        <select asp-for="SelectedCompetences" multiple class="form-control" id="form" required>
+            @foreach (var option in Model.CompetenceOptions)
+            {
+                <option value="@option">@option</option>
+            }
+        </select>
+    </div>
+    <input type="hidden" asp-for="GuideID" value="@Model.Guide.Id"/>
+    <button type="submit" class="btn btn-primary">Updatera</button>
+</form>
