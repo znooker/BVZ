@@ -8,5 +8,7 @@ namespace BVZ.BVZ.Application.Interfaces
 
         Task<bool> DeleteCompetences(List<AnimalCompetence> competences);
         //Task DeleteCompetences(List<AnimalCompetence> competences);
+
+        Task<List<AnimalCompetence>> GetCompetencesByGuideId(Guid GuideId);
     }
 }

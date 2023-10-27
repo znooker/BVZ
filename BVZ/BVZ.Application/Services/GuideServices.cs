@@ -193,29 +193,18 @@ namespace BVZ.BVZ.Application.Services
                 AnimalCompetence animalCompetence = new AnimalCompetence(animal, guide);
                 competences.Add(animalCompetence);
             }
+            //Databas anrop
 
-            var oldAnimalCompetences = guide.AnimalCompetences.Select(x => x.Animal).ToList();
-            if (oldAnimalCompetences.Any())
+            var oldAnimalCompetences = await _animalCompetencesRepository.GetCompetencesByGuideId(guide.Id);
+
+
+            if (!await _animalCompetencesRepository.DeleteCompetences(oldAnimalCompetences))
             {
-
-                List<AnimalCompetence> oldCompetences = new List<AnimalCompetence>();
-                foreach (var animal in oldAnimalCompetences)
-                {
-                    AnimalCompetence animalCompetence_1 = new AnimalCompetence(animal, guide);
-                    oldCompetences.Add(animalCompetence_1);
-                }
-               
-
-                //Fick inte detta att funka så som vi hade det uppsatt...
-                await _animalCompetencesRepository.DeleteCompetences(oldCompetences);
-                
-                //if (!) 
-                //{
-                //    result.IsSuccess = false;
-                //    result.ErrorMessage = "Kunde inte radera guidens kompetenser. Kontakta admin";
-                //    return result;
-                //}
+                result.IsSuccess = false;
+                result.ErrorMessage = "Kunde inte radera guidens kompetenser. Kontakta admin";
+                return result;
             }
+        
 
             if (!await _animalCompetencesRepository.AddCompetences(competences))
             {
