@@ -201,6 +201,13 @@ namespace BVZ.BVZ.Application.Services
         {
             ServiceResponse<string> response = new ServiceResponse<string>();
 
+            if(morning == null && afternoon == null)
+            {
+                response.IsSuccess = false;
+                response.UserInfo = "Ingen tidpunkt specificerad.";
+                return response;
+            }
+
             var today = DateTime.Now;
 
             var zooDay = await _zooRepository.GetZooDayByDate(today);

@@ -29,6 +29,7 @@ namespace BVZ.Tests.ApplicationServices.Tours
         private Ozelot animalMock;
         private int nrOfVisitMock;
 
+        private TourService tourService;
         public BookZooTourTest()
         {
             loggerMock = new Mock<ILogger<TourService>>();
@@ -140,15 +141,21 @@ namespace BVZ.Tests.ApplicationServices.Tours
                 Specie = Specie.Mammal,
                 DailyVisits = 0,
                 AnimalVisits = new List<AnimalVisit>
+                {
+                    new AnimalVisit
                     {
-                        new AnimalVisit
-                        {
-                            Id = Guid.NewGuid(),
-                            AnimalId = Guid.NewGuid(),
-                            VisitDate = DateTime.Now,
-                        }
+                        Id = Guid.NewGuid(),
+                        AnimalId = Guid.NewGuid(),
+                        VisitDate = DateTime.Now,
                     }
+                }
             };
+               tourService = new TourService(
+                                   loggerMock.Object,
+                                   tourRepositoryMock.Object,
+                                   animalRepositoryMock.Object,
+                                   zooRepositoryMock.Object,
+                                   transactionMock.Object);
         }
 
 
@@ -177,12 +184,7 @@ namespace BVZ.Tests.ApplicationServices.Tours
             zooRepositoryMock.Setup(repo => repo.GetDailyZooVisitors(It.IsAny<DateTime>())).ReturnsAsync(visitorList);
             zooRepositoryMock.Setup(repo => repo.AddTourParticipant(It.IsAny<TourParticipant>())).ReturnsAsync(true);
 
-            var tourService = new TourService(
-                loggerMock.Object,
-                tourRepositoryMock.Object,
-                animalRepositoryMock.Object,
-                zooRepositoryMock.Object,
-                transactionMock.Object);
+           
 
             // Act
             var result = await tourService.BookZooTour(
@@ -243,14 +245,7 @@ namespace BVZ.Tests.ApplicationServices.Tours
             // Helper-method HandleTickets
             zooRepositoryMock.Setup(repo => repo.AddVisitor(It.IsAny<Visitor>())).ReturnsAsync(true);
             zooRepositoryMock.Setup(repo => repo.AddTourParticipant(It.IsAny<TourParticipant>())).ReturnsAsync(true);
-  
 
-                var tourService = new TourService(
-                    loggerMock.Object,
-                    tourRepositoryMock.Object,
-                    animalRepositoryMock.Object,
-                    zooRepositoryMock.Object,
-                    transactionMock.Object);
 
                 // Act
                 var result = await tourService.BookZooTour(
@@ -278,6 +273,38 @@ namespace BVZ.Tests.ApplicationServices.Tours
                 Assert.NotNull(handleTicketsResult);
                 Assert.Null(result.UserInfo);
             }
+
+        [Fact]
+        public async Task CheckAnimalFatigue_AnimalVisitCountToHighOrLow_ReturnsErrorResponse()
+        {
+            //Commits and rollbacks
+            transactionMock.Setup(repo => repo.BeginTransaction()).Returns(transaction);
+            transactionMock.Setup(repo => repo.CommitAsync()).Returns(Task.CompletedTask);
+            transactionMock.Setup(repo => repo.RollbackAsync()).Returns(Task.CompletedTask);
+
+            tourRepositoryMock.Setup(repo => repo.GetZooTourById(ztIdMock)).ReturnsAsync(zootour);
+            animalRepositoryMock.Setup(repo => repo.GetAnimalsByGuideId(zootour.Tour.GuideId)).ReturnsAsync(animalIdList);
+            animalRepositoryMock.Setup(repo => repo.GetAnimalVisitsByDateAndAnimal(
+                It.IsAny<Guid>(), It.IsAny<DateTime>()))
+                .ReturnsAsync(3);
+
+            var result = await tourService.BookZooTour(
+             ztIdMock,
+             NrOfPersonsMock,
+             bookers,
+             hasTickets);
+
+            var animalResult = await tourService.CheckAnimalFatigue(
+                    zootour.Tour.GuideId,
+                    zootour.ZooDay,
+                    zootour.DateOfTour);
+
+            // Assert
+            Assert.False(animalResult);
+            Assert.Contains("Denna turen går tyvärr inte att boka", result.UserInfo);
+            Assert.Null(result.Data);
         }
+    }
+
 
 }

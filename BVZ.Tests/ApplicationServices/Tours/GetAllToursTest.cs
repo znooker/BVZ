@@ -1,32 +1,32 @@
 ﻿using BVZ.BVZ.Application.Interfaces;
 using BVZ.BVZ.Application.Services;
 using BVZ.BVZ.Domain.Models.Visitors;
-using BVZ.BVZ.Domain.Models.Zoo.Guides;
-using BVZ.BVZ.Infrastructure.Repositories;
-using Castle.Core.Logging;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BVZ.Tests.ApplicationServices.Tours
 {
     public class GetAllToursTest
     {
-        [Fact]
-        public async Task GetAllTours_Success_ReturnsValidResponse()
-        {
-            // Arrange
-            var loggerMock = new Mock<ILogger<TourService>>();
-            var tourRepositoryMock = new Mock<ITourRepository>();
-            var animalRepositoryMock = new Mock<IAnimalRepository>();
-            var zooRepositoryMock = new Mock<IZooRepository>();
-            var transactionMock = new Mock<ITransaction>();
+        private Mock<ILogger<TourService>> loggerMock;
+        private Mock<ITourRepository> tourRepositoryMock;
+        private Mock<IAnimalRepository> animalRepositoryMock;
+        private Mock<IZooRepository> zooRepositoryMock;
+        private Mock<ITransaction> transactionMock;
 
-            var toursList = new List<Tour>
+        private List<Tour> toursList;
+
+        private TourService tourService;
+
+        public GetAllToursTest()
+        {
+            loggerMock = new Mock<ILogger<TourService>>();
+            tourRepositoryMock = new Mock<ITourRepository>();
+            animalRepositoryMock = new Mock<IAnimalRepository>();
+            zooRepositoryMock = new Mock<IZooRepository>();
+            transactionMock = new Mock<ITransaction>();
+
+            toursList = new List<Tour>
             {
                 new Tour
                 {
@@ -42,21 +42,25 @@ namespace BVZ.Tests.ApplicationServices.Tours
                     Description = "En tur i drakarnas land",
                     GuideId = Guid.Empty,
                 },
-
             };
 
+            tourService = new TourService(
+              loggerMock.Object,
+              tourRepositoryMock.Object,
+              animalRepositoryMock.Object,
+              zooRepositoryMock.Object,
+              transactionMock.Object);
+
+        }
+
+
+        [Fact]
+        public async Task GetAllTours_Success_ReturnsValidResponse()
+        {
             tourRepositoryMock.Setup(repo => repo.GetAllTours()).ReturnsAsync(toursList);
 
-            var tourService = new TourService(
-                loggerMock.Object,
-                tourRepositoryMock.Object,
-                animalRepositoryMock.Object,
-                zooRepositoryMock.Object,
-                transactionMock.Object);
-            // Act
             var result = await tourService.GetAllTours();
 
-            // Assert
             Assert.True(result.IsSuccess);
             Assert.Equal(toursList, result.Data);
             Assert.Null(result.ErrorMessage);
@@ -65,29 +69,12 @@ namespace BVZ.Tests.ApplicationServices.Tours
         [Fact]
         public async Task GetAllTours_NoTours_ReturnsErrorResponse()
         {
-            // Arrange
-            var loggerMock = new Mock<ILogger<TourService>>();
-            var tourRepositoryMock = new Mock<ITourRepository>();
-            var animalRepositoryMock = new Mock<IAnimalRepository>();
-            var zooRepositoryMock = new Mock<IZooRepository>();
-            var transactionMock = new Mock<ITransaction>();
-
             List<Tour> emptyList = new List<Tour>();
 
             tourRepositoryMock.Setup(repo => repo.GetAllTours()).ReturnsAsync(emptyList);
 
-            var tourService = new TourService(
-                loggerMock.Object,
-                tourRepositoryMock.Object,
-                animalRepositoryMock.Object,
-                zooRepositoryMock.Object,
-                transactionMock.Object
-            );
-
-            // Act
             var result = await tourService.GetAllTours();
 
-            // Assert
             Assert.False(result.IsSuccess);
             Assert.Null(result.Data);
             Assert.Contains("inga tours", result.UserInfo);

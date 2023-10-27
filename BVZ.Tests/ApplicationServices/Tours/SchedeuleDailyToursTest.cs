@@ -42,16 +42,18 @@ namespace BVZ.Tests.ApplicationServices.Tours
             transactionMock = new Mock<ITransaction>();
 
             TouridMock = Guid.NewGuid();
-            tourMock = new Tour();
+            tourMock = new Tour
+            {
+                Id = TouridMock
+            };
 
-            zoodayMock = new ZooDay();
+            zoodayMock = new ZooDay
+            {
+                Id = Guid.NewGuid()
+            };
 
             morningMock = null;
             afternoonMock = null;
-
-            zootourMock = new ZooTour();
-
-            ZooTour morningTour = new ZooTour(tourMock, zoodayMock, true, DateTime.Now);
 
             tourService = new TourService(
                 loggerMock.Object,
@@ -72,9 +74,12 @@ namespace BVZ.Tests.ApplicationServices.Tours
             tourRepositoryMock.Setup(repo => repo.GetTourById(TouridMock))
                 .ReturnsAsync(tourMock);
 
-            tourRepositoryMock.Setup(repo => repo.AddZooTour(zootourMock))
-                .ReturnsAsync(true);
-
+            tourRepositoryMock.Setup(repo => repo.AddZooTour(
+                                It.Is<ZooTour>(zt =>
+                                    zt.Tour.Id == tourMock.Id &&
+                                    zt.ZooDay.Id == zoodayMock.Id &&
+                                    zt.IsMorningTour == true)))
+                                .ReturnsAsync(true);
 
             var result = await tourService.SchedeuleDailyTours(TouridMock, morningMock, afternoonMock);
 
@@ -83,7 +88,72 @@ namespace BVZ.Tests.ApplicationServices.Tours
             Assert.Null(result.ErrorMessage);
         }
 
-        
+        [Fact]
+        public async Task SchedeuleDailyToursTest_SchedeuleAfternoonTourIsSuccess_ReturnsValidResponse()
+        {
+            afternoonMock = "not null";
+
+            zooRepositoryMock.Setup(repo => repo.GetZooDayByDate(It.IsAny<DateTime>()))
+                .ReturnsAsync(zoodayMock);
+
+            tourRepositoryMock.Setup(repo => repo.GetTourById(TouridMock))
+                .ReturnsAsync(tourMock);
+
+            tourRepositoryMock.Setup(repo => repo.AddZooTour(
+                                It.Is<ZooTour>(zt =>
+                                    zt.Tour.Id == tourMock.Id &&
+                                    zt.ZooDay.Id == zoodayMock.Id &&
+                                    zt.IsMorningTour == false)))
+                                .ReturnsAsync(true);
+
+            var result = await tourService.SchedeuleDailyTours(TouridMock, morningMock, afternoonMock);
+
+            Assert.True(result.IsSuccess);
+            Assert.Equal("Turen eller turerna är framgångsrikt schemalagda", result.Data);
+            Assert.Null(result.ErrorMessage);
+        }
+
+        [Fact]
+        public async Task SchedeuleDailyToursTest_ZoodayOrTourIsNull_ReturnsErrorResponse()
+        {
+            afternoonMock = "not null";
+
+            zooRepositoryMock.Setup(repo => repo.GetZooDayByDate(It.IsAny<DateTime>()))
+                .ReturnsAsync((ZooDay)null);
+
+            tourRepositoryMock.Setup(repo => repo.GetTourById(TouridMock))
+                .ReturnsAsync((Tour)null);
+
+            var result = await tourService.SchedeuleDailyTours(TouridMock, morningMock, afternoonMock);
+
+            Assert.False(result.IsSuccess);
+            Assert.Null(result.Data);
+            Assert.Contains("Kontakta", result.UserInfo);
+        }
+
+
+        [Fact]
+        public async Task SchedeuleDailyToursTest_EmptyGuid_ReturnsErrorResponse()
+        {
+            tourRepositoryMock.Setup(repo => repo.GetTourById(Guid.Empty))
+                .ReturnsAsync(It.IsAny<Tour>());
+
+            var result = await tourService.SchedeuleDailyTours(TouridMock, morningMock, afternoonMock);
+
+            Assert.False(result.IsSuccess);
+            Assert.Null(result.Data);
+            Assert.Contains("specificerad", result.UserInfo);
+        }
+
+        [Fact]
+        public async Task SchedeuleDailyToursTest_EmptyParameters_ReturnsErrorResponse()
+        {
+            var result = await tourService.SchedeuleDailyTours(TouridMock, morningMock, afternoonMock);
+
+            Assert.False(result.IsSuccess);
+            Assert.Null(result.Data);
+            Assert.Contains("specificerad", result.UserInfo);
+        }
     }
 }
 
