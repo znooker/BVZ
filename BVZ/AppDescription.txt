@@ -1,1 +1,35 @@
-﻿
+﻿:: OM APPEN ::
+Visar Beverly Hills Zoo. Utgår från två vyer, en öppen vy och en admin vy.
+
+
+:: INNAN UPPSTART ::
+För att seeda all start-data måste update-database göras samma dag som test av app ska ske.
+
+
+:: ÖPPEN VY ::
+Simulera en besökare-vy. Man kan se alla djur samt trycka på knappar som visar deras olika
+rörelse-mönster, läten och särskilda förmågor. Vidare kan man boka en dagstur som åtföljs
+av en guide. 
+
+Vid bokning så bokar man antingen att man har biljett eller att man inte har biljett.
+Om man tar utan biljett anmodas man fylla i namn. Som kvittens får man ett biljett-nr 
+tillbaka. Detta simulerar en sms-biljett eller möjligen en fysisk biljett med ett biljett-nr.
+
+Om man sedan ska boka ytterligare en dagstur behöver man då fylla i det biljettnr som man 
+tidigare erhållit. 
+
+
+:: ADMIN VY :: 
+Bas-crud för djur, guider, turer samt schemaläggning av dagliga turer.
+
+
+:: KÄNDA BUGGAR ::
+Vid testning sista dagen upptäcktes en bugg av bokning av dagliga turer. 
+Exempel: Om två personer bokar en tur så kommer detta registreras som ett besök 
+hos berörda djur i systemet. Detta är fel då ytterligare tre personer exempelvis kan 
+boka sig till samma tur och på så sätt registreras ytterligare ett besök hos djuren 
+fastän det egentligen är samma besök.
+
+Dock känner vi att tiden inte finns nu på slutet att ordna detta, även om vi är säkra på att
+vi kan lösa det. Vi hoppas och tänker att detta egentligen inte på något väsentligt
+sätt har påverkat läromålet med projektet.
