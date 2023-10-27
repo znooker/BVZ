@@ -34,6 +34,7 @@ namespace BVZ.BVZ.Infrastructure.Repositories
                             .ThenInclude(t => t.Guide)
                         .Where(z => z.DateOfTour.Date == day.Date 
                         && (z.Tour.IsArchived == false || z.Tour.IsArchived == null)
+                        && (z.Tour.Guide.IsArchived == false)
                         && z.NrOfParticipants < 5)
                         .ToListAsync();
         }
