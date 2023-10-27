@@ -3,10 +3,15 @@ using BVZ.BVZ.Application.Services;
 using BVZ.BVZ.Domain.Models.Zoo.Guides;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace BVZ.Tests.ApplicationServices.Guides
 {
-    public class GetGuideByIdTest
+    public class SoftDeleteGuideTest
     {
         private Mock<ILogger<GuideServices>> _loggerMock;
         private Mock<IGuideRepository> _guideRepositoryMock;
@@ -18,7 +23,7 @@ namespace BVZ.Tests.ApplicationServices.Guides
         private Guide _guide2;
         private GuideServices _guideService;
 
-        public GetGuideByIdTest()
+        public SoftDeleteGuideTest()
         {
             _loggerMock= new Mock<ILogger<GuideServices>>();
             _guideRepositoryMock = new Mock<IGuideRepository>();
@@ -28,7 +33,7 @@ namespace BVZ.Tests.ApplicationServices.Guides
 
             _guide = new Guide { Id = Guid.Parse("123e4567-e89b-12d3-a456-426655440000"), Name = "Terminator", IsUnavailable = false };
             _guide2 = new Guide { Id = Guid.Parse("123e4567-e89b-12d3-a456-426655440001"), Name = "John Connor", IsUnavailable = false };
-            
+
             _guideService = new GuideServices(
                 _loggerMock.Object,
                 _guideRepositoryMock.Object,
@@ -38,31 +43,46 @@ namespace BVZ.Tests.ApplicationServices.Guides
         }
 
         [Fact]
-        public async Task GetGuideById_Success_ReturnsValidResponse()
+        public async Task SoftDeleteGuide_Success_ReturnsValidResponse()
         {
-
             _guideRepositoryMock.Setup(repo => repo.GetGuideById(_guide.Id)).ReturnsAsync(_guide);
+            _guideRepositoryMock.Setup(repo => repo.SoftDeleteGuide(_guide)).ReturnsAsync(true);
 
-            var result = await _guideService.GetGuideById(_guide.Id);
-            
+            var result = await _guideService.SoftDeleteGuide(_guide.Id);
+
             Assert.True(result.IsSuccess);
-            Assert.Equal(_guide, result.Data);
+            Assert.Equal($"{_guide.Name} är avskedad.", result.Data);
             Assert.Null(result.ErrorMessage);
+            Assert.Null(result.UserInfo);
 
         }
 
         [Fact]
-
-        public async Task GetGuideById_GuideNotFound_ReturnsErrorResponse()
+        public async Task SoftDeleteGuide_CouldNotDeleteGuide_ReturnsErrorResponse()
         {
-            _guideRepositoryMock.Setup(repo => repo.GetGuideById(_guide.Id)).ReturnsAsync((Guide)null);
+            _guideRepositoryMock.Setup(repo => repo.GetGuideById(_guide.Id)).ReturnsAsync(_guide);
+            _guideRepositoryMock.Setup(repo => repo.SoftDeleteGuide(_guide)).ReturnsAsync(false);
 
-            var result = await _guideService.GetGuideById(_guide.Id);
+            var result = await _guideService.SoftDeleteGuide(_guide.Id);
 
             Assert.False(result.IsSuccess);
             Assert.Null(result.Data);
-            Assert.Equal("Kan inte hitta guide med det angivna id't",result.ErrorMessage);
+            Assert.Equal("Gick inte att ta bort den valda guiden. Kontakta admin.",result.ErrorMessage);
+            Assert.Null(result.UserInfo);
         }
 
+        [Fact]
+        public async Task SoftDeleteGuide_CouldNotFindSelecedGuideToDelete_ReturnsErrorResponse()
+        {
+            _guideRepositoryMock.Setup(repo => repo.GetGuideById(_guide.Id)).ReturnsAsync((Guide)null);
+            _guideRepositoryMock.Setup(repo => repo.SoftDeleteGuide(_guide)).ReturnsAsync(false);
+
+            var result = await _guideService.SoftDeleteGuide(_guide.Id);
+
+            Assert.False(result.IsSuccess);
+            Assert.Null(result.Data);
+            Assert.Equal("Hittade ingen guide att ta bort.", result.ErrorMessage);
+            Assert.Null(result.UserInfo);
+        }
     }
 }
