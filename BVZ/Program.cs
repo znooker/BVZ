@@ -7,6 +7,12 @@ using Microsoft.Extensions.Configuration;
 using System.Configuration;
 using static BVZ.BVZ.Domain.Models.Zoo.Animals.Animal;
 
+/*
+Deltagare i projektet:
+Tobias Ott
+Andreas Gustavsson
+ */
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
