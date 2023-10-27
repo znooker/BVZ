@@ -162,6 +162,7 @@ namespace BVZ.BVZ.Application.Services
                 // Controller will need to handle 1,2 and 3.
                 int codeForBooking = 0;
                 var today = DateTime.Now;
+
                 var optionsToSchedeule = await _tourRepository.GetBookingOptionsForTour(Id, today);
 
                
